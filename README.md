@@ -1,6 +1,6 @@
 # XXF Tools
 
-XXF Tools is a privacy-first JSON and frontend conversion toolbox deployed at [xxf.app](https://xxf.app/).
+XXF Tools is a privacy-first JSON and frontend conversion toolbox deployed at [www.xxf.app](https://www.xxf.app/).
 
 ## Product
 

@@ -7,20 +7,20 @@ const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://xxf.app"),
+  metadataBase: new URL("https://www.xxf.app"),
   title: { default: "XXF Tools — JSON & Frontend Converters", template: "%s | XXF Tools" },
   description: "Private, fast JSON and frontend conversion tools that run entirely in your browser.",
   applicationName: "XXF Tools",
   category: "technology",
   keywords: ["JSON tools", "frontend tools", "developer tools", "JSON converter", "JSON formatter"],
-  authors: [{ name: "XXF Tools", url: "https://xxf.app/about/" }],
+  authors: [{ name: "XXF Tools", url: "https://www.xxf.app/about/" }],
   creator: "XXF Tools",
   publisher: "XXF Tools",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://xxf.app/",
+    url: "https://www.xxf.app/",
     siteName: "XXF Tools",
     title: "XXF Tools — JSON in. Frontend-ready out.",
     description: "24 private browser-based tools for JSON, frontend data and developer workflows.",

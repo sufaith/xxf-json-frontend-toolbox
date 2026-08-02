@@ -39,11 +39,11 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "XXF Tools",
-    url: "https://xxf.app/",
+    url: "https://www.xxf.app/",
     description: "Private browser-based JSON and frontend conversion tools.",
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://xxf.app/?q={search_term_string}",
+      target: "https://www.xxf.app/?q={search_term_string}",
       "query-input": "required name=search_term_string",
     },
   };
@@ -53,7 +53,7 @@ export default function Home() {
     name: "XXF JSON & Frontend Toolbox",
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Any modern web browser",
-    url: "https://xxf.app/",
+    url: "https://www.xxf.app/",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     featureList: tools.map((tool) => tool.name),
   };

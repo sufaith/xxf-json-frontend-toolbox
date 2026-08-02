@@ -15,7 +15,7 @@ test("home page renders the product, privacy promise and SEO metadata", async ()
   assert.match(source, /24 tools/);
   assert.match(source, /Local processing/);
   assert.match(source, /JSON Formatter workspace/);
-  assert.match(source, /<link rel="canonical" href="https:\/\/xxf\.app\/"/i);
+  assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
   assert.match(source, /og:image/);
   assert.ok((source.match(/application\/ld\+json/g) ?? []).length >= 3);
   assert.match(source, /WebSite/);
@@ -34,7 +34,7 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
     const title = source.match(/<title>(.*?)<\/title>/i)?.[1];
     assert.ok(title, `${slug} has a title`);
     titles.add(title);
-    assert.match(source, new RegExp(`<link rel="canonical" href="https://xxf\\.app/tools/${slug}/"`, "i"));
+    assert.match(source, new RegExp(`<link rel="canonical" href="https://www\\.xxf\\.app/tools/${slug}/"`, "i"));
     assert.match(source, /SoftwareApplication/);
     assert.match(source, /HowTo/);
     assert.match(source, /FAQPage/);
@@ -50,7 +50,7 @@ test("six editorial guides are statically rendered as technical articles", async
     const source = await html(`guides/${slug}/index.html`);
     assert.match(source, /TechArticle/);
     assert.match(source, /BreadcrumbList/);
-    assert.match(source, new RegExp(`https://xxf\\.app/guides/${slug}/`));
+    assert.match(source, new RegExp(`https://www\\.xxf\\.app/guides/${slug}/`));
   }
 });
 
@@ -62,7 +62,7 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("llms.txt", out), "utf8"),
   ]);
   assert.equal((sitemap.match(/<url>/g) ?? []).length, 34);
-  assert.match(robots, /Sitemap: https:\/\/xxf\.app\/sitemap\.xml/);
+  assert.match(robots, /Sitemap: https:\/\/www\.xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON & Frontend Tools/);
   assert.match(llms, /All conversions run locally/);
   await Promise.all(["og.png", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));

@@ -57,10 +57,23 @@ jobs:
           tar -C out -czf - . | ssh -i ~/.ssh/xxf_deploy -p "$PORT" "$DEPLOY_USER@$DEPLOY_HOST" "tar -xzf - -C '$RELEASE'"
           ssh -i ~/.ssh/xxf_deploy -p "$PORT" "$DEPLOY_USER@$DEPLOY_HOST" "test -s '$RELEASE/index.html' && ln -sfn '$RELEASE' /www/wwwroot/xxf.app/current && find /www/wwwroot/xxf.app/releases -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rn | tail -n +6 | cut -d' ' -f2- | xargs -r rm -rf"
 
+      - name: Install canonical host configuration
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          PORT="${DEPLOY_PORT:-22}"
+          REMOTE_CONFIG="/tmp/xxf.app.conf.${GITHUB_SHA}"
+          scp -i ~/.ssh/xxf_deploy -P "$PORT" deploy/nginx-xxf.conf "$DEPLOY_USER@$DEPLOY_HOST:$REMOTE_CONFIG"
+          ssh -i ~/.ssh/xxf_deploy -p "$PORT" "$DEPLOY_USER@$DEPLOY_HOST" "set -e; cp /www/server/panel/vhost/nginx/xxf.app.conf /tmp/xxf.app.conf.previous; install -m 644 '$REMOTE_CONFIG' /www/server/panel/vhost/nginx/xxf.app.conf; if /www/server/nginx/sbin/nginx -t; then /www/server/nginx/sbin/nginx -s reload; else cp /tmp/xxf.app.conf.previous /www/server/panel/vhost/nginx/xxf.app.conf; /www/server/nginx/sbin/nginx -t; exit 1; fi; rm -f '$REMOTE_CONFIG' /tmp/xxf.app.conf.previous"
+
       - name: Verify production
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: |
           for attempt in {1..10}; do
-            if curl --fail --silent --show-error --location --max-time 15 https://xxf.app/ | grep -q "Frontend-ready"; then
+            if curl --fail --silent --show-error --location --max-time 15 https://www.xxf.app/ | grep -q "Frontend-ready" && test "$(curl --insecure --silent --show-error --resolve "xxf.app:443:$DEPLOY_HOST" --output /dev/null --write-out '%{redirect_url}' https://xxf.app/)" = "https://www.xxf.app/"; then
               exit 0
             fi
             sleep 6

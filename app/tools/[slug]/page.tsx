@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: `/tools/${tool.slug}/` },
     openGraph: {
       type: "website",
-      url: `https://xxf.app/tools/${tool.slug}/`,
+      url: `https://www.xxf.app/tools/${tool.slug}/`,
       title: `${tool.name} — Free, fast and private`,
       description: tool.seoDescription,
       images: [{ url: "/og.png", width: 1536, height: 1024, alt: `${tool.name} on XXF Tools` }],
@@ -37,7 +37,7 @@ export default async function ToolPage({ params }: Props) {
   const tool = toolMap.get(slug);
   if (!tool) notFound();
   const related = getRelatedTools(tool);
-  const canonical = `https://xxf.app/tools/${tool.slug}/`;
+  const canonical = `https://www.xxf.app/tools/${tool.slug}/`;
   const applicationSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -70,8 +70,8 @@ export default async function ToolPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://xxf.app/" },
-      { "@type": "ListItem", position: 2, name: tool.category, item: `https://xxf.app/#tools` },
+      { "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://www.xxf.app/" },
+      { "@type": "ListItem", position: 2, name: tool.category, item: `https://www.xxf.app/#tools` },
       { "@type": "ListItem", position: 3, name: tool.name, item: canonical },
     ],
   };
