@@ -45,6 +45,7 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /site-header__drag-handle/);
     assert.match(source, /移动悬浮导航/);
     assert.match(source, /editor-toolbar/);
+    assert.match(source, /data-tooltip="显示行号"/);
     assert.match(source, /data-tooltip="复制"/);
     assert.match(source, /output-viewer/);
     if (slug === "json-formatter") {
