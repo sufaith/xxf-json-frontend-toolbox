@@ -1,0 +1,4 @@
+Canonical: https://xxf.app/.well-known/security.txt
+Contact: https://github.com/sufaith
+Preferred-Languages: en, zh
+Expires: 2027-08-02T00:00:00.000Z

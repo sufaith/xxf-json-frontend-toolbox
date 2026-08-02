@@ -1,0 +1,69 @@
+name: Build and deploy XXF Tools
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xxf-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate and build static site
+        run: |
+          npm run lint
+          npm test
+
+      - name: Configure deployment key
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/xxf_deploy
+          chmod 600 ~/.ssh/xxf_deploy
+          ssh-keyscan -p "${DEPLOY_PORT:-22}" "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload atomic release
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          PORT="${DEPLOY_PORT:-22}"
+          RELEASE="/www/wwwroot/xxf.app/releases/${GITHUB_SHA}"
+          ssh -i ~/.ssh/xxf_deploy -p "$PORT" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$RELEASE'"
+          tar -C out -czf - . | ssh -i ~/.ssh/xxf_deploy -p "$PORT" "$DEPLOY_USER@$DEPLOY_HOST" "tar -xzf - -C '$RELEASE'"
+          ssh -i ~/.ssh/xxf_deploy -p "$PORT" "$DEPLOY_USER@$DEPLOY_HOST" "test -s '$RELEASE/index.html' && ln -sfn '$RELEASE' /www/wwwroot/xxf.app/current && find /www/wwwroot/xxf.app/releases -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rn | tail -n +6 | cut -d' ' -f2- | xargs -r rm -rf"
+
+      - name: Verify production
+        run: |
+          for attempt in {1..10}; do
+            if curl --fail --silent --show-error --location --max-time 15 https://xxf.app/ | grep -q "Frontend-ready"; then
+              exit 0
+            fi
+            sleep 6
+          done
+          echo "Production verification failed after 10 attempts"
+          exit 1

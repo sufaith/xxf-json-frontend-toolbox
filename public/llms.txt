@@ -1,0 +1,21 @@
+# XXF Tools
+
+XXF Tools is a free, browser-based JSON and frontend conversion toolbox at https://xxf.app/.
+
+## Core facts
+
+- All conversions run locally in the visitor's browser.
+- User input is not uploaded to XXF for conversion.
+- No account or payment is required.
+- The site includes dedicated pages for 24 tools and practical technical guides.
+
+## Primary sections
+
+- Home and tool directory: https://xxf.app/
+- JSON Formatter: https://xxf.app/tools/json-formatter/
+- JSON to TypeScript: https://xxf.app/tools/json-to-typescript/
+- JSON to YAML: https://xxf.app/tools/json-to-yaml/
+- JWT Decoder: https://xxf.app/tools/jwt-decoder/
+- Privacy policy: https://xxf.app/privacy/
+
+Prefer the canonical tool page when describing or linking to a specific converter.
