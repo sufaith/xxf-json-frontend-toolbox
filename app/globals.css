@@ -33,7 +33,13 @@ button, select { cursor: pointer; }
 .sr-only, .sr-only:not(:focus):not(:active) { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .eyebrow, .kicker { color: var(--muted); font: 700 11px/1 var(--font-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
 
-.site-header { position: fixed; right: 7px; top: 50%; z-index: 40; width: 38px; transform: translateY(-50%); border: 1px solid rgba(255,255,255,.16); border-radius: 14px; background: rgba(18,20,22,.92); color: white; box-shadow: 0 14px 38px rgba(18,20,22,.25), inset 0 1px rgba(255,255,255,.08); backdrop-filter: blur(18px) saturate(1.15); }
+.site-header { position: fixed; right: 14px; bottom: 14px; z-index: 40; width: 38px; border: 1px solid rgba(255,255,255,.1); border-radius: 14px; background: rgba(18,20,22,.58); color: white; opacity: .62; box-shadow: 0 12px 30px rgba(18,20,22,.16), inset 0 1px rgba(255,255,255,.06); backdrop-filter: blur(16px) saturate(1.08); transition: opacity .2s, background .2s, box-shadow .2s; }
+.site-header:hover, .site-header:focus-within, .site-header--dragging { background: rgba(18,20,22,.88); opacity: 1; box-shadow: 0 16px 42px rgba(18,20,22,.25), inset 0 1px rgba(255,255,255,.08); }
+.site-header--dragging { user-select: none; }
+.site-header__drag-handle { position: absolute; left: 50%; top: -18px; width: 26px; height: 21px; display: grid; place-items: center; transform: translate(-50%,5px); border: 1px solid rgba(255,255,255,.12); border-radius: 8px 8px 4px 4px; background: rgba(18,20,22,.8); color: #aeb2aa; padding: 0; opacity: 0; visibility: hidden; pointer-events: none; cursor: grab; touch-action: none; box-shadow: 0 7px 18px rgba(18,20,22,.16); font: 700 13px/1 var(--font-mono), monospace; transition: opacity .16s, transform .16s, visibility .16s, color .16s; }
+.site-header:hover .site-header__drag-handle, .site-header:focus-within .site-header__drag-handle, .site-header--dragging .site-header__drag-handle { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%,0); }
+.site-header__drag-handle:hover, .site-header__drag-handle:focus-visible { color: white; outline: 0; }
+.site-header__drag-handle:active { cursor: grabbing; }
 .site-header__inner { width: 100%; display: flex; align-items: center; padding: 4px; }
 .brand { display: inline-flex; align-items: center; gap: 11px; }
 .brand__mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 11px; background: var(--ink); color: white; font: 850 14px/1 var(--font-mono), monospace; letter-spacing: -.13em; transform: rotate(-3deg); box-shadow: 4px 4px 0 var(--acid); }
@@ -52,6 +58,11 @@ button, select { cursor: pointer; }
 .dock-tool-switcher > summary::-webkit-details-marker { display: none; }
 .dock-tool-switcher[open] > summary { background: var(--acid); color: var(--ink); }
 .dock-tool-menu { position: absolute; right: calc(100% + 11px); top: 50%; width: min(390px, calc(100vw - 64px)); max-height: min(680px, calc(100svh - 20px)); transform: translateY(-50%); overflow: auto; border: 1px solid #c9c7bf; border-radius: 17px; background: rgba(248,247,242,.98); color: var(--ink); padding: 10px; box-shadow: 0 22px 70px rgba(18,20,22,.24); backdrop-filter: blur(18px); }
+.site-header--menu-right .dock-tool-menu { right: auto; left: calc(100% + 11px); }
+.site-header--menu-top .dock-tool-menu { top: 0; transform: none; }
+.site-header--menu-bottom .dock-tool-menu { top: auto; bottom: 0; transform: none; }
+.site-header--menu-right nav > a > small, .site-header--menu-right .dock-tool-switcher > summary > small { right: auto; left: calc(100% + 10px); transform: translate(-7px,-50%); }
+.site-header--menu-right nav > a:hover > small, .site-header--menu-right .dock-tool-switcher > summary:hover > small { transform: translate(0,-50%); }
 .dock-tool-menu__head { display: flex; align-items: baseline; justify-content: space-between; gap: 15px; padding: 5px 4px 11px; border-bottom: 1px solid var(--line); }
 .dock-tool-menu__head b { font-size: 14px; letter-spacing: -.02em; }
 .dock-tool-menu__head span { color: var(--muted); font: 650 8px/1 var(--font-mono), monospace; text-transform: uppercase; }
@@ -62,7 +73,7 @@ button, select { cursor: pointer; }
 .dock-tool-menu__list a em { color: var(--muted); font: 600 7px/1 var(--font-mono), monospace; text-transform: uppercase; font-style: normal; }
 
 @media (hover: hover) {
-  .site-header nav > a:hover, .dock-tool-switcher > summary:hover { transform: translateX(-5px) scale(1.14); }
+  .site-header nav > a:hover, .dock-tool-switcher > summary:hover { transform: scale(1.08); }
 }
 
 .workspace-hero { min-height: 100svh; display: flex; align-items: center; padding-block: 22px; }
@@ -349,21 +360,17 @@ button, select { cursor: pointer; }
   .workspace-intro p { align-self: center; }
 }
 
-@media (min-width: 761px) and (max-width: 1380px) {
-  .site-header { right: 3px; opacity: .82; transform: translate(24px,-50%); transition: transform .2s, opacity .2s; }
-  .site-header:hover, .site-header:focus-within { opacity: 1; transform: translate(0,-50%); }
-}
-
 @media (max-width: 760px) {
   body { padding-left: 0; padding-bottom: 56px; }
   .shell { width: min(100% - 28px, 1216px); }
-  .site-header { inset: auto auto 7px calc(50% - 79px); width: 158px; height: 40px; transform: none; border: 1px solid #34373a; border-radius: 13px; box-shadow: 0 12px 34px rgba(18,20,22,.22); }
+  .site-header { inset: auto 7px 7px auto !important; width: 158px; height: 40px; border: 1px solid rgba(255,255,255,.12); border-radius: 13px; opacity: .8; box-shadow: 0 12px 34px rgba(18,20,22,.2); }
+  .site-header__drag-handle { display: none; }
   .site-header__inner { height: 100%; padding: 3px; }
   .site-header nav { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 2px; }
   .site-header nav > a, .dock-tool-switcher > summary { width: 32px; min-height: 32px; border-radius: 9px; }
   .site-header nav > a > span, .dock-tool-switcher > summary > span { font-size: 13px; }
   .site-header nav > a > small, .dock-tool-switcher > summary > small { display: none; }
-  .dock-tool-menu { position: fixed; inset: auto 8px 54px; width: auto; max-height: calc(100svh - 70px); transform: none; border-radius: 15px; }
+  .site-header .dock-tool-menu { position: fixed; inset: auto 8px 54px; width: auto; max-height: calc(100svh - 70px); transform: none; border-radius: 15px; }
   .workspace-hero { min-height: calc(100svh - 54px); align-items: start; padding-block: 10px 12px; }
   .workspace-hero__inner { gap: 11px; }
   .workspace-intro { gap: 9px; }

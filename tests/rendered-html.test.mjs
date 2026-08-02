@@ -42,6 +42,8 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
     assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer|<select/);
     assert.match(source, /editor-panel__head-tools/);
     assert.match(source, /dock-tool-switcher/);
+    assert.match(source, /site-header__drag-handle/);
+    assert.match(source, /移动悬浮导航/);
     assert.match(source, /editor-toolbar/);
     assert.match(source, /data-tooltip="复制"/);
     assert.match(source, /output-viewer/);
