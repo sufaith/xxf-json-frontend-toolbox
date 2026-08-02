@@ -154,7 +154,7 @@ button, select { cursor: pointer; }
 .editor-panel__options:empty { display: none; }
 .editor-panel__options .segmented { border-color: #45494d; border-radius: 7px; background: #272a2e; }
 .editor-panel__options .segmented button { border-color: #45494d; padding: 6px 8px; color: #b8bcb4; font: 650 8px/1 var(--font-mono), monospace; }
-.editor-panel__options .segmented button.is-active { background: var(--acid); color: var(--ink); }
+.editor-panel__options .segmented button.is-active { background: #3a3e42; color: #f1f2ed; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); }
 .editor-panel__stats { flex: 0 0 auto; color: #858a82; font: 500 9px/1 var(--font-mono), monospace; }
 .editor-panel textarea { display: block; width: 100%; height: 340px; resize: vertical; border: 0; outline: 0; background: transparent; color: #d9ff83; padding: 19px; font: 500 12px/1.78 var(--font-mono), monospace; tab-size: 2; }
 .editor-panel textarea::placeholder { color: #6f746d; }
