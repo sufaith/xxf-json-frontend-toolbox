@@ -38,7 +38,7 @@ export const tools: ToolDefinition[] = [
     inputLabel: "Unformatted JSON",
     outputLabel: "Formatted JSON",
     action: "Format JSON",
-    sample: '{"project":"XXF","ready":true,"tools":["format","convert","ship"],"meta":{"version":1,"private":true}}',
+    sample: '{"project":"XXF","ready":true,"tools":["format","convert","ship"],"encoded":"\\u003e","meta":{"version":1,"private":true}}',
     fileExtension: "json",
     faq: [
       sharedPrivacy,

@@ -11,7 +11,7 @@ type Props = {
   isMinified: boolean;
   indentSize: number;
   showLineNumbers: boolean;
-  preserveEscapes: boolean;
+  encodeEscapes: boolean;
   rainbowBrackets: boolean;
   collapsedPaths: Set<string>;
   onTogglePath: (path: string) => void;
@@ -34,27 +34,27 @@ function bracket(value: string, depth: number, rainbow: boolean) {
   return <span className={rainbow ? `json-bracket json-bracket--${depth % 6}` : "json-bracket"}>{value}</span>;
 }
 
-function displayString(value: string, preserveEscapes: boolean) {
+function displayString(value: string, encodeEscapes: boolean) {
   const escaped = JSON.stringify(value);
-  if (preserveEscapes) return escaped;
+  if (!encodeEscapes) return escaped;
   return escaped
-    .replaceAll("\\n", "↵ ")
-    .replaceAll("\\r", "↵ ")
-    .replaceAll("\\t", "⇥ ")
-    .replaceAll("\\b", "⌫")
-    .replaceAll("\\f", "↡");
+    .replaceAll("<", "\\u003c")
+    .replaceAll(">", "\\u003e")
+    .replaceAll("&", "\\u0026")
+    .replaceAll("\u2028", "\\u2028")
+    .replaceAll("\u2029", "\\u2029");
 }
 
-function primitive(value: Exclude<JsonValue, JsonValue[] | { [key: string]: JsonValue }>, preserveEscapes: boolean) {
-  if (typeof value === "string") return <span className="json-string">{displayString(value, preserveEscapes)}</span>;
+function primitive(value: Exclude<JsonValue, JsonValue[] | { [key: string]: JsonValue }>, encodeEscapes: boolean) {
+  if (typeof value === "string") return <span className="json-string">{displayString(value, encodeEscapes)}</span>;
   if (typeof value === "number") return <span className="json-number">{String(value)}</span>;
   if (typeof value === "boolean") return <span className="json-boolean">{String(value)}</span>;
   return <span className="json-null">null</span>;
 }
 
-function keyPrefix(name: string | undefined) {
+function keyPrefix(name: string | undefined, encodeEscapes: boolean) {
   if (name === undefined) return null;
-  return <><span className="json-key">{JSON.stringify(name)}</span><span className="json-punctuation">: </span></>;
+  return <><span className="json-key">{displayString(name, encodeEscapes)}</span><span className="json-punctuation">: </span></>;
 }
 
 function foldControl(path: string, collapsed: boolean, kind: "object" | "array", onTogglePath: (path: string) => void) {
@@ -78,14 +78,14 @@ function renderJsonLines(
   path: string,
   name: string | undefined,
   trailingComma: boolean,
-  preserveEscapes: boolean,
+  encodeEscapes: boolean,
   rainbowBrackets: boolean,
   collapsedPaths: Set<string>,
   onTogglePath: (path: string) => void,
 ): ReactNode[] {
   const comma = trailingComma ? <span className="json-punctuation">,</span> : null;
   if (!isContainer(value)) {
-    return [<OutputLine depth={depth} key={path}><span className="json-fold-spacer" />{keyPrefix(name)}{primitive(value, preserveEscapes)}{comma}</OutputLine>];
+    return [<OutputLine depth={depth} key={path}><span className="json-fold-spacer" />{keyPrefix(name, encodeEscapes)}{primitive(value, encodeEscapes)}{comma}</OutputLine>];
   }
 
   const isArray = Array.isArray(value);
@@ -98,14 +98,14 @@ function renderJsonLines(
   const collapsed = collapsedPaths.has(path);
 
   if (!entries.length) {
-    return [<OutputLine depth={depth} key={path}><span className="json-fold-spacer" />{keyPrefix(name)}{bracket(open, depth, rainbowBrackets)}{bracket(close, depth, rainbowBrackets)}{comma}</OutputLine>];
+    return [<OutputLine depth={depth} key={path}><span className="json-fold-spacer" />{keyPrefix(name, encodeEscapes)}{bracket(open, depth, rainbowBrackets)}{bracket(close, depth, rainbowBrackets)}{comma}</OutputLine>];
   }
 
   if (collapsed) {
     return [
       <OutputLine depth={depth} key={path}>
         {foldControl(path, true, kind, onTogglePath)}
-        {keyPrefix(name)}
+        {keyPrefix(name, encodeEscapes)}
         {bracket(open, depth, rainbowBrackets)}
         <span className="json-collapsed">… {entries.length} {entries.length === 1 ? "item" : "items"}</span>
         {bracket(close, depth, rainbowBrackets)}
@@ -117,7 +117,7 @@ function renderJsonLines(
   const lines: ReactNode[] = [
     <OutputLine depth={depth} key={`${path}:open`}>
       {foldControl(path, false, kind, onTogglePath)}
-      {keyPrefix(name)}
+      {keyPrefix(name, encodeEscapes)}
       {bracket(open, depth, rainbowBrackets)}
     </OutputLine>,
   ];
@@ -129,7 +129,7 @@ function renderJsonLines(
       childPath,
       isArray ? undefined : entryName,
       index < entries.length - 1,
-      preserveEscapes,
+      encodeEscapes,
       rainbowBrackets,
       collapsedPaths,
       onTogglePath,
@@ -151,7 +151,7 @@ export function OutputViewer({
   isMinified,
   indentSize,
   showLineNumbers,
-  preserveEscapes,
+  encodeEscapes,
   rainbowBrackets,
   collapsedPaths,
   onTogglePath,
@@ -164,7 +164,7 @@ export function OutputViewer({
       aria-label="Generated output"
     >
       {isJson && !isMinified
-        ? renderJsonLines(jsonValue, 0, "$", undefined, false, preserveEscapes, rainbowBrackets, collapsedPaths, onTogglePath)
+        ? renderJsonLines(jsonValue, 0, "$", undefined, false, encodeEscapes, rainbowBrackets, collapsedPaths, onTogglePath)
         : <PlainOutput output={output} />}
     </div>
   );

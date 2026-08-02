@@ -21,7 +21,7 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
   const [message, setMessage] = useState("Ready — your data stays in this tab.");
   const [isMinified, setIsMinified] = useState(false);
   const [showLineNumbers, setShowLineNumbers] = useState(true);
-  const [preserveEscapes, setPreserveEscapes] = useState(true);
+  const [encodeEscapes, setEncodeEscapes] = useState(false);
   const [rainbowBrackets, setRainbowBrackets] = useState(true);
   const [collapsedPaths, setCollapsedPaths] = useState<Set<string>>(() => new Set());
   const [isOutputFullscreen, setIsOutputFullscreen] = useState(false);
@@ -77,9 +77,15 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
     }
   }, [output]);
   const displayedOutput = useMemo(() => {
-    if (!isMinified || !parsedOutput.isJson) return output;
-    return JSON.stringify(parsedOutput.value);
-  }, [isMinified, output, parsedOutput]);
+    const displayed = isMinified && parsedOutput.isJson ? JSON.stringify(parsedOutput.value) : output;
+    if (!encodeEscapes || !parsedOutput.isJson) return displayed;
+    return displayed
+      .replaceAll("<", "\\u003c")
+      .replaceAll(">", "\\u003e")
+      .replaceAll("&", "\\u0026")
+      .replaceAll("\u2028", "\\u2028")
+      .replaceAll("\u2029", "\\u2029");
+  }, [encodeEscapes, isMinified, output, parsedOutput]);
   const outputBytes = useMemo(() => new Blob([displayedOutput]).size, [displayedOutput]);
   const canFold = parsedOutput.isJson && parsedOutput.value !== null && typeof parsedOutput.value === "object" && !isMinified;
 
@@ -190,13 +196,13 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
                 )}
               </div>
               <div className="editor-toolbar" role="toolbar" aria-label="Output actions">
-                <button className="icon-button" type="button" aria-label="复制" data-tooltip="复制" onClick={() => void copyOutput()} disabled={!displayedOutput}><span aria-hidden="true">⧉</span></button>
-                <button className={`icon-button ${isMinified ? "is-active" : ""}`} type="button" aria-label={isMinified ? "恢复格式化" : "压缩 JSON"} data-tooltip={isMinified ? "恢复格式化" : "压缩 JSON"} onClick={toggleMinified} disabled={!parsedOutput.isJson}><span aria-hidden="true">⇥</span></button>
+                <button className="icon-button" type="button" aria-label="复制" data-tooltip="复制" onClick={() => void copyOutput()} disabled={!displayedOutput}><span className="tool-icon tool-icon--copy" aria-hidden="true" /></button>
+                <button className={`icon-button ${isMinified ? "is-active" : ""}`} type="button" aria-label={isMinified ? "恢复格式化" : "压缩 JSON"} data-tooltip={isMinified ? "恢复格式化" : "压缩 JSON"} onClick={toggleMinified} disabled={!parsedOutput.isJson}><span className={`tool-icon tool-icon--minify ${isMinified ? "tool-icon--restore" : ""}`} aria-hidden="true" /></button>
                 <button className="icon-button" type="button" aria-label="下载" data-tooltip="下载" onClick={downloadOutput} disabled={!displayedOutput}><span aria-hidden="true">⇩</span></button>
                 <span className="editor-toolbar__separator" aria-hidden="true" />
                 <button className={`icon-button ${showLineNumbers ? "is-active" : ""}`} type="button" aria-label={showLineNumbers ? "隐藏行号" : "显示行号"} data-tooltip={showLineNumbers ? "隐藏行号" : "显示行号"} onClick={() => setShowLineNumbers((current) => !current)}><span aria-hidden="true">#</span></button>
-                <button className={`icon-button ${collapsedPaths.size ? "is-active" : ""}`} type="button" aria-label={collapsedPaths.size ? "展开全部对象" : "折叠全部对象"} data-tooltip={collapsedPaths.size ? "展开全部对象" : "折叠全部对象"} onClick={toggleAllObjects} disabled={!canFold}><span aria-hidden="true">{collapsedPaths.size ? "⊞" : "⊟"}</span></button>
-                <button className={`icon-button ${preserveEscapes ? "is-active" : ""}`} type="button" aria-label={preserveEscapes ? "可读显示转义符" : "保留转义符显示"} data-tooltip={preserveEscapes ? "可读显示转义符" : "保留转义符显示"} onClick={() => setPreserveEscapes((current) => !current)} disabled={!parsedOutput.isJson}><span aria-hidden="true">\</span></button>
+                <button className={`icon-button ${collapsedPaths.size ? "is-active" : ""}`} type="button" aria-label={collapsedPaths.size ? "展开全部对象" : "折叠全部对象"} data-tooltip={collapsedPaths.size ? "展开全部对象" : "折叠全部对象"} onClick={toggleAllObjects} disabled={!canFold}><span className={`tool-icon fold-icon ${collapsedPaths.size ? "fold-icon--expand" : "fold-icon--collapse"}`} aria-hidden="true"><i /><i /><i /><i /></span></button>
+                <button className={`icon-button ${encodeEscapes ? "is-active" : ""}`} type="button" aria-label={encodeEscapes ? "显示字符（Decode）" : "保留转义（Encode）"} data-tooltip={encodeEscapes ? "显示字符（Decode）" : "保留转义（Encode）"} onClick={() => setEncodeEscapes((current) => !current)} disabled={!parsedOutput.isJson}><span aria-hidden="true" className="escape-icon">\\u</span></button>
                 <button className={`icon-button icon-button--rainbow ${rainbowBrackets ? "is-active" : ""}`} type="button" aria-label={rainbowBrackets ? "关闭彩虹括号" : "开启彩虹括号"} data-tooltip={rainbowBrackets ? "关闭彩虹括号" : "开启彩虹括号"} onClick={() => setRainbowBrackets((current) => !current)} disabled={!parsedOutput.isJson || isMinified}><span aria-hidden="true">{`{}`}</span></button>
                 <button className={`icon-button ${isOutputFullscreen ? "is-active" : ""}`} type="button" aria-label={isOutputFullscreen ? "退出全屏" : "全屏"} data-tooltip={isOutputFullscreen ? "退出全屏" : "全屏"} onClick={() => void toggleFullscreen()}><span aria-hidden="true">⛶</span></button>
               </div>
@@ -210,7 +216,7 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
             isMinified={isMinified}
             indentSize={indent}
             showLineNumbers={showLineNumbers}
-            preserveEscapes={preserveEscapes}
+            encodeEscapes={encodeEscapes}
             rainbowBrackets={rainbowBrackets}
             collapsedPaths={collapsedPaths}
             onTogglePath={toggleObject}

@@ -45,6 +45,12 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /editor-toolbar/);
     assert.match(source, /data-tooltip="复制"/);
     assert.match(source, /output-viewer/);
+    if (slug === "json-formatter") {
+      assert.ok(source.includes("\\u003e"));
+      assert.match(source, /保留转义（Encode）/);
+      assert.match(source, /tool-icon--copy/);
+      assert.match(source, /fold-icon--collapse/);
+    }
   }
   assert.equal(titles.size, 24);
 });
