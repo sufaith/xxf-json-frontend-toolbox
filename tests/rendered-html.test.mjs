@@ -39,8 +39,9 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /HowTo/);
     assert.match(source, /FAQPage/);
     assert.match(source, /<h1 class="sr-only">/);
-    assert.doesNotMatch(source, /page-hero|workbench__topline|convert-rail|workbench__footer/);
+    assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer|<select/);
     assert.match(source, /editor-panel__head-tools/);
+    assert.match(source, /dock-tool-switcher/);
   }
   assert.equal(titles.size, 24);
 });

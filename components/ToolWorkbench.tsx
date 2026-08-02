@@ -72,43 +72,8 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
     setMessage("Download created.");
   }
 
-  function selectTool(slug: string) {
-    window.location.href = `/tools/${slug}/`;
-  }
-
   return (
     <section className={`workbench ${compact ? "workbench--compact" : ""}`} aria-label={`${tool.name} workspace`}>
-      <div className="workbench__controls">
-        <label className="tool-select-label">
-          <span>Switch tool</span>
-          <select value={tool.slug} onChange={(event) => selectTool(event.target.value)} aria-label="Switch tool">
-            {tools.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
-          </select>
-        </label>
-
-        {tool.directions && (
-          <div className="segmented" aria-label="Conversion direction">
-            {tool.directions.map((label, index) => (
-              <button key={label} className={direction === index ? "is-active" : ""} onClick={() => setDirection(index)} type="button">
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {tool.slug.includes("json") && !tool.slug.includes("minifier") && tool.slug !== "json-validator" && (
-          <div className="segmented segmented--small" aria-label="Indentation">
-            {[2, 4].map((size) => (
-              <button key={size} className={indent === size ? "is-active" : ""} onClick={() => setIndent(size)} type="button">
-                {size} spaces
-              </button>
-            ))}
-          </div>
-        )}
-
-        {compact && <Link className="text-link" href={`/tools/${tool.slug}/`}>Open full tool ↗</Link>}
-      </div>
-
       <div className="mobile-editor-tabs" aria-label="Editor panel">
         <button type="button" className={mobilePanel === "input" ? "is-active" : ""} aria-pressed={mobilePanel === "input"} onClick={() => setMobilePanel("input")}>Input</button>
         <button type="button" className={mobilePanel === "output" ? "is-active" : ""} aria-pressed={mobilePanel === "output"} onClick={() => setMobilePanel("output")}>Output {output ? <span>●</span> : null}</button>
@@ -140,6 +105,22 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
           <div className="editor-panel__head">
             <label htmlFor={`output-${tool.slug}`}>{tool.outputLabel}</label>
             <div className="editor-panel__head-tools">
+              <div className="editor-panel__options">
+                {tool.directions && (
+                  <div className="segmented" aria-label="Conversion direction">
+                    {tool.directions.map((label, index) => (
+                      <button key={label} className={direction === index ? "is-active" : ""} onClick={() => setDirection(index)} type="button">{label}</button>
+                    ))}
+                  </div>
+                )}
+                {tool.slug.includes("json") && !tool.slug.includes("minifier") && tool.slug !== "json-validator" && (
+                  <div className="segmented segmented--small" aria-label="Indentation">
+                    {[2, 4].map((size) => (
+                      <button key={size} className={indent === size ? "is-active" : ""} onClick={() => setIndent(size)} type="button">{size} spaces</button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <div className="editor-panel__actions">
                 <button className="ghost-button" type="button" onClick={() => void copyOutput()} disabled={!output}>Copy</button>
                 <button className="ghost-button" type="button" onClick={downloadOutput} disabled={!output}>Download</button>

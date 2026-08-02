@@ -1,19 +1,24 @@
 import Link from "next/link";
+import { tools } from "@/lib/tools";
 
 export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <Link className="brand" href="/" aria-label="XXF Tools home">
-          <span className="brand__mark">X<span>X</span>F</span>
-          <span className="brand__copy"><b>XXF Tools</b><small>JSON + FRONTEND</small></span>
-        </Link>
         <nav aria-label="Primary navigation">
-          <Link href="/#tools"><span aria-hidden="true">{`{}`}</span><small>Tools</small></Link>
+          <Link href="/" aria-label="XXF Tools home"><span aria-hidden="true">⌂</span><small>Home</small></Link>
+          <details className="dock-tool-switcher">
+            <summary aria-label="Switch tool"><span aria-hidden="true">{`{}`}</span><small>Switch tool</small></summary>
+            <div className="dock-tool-menu">
+              <div className="dock-tool-menu__head"><b>Switch tool</b><span>{tools.length} local tools</span></div>
+              <div className="dock-tool-menu__list">
+                {tools.map((tool) => <Link href={`/tools/${tool.slug}/`} key={tool.slug}><span>{tool.name}</span><em>{tool.category}</em></Link>)}
+              </div>
+            </div>
+          </details>
           <Link href="/#guides"><span aria-hidden="true">≡</span><small>Guides</small></Link>
           <Link href="/about/"><span aria-hidden="true">i</span><small>About</small></Link>
         </nav>
-        <Link className="header-cta" href="/tools/json-formatter/" aria-label="Open JSON Formatter"><span>J</span><small>Format</small></Link>
       </div>
     </header>
   );
