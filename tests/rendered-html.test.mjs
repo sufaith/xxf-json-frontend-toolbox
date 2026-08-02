@@ -10,8 +10,8 @@ async function html(path) {
 
 test("home page renders the product, privacy promise and SEO metadata", async () => {
   const source = await html("index.html");
-  assert.match(source, /<h1[^>]*>JSON in\./i);
-  assert.match(source, /Frontend-ready/);
+  assert.match(source, /<h1[^>]*>Choose a tool\./i);
+  assert.match(source, /Start instantly/);
   assert.match(source, /24 tools/);
   assert.match(source, /Local processing/);
   assert.match(source, /JSON Formatter workspace/);

@@ -16,6 +16,7 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
   const [output, setOutput] = useState("");
   const [direction, setDirection] = useState(0);
   const [indent, setIndent] = useState(2);
+  const [mobilePanel, setMobilePanel] = useState<"input" | "output">("input");
   const [state, setState] = useState<"idle" | "working" | "success" | "error">("idle");
   const [message, setMessage] = useState("Ready — your data stays in this tab.");
 
@@ -124,7 +125,12 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
         {compact && <Link className="text-link" href={`/tools/${tool.slug}/`}>Open full tool ↗</Link>}
       </div>
 
-      <div className="editor-grid">
+      <div className="mobile-editor-tabs" aria-label="Editor panel">
+        <button type="button" className={mobilePanel === "input" ? "is-active" : ""} aria-pressed={mobilePanel === "input"} onClick={() => setMobilePanel("input")}>Input</button>
+        <button type="button" className={mobilePanel === "output" ? "is-active" : ""} aria-pressed={mobilePanel === "output"} onClick={() => setMobilePanel("output")}>Output {output ? <span>●</span> : null}</button>
+      </div>
+
+      <div className={`editor-grid editor-grid--mobile-${mobilePanel}`}>
         <div className="editor-panel">
           <div className="editor-panel__head">
             <label htmlFor={`input-${tool.slug}`}>{tool.inputLabel}</label>

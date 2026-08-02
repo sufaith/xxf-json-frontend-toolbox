@@ -35,6 +35,9 @@ const faqs = [
 ];
 
 export default function Home() {
+  const quickTools = ["json-formatter", "json-validator", "json-to-typescript", "json-to-yaml", "csv-to-json", "jwt-decoder"]
+    .map((slug) => tools.find((tool) => tool.slug === slug))
+    .filter((tool): tool is (typeof tools)[number] => Boolean(tool));
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -73,54 +76,21 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(appSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
-      <section className="hero shell">
-        <div className="hero__copy">
-          <div className="hero__badge"><span /> 24 tools · private by default</div>
-          <h1>JSON in.<br /><em>Frontend-ready</em> out.</h1>
-          <p>Format, validate and convert development data without sending a single byte to a server.</p>
-          <div className="hero__actions">
-            <Link className="primary-button primary-button--large" href="#playground">Try the formatter <span>↓</span></Link>
-            <Link className="underlined-link" href="#tools">Browse all 24 tools</Link>
-          </div>
-          <dl className="hero__stats">
-            <div><dt>24</dt><dd>focused tools</dd></div>
-            <div><dt>0</dt><dd>data uploads</dd></div>
-            <div><dt>1</dt><dd>fast workflow</dd></div>
-          </dl>
-        </div>
-        <div className="hero__product" aria-label="XXF product preview">
-          <div className="preview-window">
-            <div className="preview-window__bar"><span /><span /><span /><b>json → typescript</b><small>LOCAL</small></div>
-            <div className="preview-window__body">
-              <div className="preview-code preview-code--input">
-                <span>INPUT.JSON</span>
-                <pre>{`{\n  "id": 42,\n  "name": "Nova",\n  "active": true,\n  "tags": ["web", "api"]\n}`}</pre>
-              </div>
-              <div className="preview-arrow">→</div>
-              <div className="preview-code preview-code--output">
-                <span>OUTPUT.TS</span>
-                <pre>{`interface Root {\n  id: number;\n  name: string;\n  active: boolean;\n  tags: string[];\n}`}</pre>
-              </div>
+      <section className="workspace-hero" id="playground">
+        <div className="workspace-hero__inner shell">
+          <div className="workspace-intro">
+            <div>
+              <div className="hero__badge"><span /> 24 tools · local by default</div>
+              <h1>Choose a tool. <em>Start instantly.</em></h1>
+              <p>Format, validate and convert without uploads, accounts or waiting.</p>
             </div>
-            <div className="preview-window__footer"><span>✓ Valid JSON</span><b>Copy TypeScript ↗</b></div>
+            <div className="quick-launch" aria-label="Quick launch tools">
+              <span>Quick launch</span>
+              <div>{quickTools.map((tool) => <Link key={tool.slug} href={`/tools/${tool.slug}/`}><b>{tool.category.slice(0, 1)}</b>{tool.name}</Link>)}</div>
+            </div>
           </div>
-          <div className="floating-chip floating-chip--one">⌘ ↵ Instant convert</div>
-          <div className="floating-chip floating-chip--two">● Nothing uploaded</div>
+          <ToolWorkbench initialSlug="json-formatter" compact />
         </div>
-      </section>
-
-      <section className="tool-ribbon" aria-label="Popular tools">
-        <div className="tool-ribbon__track">
-          {tools.slice(0, 8).map((tool) => <Link key={tool.slug} href={`/tools/${tool.slug}/`}><span>{tool.category.slice(0, 1)}</span>{tool.name}</Link>)}
-        </div>
-      </section>
-
-      <section className="section shell" id="playground">
-        <div className="section-heading section-heading--split">
-          <div><span className="kicker">Live playground</span><h2>Paste it. Fix it. Ship it.</h2></div>
-          <p>The editor reacts as you type. Use the sample, paste your own payload, or press <kbd>⌘</kbd> <kbd>Enter</kbd> to run.</p>
-        </div>
-        <ToolWorkbench initialSlug="json-formatter" compact />
       </section>
 
       <section className="section section--tint" id="tools">
