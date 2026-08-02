@@ -14,7 +14,6 @@ export function SiteHeader() {
           <Link href="/about/"><span aria-hidden="true">i</span><small>About</small></Link>
         </nav>
         <Link className="header-cta" href="/tools/json-formatter/" aria-label="Open JSON Formatter"><span>J</span><small>Format</small></Link>
-        <span className="rail-status"><i /> Local</span>
       </div>
     </header>
   );

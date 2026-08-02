@@ -13,7 +13,7 @@ test("home page renders the product, privacy promise and SEO metadata", async ()
   assert.match(source, /<h1[^>]*>Choose a tool\./i);
   assert.match(source, /Start instantly/);
   assert.match(source, /24 tools/);
-  assert.match(source, /Local processing/);
+  assert.match(source, /local by default/i);
   assert.match(source, /JSON Formatter workspace/);
   assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
   assert.match(source, /og:image/);
@@ -38,6 +38,8 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /SoftwareApplication/);
     assert.match(source, /HowTo/);
     assert.match(source, /FAQPage/);
+    assert.match(source, /<h1 class="sr-only">/);
+    assert.doesNotMatch(source, /page-hero|workbench__topline/);
   }
   assert.equal(titles.size, 24);
 });

@@ -81,14 +81,7 @@ export default async function ToolPage({ params }: Props) {
       {[applicationSchema, howToSchema, faqSchema, breadcrumbSchema].map((schema, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       ))}
-      <section className="page-hero shell">
-        <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/#tools">{tool.category}</Link><span>/</span><span>{tool.name}</span></nav>
-        <div className="page-hero__grid">
-          <div><span className="kicker">{tool.eyebrow}</span><h1>{tool.name}</h1></div>
-          <div className="page-hero__intro"><p>{tool.seoDescription}</p><div className="page-hero__meta"><span>Free</span><span>No sign-up</span><span>Local only</span></div></div>
-        </div>
-      </section>
-
+      <h1 className="sr-only">{tool.name}</h1>
       <section className="tool-page-workbench shell"><ToolWorkbench initialSlug={tool.slug} /></section>
 
       <section className="content-grid shell">

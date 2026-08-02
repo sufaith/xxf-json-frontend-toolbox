@@ -83,17 +83,6 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
 
   return (
     <section className={`workbench ${compact ? "workbench--compact" : ""}`} aria-label={`${tool.name} workspace`}>
-      <div className="workbench__topline">
-        <div className="workbench__identity">
-          <span className="tool-glyph" aria-hidden="true">{tool.category.slice(0, 1)}</span>
-          <div>
-            <span className="eyebrow">{tool.eyebrow}</span>
-            <h2>{tool.name}</h2>
-          </div>
-        </div>
-        <div className="local-pill"><span /> Local processing · 0 uploads</div>
-      </div>
-
       <div className="workbench__controls">
         <label className="tool-select-label">
           <span>Switch tool</span>
