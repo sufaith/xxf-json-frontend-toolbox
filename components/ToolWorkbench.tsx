@@ -17,25 +17,20 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
   const [direction, setDirection] = useState(0);
   const [indent, setIndent] = useState(2);
   const [mobilePanel, setMobilePanel] = useState<"input" | "output">("input");
-  const [state, setState] = useState<"idle" | "working" | "success" | "error">("idle");
   const [message, setMessage] = useState("Ready — your data stays in this tab.");
 
   const execute = useCallback(async () => {
     if (!input.trim()) {
       setOutput("");
-      setState("idle");
       setMessage("Add input to start converting.");
       return;
     }
-    setState("working");
     try {
       const result = await runTool(tool.slug, input, { direction, indent });
       setOutput(result);
-      setState("success");
       setMessage("Converted locally — nothing was uploaded.");
     } catch (error) {
       setOutput("");
-      setState("error");
       setMessage(error instanceof Error ? error.message : "Conversion failed.");
     }
   }, [direction, indent, input, tool.slug]);
@@ -123,7 +118,14 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
         <div className="editor-panel">
           <div className="editor-panel__head">
             <label htmlFor={`input-${tool.slug}`}>{tool.inputLabel}</label>
-            <span>{input.length.toLocaleString()} chars · {inputBytes.toLocaleString()} B</span>
+            <div className="editor-panel__head-tools">
+              <div className="editor-panel__actions">
+                <button className="ghost-button" type="button" onClick={() => setInput(tool.sample)}>Use sample</button>
+                <button className="ghost-button" type="button" onClick={() => setInput("")}>Clear</button>
+                {tool.reverseSlug && <Link className="ghost-button" href={`/tools/${tool.reverseSlug}/`}>Reverse tool ↔</Link>}
+              </div>
+              <span className="editor-panel__stats">{input.length.toLocaleString()} chars · {inputBytes.toLocaleString()} B</span>
+            </div>
           </div>
           <textarea
             id={`input-${tool.slug}`}
@@ -132,38 +134,24 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
             spellCheck={false}
             aria-describedby={`status-${tool.slug}`}
           />
-          <div className="editor-panel__actions">
-            <button className="ghost-button" type="button" onClick={() => setInput(tool.sample)}>Use sample</button>
-            <button className="ghost-button" type="button" onClick={() => setInput("")}>Clear</button>
-            {tool.reverseSlug && <Link className="ghost-button" href={`/tools/${tool.reverseSlug}/`}>Reverse tool ↔</Link>}
-          </div>
-        </div>
-
-        <div className="convert-rail" aria-hidden="true">
-          <span>⌘↵</span>
-          <b>→</b>
         </div>
 
         <div className="editor-panel editor-panel--output">
           <div className="editor-panel__head">
             <label htmlFor={`output-${tool.slug}`}>{tool.outputLabel}</label>
-            <span>{output.length.toLocaleString()} chars · {outputBytes.toLocaleString()} B</span>
+            <div className="editor-panel__head-tools">
+              <div className="editor-panel__actions">
+                <button className="ghost-button" type="button" onClick={() => void copyOutput()} disabled={!output}>Copy</button>
+                <button className="ghost-button" type="button" onClick={downloadOutput} disabled={!output}>Download</button>
+              </div>
+              <span className="editor-panel__stats">{output.length.toLocaleString()} chars · {outputBytes.toLocaleString()} B</span>
+            </div>
           </div>
           <textarea id={`output-${tool.slug}`} value={output} readOnly spellCheck={false} placeholder="Your result appears here…" />
-          <div className="editor-panel__actions">
-            <button className="ghost-button" type="button" onClick={() => void copyOutput()} disabled={!output}>Copy</button>
-            <button className="ghost-button" type="button" onClick={downloadOutput} disabled={!output}>Download</button>
-          </div>
         </div>
       </div>
 
-      <div className="workbench__footer">
-        <div id={`status-${tool.slug}`} className={`status status--${state}`} role="status" aria-live="polite">
-          <span aria-hidden="true">{state === "error" ? "!" : state === "working" ? "…" : "✓"}</span>
-          {message}
-        </div>
-        <button className="primary-button" type="button" onClick={() => void execute()}>{tool.action}<span>→</span></button>
-      </div>
+      <div id={`status-${tool.slug}`} className="sr-only" role="status" aria-live="polite">{message}</div>
     </section>
   );
 }
