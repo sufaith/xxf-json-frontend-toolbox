@@ -96,3 +96,12 @@ test("crawler and app files expose the complete canonical surface", async () => 
   assert.match(llms, /All conversions run locally/);
   await Promise.all(["og.png", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
 });
+
+test("tool workspaces and the floating dock use the requested viewport insets", async () => {
+  const source = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(source, /\.site-header \{[^}]*right: 10px; bottom: 10px;/);
+  assert.match(source, /\.tool-page-workbench \{[^}]*width: calc\(100% - 12px\);[^}]*margin-inline: 6px; padding-block: 6px;/);
+  assert.match(source, /\.photo-tool-page \{[^}]*width: calc\(100% - 12px\);[^}]*margin: 0 6px; padding-block: 6px;/);
+  assert.match(source, /\.photo-collage-workbench \{[^}]*min-height: calc\(100svh - 12px\);/);
+  assert.match(source, /inset: auto 10px 10px auto !important;/);
+});
