@@ -17,7 +17,7 @@ export type ToolDefinition = {
   directions?: [string, string];
   usesInput?: boolean;
   faq: Array<{ question: string; answer: string }>;
-  kind?: "standard" | "url-parser" | "redirect-checker" | "m3u8-player";
+  kind?: "standard" | "url-parser" | "redirect-checker" | "m3u8-player" | "video-to-m3u8";
 };
 
 const sharedPrivacy = {
@@ -577,6 +577,34 @@ export const tools: ToolDefinition[] = [
       {
         question: "Which browsers support M3U8 playback?",
         answer: "Safari can use native HLS playback. Chrome, Edge and Firefox use the browser's Media Source Extensions through the HLS playback engine.",
+      },
+    ],
+  },
+  {
+    slug: "video-to-m3u8",
+    name: "Video to M3U8",
+    eyebrow: "Create HLS packages",
+    category: "Video",
+    description: "Convert local video files into a downloadable M3U8 playlist and HLS segments.",
+    seoDescription:
+      "Convert MP4, MOV, WebM and other video files to M3U8 HLS playlists online in your browser. Generate video segments locally with no upload.",
+    keywords: ["video to m3u8", "convert video to hls", "mp4 to m3u8", "video hls converter", "m3u8 converter"],
+    inputLabel: "Video file",
+    outputLabel: "M3U8 HLS package",
+    action: "Convert to M3U8",
+    sample: "",
+    fileExtension: "zip",
+    usesInput: false,
+    kind: "video-to-m3u8",
+    faq: [
+      sharedPrivacy,
+      {
+        question: "What does the downloaded HLS package contain?",
+        answer: "The ZIP contains an M3U8 playlist and MPEG-TS video segments that can be served together from a web server or CDN.",
+      },
+      {
+        question: "Does the video leave my device?",
+        answer: "No. FFmpeg runs in a browser worker through WebAssembly. The selected video is processed locally and is never uploaded to XXF.",
       },
     ],
   },

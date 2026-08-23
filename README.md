@@ -1,15 +1,16 @@
 # XXF Tools
 
-XXF Tools is a privacy-first JSON, frontend and image toolbox deployed at [www.xxf.app](https://www.xxf.app/).
+XXF Tools is a privacy-first JSON, frontend, image and video toolbox deployed at [www.xxf.app](https://www.xxf.app/).
 
 ## Product
 
-- 29 browser-based developer and creative tools
+- 30 browser-based developer and creative tools
 - JSON formatting, validation, minification and key sorting
 - TypeScript, Zod and JSON Schema generation
 - JSON conversion for YAML, CSV, XML, HTML and Markdown
 - URL, Base64, HTML entity, JWT, timestamp, color, UUID, hash and CSS utilities
 - A browser-local photo collage maker with 1–16 image layouts, annotations, watermarks and JPG/PNG export
+- A browser-local video to M3U8 converter that creates downloadable HLS playlists and MPEG-TS segments
 - Dedicated SEO landing pages and practical technical guides
 - Local-only conversion: editor contents are never uploaded
 

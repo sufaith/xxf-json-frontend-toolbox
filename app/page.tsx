@@ -5,7 +5,7 @@ import { tools } from "@/lib/tools";
 export const metadata: Metadata = {
   title: "Browser Tools for JSON, Frontend, Image & Video",
   description:
-    "Browse 29 free JSON, data, frontend, encoding, image and video tools that run privately in your browser.",
+    "Browse 30 free JSON, data, frontend, encoding, image and video tools that run privately in your browser.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     url: "https://www.xxf.app/",
     siteName: "XXF Tools",
     title: "Free JSON, Frontend, Image & Video Tools — XXF Tools",
-    description: "Use 29 fast, private browser tools for JSON, data conversion, encoding, frontend work, images and video.",
+    description: "Use 30 fast, private browser tools for JSON, data conversion, encoding, frontend work, images and video.",
     images: [{ url: "/og.jpg", width: 1536, height: 1024, alt: "XXF JSON, frontend, image and video tools" }],
   },
 };
@@ -43,7 +43,7 @@ export default function Home() {
         "@id": "https://www.xxf.app/#webpage",
         url: "https://www.xxf.app/",
         name: "Free JSON, Frontend, Image & Video Tools",
-        description: "Use 29 fast, private browser tools for JSON, data conversion, encoding, frontend work, images and video.",
+        description: "Use 30 fast, private browser tools for JSON, data conversion, encoding, frontend work, images and video.",
         inLanguage: "en",
         isPartOf: { "@id": "https://www.xxf.app/#website" },
         about: { "@id": "https://www.xxf.app/#organization" },

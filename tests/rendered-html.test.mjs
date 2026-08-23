@@ -22,6 +22,7 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /URL Parser/);
   assert.match(source, /Redirect Checker/);
   assert.match(source, /M3U8 Video Player/);
+  assert.match(source, /Video to M3U8/);
   assert.doesNotMatch(source, />Open tool</i);
   assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
@@ -35,10 +36,10 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
 
-test("all 29 tool pages are statically rendered with unique SEO signals", async () => {
+test("all 30 tool pages are statically rendered with unique SEO signals", async () => {
   const directory = new URL("tools/", out);
   const slugs = (await readdir(directory, { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name);
-  assert.equal(slugs.length, 29);
+  assert.equal(slugs.length, 30);
   const titles = new Set();
   const descriptions = new Set();
   for (const slug of slugs) {
@@ -101,6 +102,12 @@ test("all 29 tool pages are statically rendered with unique SEO signals", async 
       assert.match(source, /Native HLS/);
       assert.match(source, /video-player__placeholder/);
       assert.doesNotMatch(source, /editor-panel__head-tools|Redirect Checker workspace/);
+    } else if (slug === "video-to-m3u8") {
+      assert.match(source, /Video to M3U8 workspace/);
+      assert.match(source, /Drop a video here/);
+      assert.match(source, /Convert to M3U8/);
+      assert.match(source, /M3U8 playlist/);
+      assert.doesNotMatch(source, /editor-panel__head-tools|M3U8 Video Player workspace/);
     } else {
       assert.doesNotMatch(source, /<select/);
       assert.match(source, /editor-panel__head-tools/);
@@ -116,8 +123,8 @@ test("all 29 tool pages are statically rendered with unique SEO signals", async 
       assert.match(source, /fold-icon--collapse/);
     }
   }
-  assert.equal(titles.size, 29);
-  assert.equal(descriptions.size, 29);
+  assert.equal(titles.size, 30);
+  assert.equal(descriptions.size, 30);
 });
 
 test("six editorial guides are statically rendered as technical articles", async () => {
@@ -139,11 +146,11 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("manifest.webmanifest", out), "utf8"),
     readFile(new URL("llms.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 40);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 41);
   assert.match(sitemap, /https:\/\/www\.xxf\.app\/site-map\//);
   assert.match(robots, /Sitemap: https:\/\/www\.xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
-  assert.match(llms, /Text and image conversions run locally/);
+  assert.match(llms, /Text, image and video conversions run locally/);
   assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
   await Promise.all(["og.jpg", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
 });
@@ -194,6 +201,8 @@ test("floating dock resets after reload and closes its switcher outside", async 
 test("public host security policy allows the configured AdSense domains", async () => {
   const source = await readFile(new URL("../deploy/nginx-xxf.conf", import.meta.url), "utf8");
   assert.match(source, /script-src[^;]*https:\/\/\*\.googlesyndication\.com/);
+  assert.match(source, /connect-src[^;]*https:\/\/cdn\.jsdelivr\.net/);
+  assert.match(source, /worker-src 'self' blob:/);
   assert.match(source, /frame-src[^;]*https:\/\/\*\.doubleclick\.net/);
   assert.match(source, /location = \/api\/check-redirects/);
   assert.match(source, /proxy_pass https:\/\/u\.xxf\.app\/api\/check-redirects/);
@@ -213,4 +222,15 @@ test("M3U8 player loads HLS support only when a stream is requested", async () =
   assert.match(source, /import\("hls\.js"\)/);
   assert.match(source, /controls playsInline/);
   assert.match(source, /CORS/);
+});
+
+test("video to M3U8 conversion stays local and packages HLS output", async () => {
+  const source = await readFile(new URL("../components/VideoToM3u8Workbench.tsx", import.meta.url), "utf8");
+  assert.match(source, /import\("@ffmpeg\/ffmpeg"\)/);
+  assert.match(source, /import\("@ffmpeg\/util"\)/);
+  assert.match(source, /-f", "hls"/);
+  assert.match(source, /playlist\.m3u8/);
+  assert.match(source, /segment-\\d\+\\.ts/);
+  assert.match(source, /Download HLS package/);
+  assert.match(source, /Nothing is uploaded|nothing is uploaded/);
 });
