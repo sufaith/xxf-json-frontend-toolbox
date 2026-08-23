@@ -17,6 +17,7 @@ export type ToolDefinition = {
   directions?: [string, string];
   usesInput?: boolean;
   faq: Array<{ question: string; answer: string }>;
+  kind?: "standard" | "url-parser" | "redirect-checker";
 };
 
 const sharedPrivacy = {
@@ -26,6 +27,52 @@ const sharedPrivacy = {
 };
 
 export const tools: ToolDefinition[] = [
+  {
+    slug: "url-parser",
+    name: "URL Parser",
+    eyebrow: "Inspect query params",
+    category: "Encoding",
+    description: "Parse a URL into its components and explore nested query parameters.",
+    seoDescription:
+      "Parse URLs online into protocol, host, path and query parameters. Expand nested URLs and copy values without uploading data.",
+    keywords: ["url parser", "parse url online", "query parameter viewer", "url query string parser"],
+    inputLabel: "URL to parse",
+    outputLabel: "URL details",
+    action: "Parse URL",
+    sample: "https://www.xxf.app/tools/json-formatter/?mode=pretty&theme=dark&next=https%3A%2F%2Fexample.com%2F%3Fref%3Ddemo",
+    fileExtension: "txt",
+    kind: "url-parser",
+    faq: [
+      sharedPrivacy,
+      {
+        question: "Can I inspect a URL inside a query parameter?",
+        answer: "Yes. Query values that contain another URL can be expanded to inspect their nested parameters.",
+      },
+    ],
+  },
+  {
+    slug: "redirect-checker",
+    name: "Redirect Checker",
+    eyebrow: "Trace HTTP redirects",
+    category: "Frontend",
+    description: "Trace a URL's redirect chain and compare responses for common browser user agents.",
+    seoDescription:
+      "Check URL redirects online and inspect each hop, status code and final destination for desktop and mobile user agents.",
+    keywords: ["redirect checker", "check url redirects", "http redirect checker", "redirect chain checker"],
+    inputLabel: "URL to check",
+    outputLabel: "Redirect chain",
+    action: "Check redirects",
+    sample: "https://www.xxf.app/",
+    fileExtension: "txt",
+    kind: "redirect-checker",
+    faq: [
+      sharedPrivacy,
+      {
+        question: "Which redirect responses are shown?",
+        answer: "The checker follows HTTP redirect responses and reports each URL and status code until it reaches a final response or a loop.",
+      },
+    ],
+  },
   {
     slug: "json-formatter",
     name: "JSON Formatter",

@@ -4,7 +4,7 @@ XXF Tools is a privacy-first JSON, frontend and image toolbox deployed at [www.x
 
 ## Product
 
-- 26 browser-based developer and creative tools
+- 28 browser-based developer and creative tools
 - JSON formatting, validation, minification and key sorting
 - TypeScript, Zod and JSON Schema generation
 - JSON conversion for YAML, CSV, XML, HTML and Markdown

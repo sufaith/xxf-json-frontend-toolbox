@@ -7,7 +7,7 @@ XXF Tools is a free, browser-based JSON, frontend and image toolbox at https://w
 - All conversions run locally in the visitor's browser.
 - User input is not uploaded to XXF for conversion.
 - No account or payment is required.
-- The site includes dedicated pages for 26 tools, including a local image compressor and photo collage maker, plus practical technical guides.
+- The site includes dedicated pages for 28 tools, including URL inspection, redirect checking, a local image compressor and photo collage maker, plus practical technical guides.
 
 ## Primary sections
 

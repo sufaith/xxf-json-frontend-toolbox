@@ -18,6 +18,8 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /JSON Formatter/);
   assert.match(source, /Image Compressor/);
   assert.match(source, /Photo Collage Maker/);
+  assert.match(source, /URL Parser/);
+  assert.match(source, /Redirect Checker/);
   assert.doesNotMatch(source, />Open tool</i);
   assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
@@ -31,10 +33,10 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
 
-test("all 26 tool pages are statically rendered with unique SEO signals", async () => {
+test("all 28 tool pages are statically rendered with unique SEO signals", async () => {
   const directory = new URL("tools/", out);
   const slugs = (await readdir(directory, { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name);
-  assert.equal(slugs.length, 26);
+  assert.equal(slugs.length, 28);
   const titles = new Set();
   const descriptions = new Set();
   for (const slug of slugs) {
@@ -77,6 +79,19 @@ test("all 26 tool pages are statically rendered with unique SEO signals", async 
       assert.match(source, /Download image/);
       assert.match(source, /Interactive collage canvas/);
       assert.match(source, /Custom grid/);
+    } else if (slug === "url-parser") {
+      assert.match(source, /URL Parser workspace/);
+      assert.match(source, /Paste a URL to inspect/);
+      assert.match(source, /query parameters/);
+      assert.match(source, /url-parser-table/);
+      assert.doesNotMatch(source, /editor-panel__head-tools|Redirect Checker workspace/);
+    } else if (slug === "redirect-checker") {
+      assert.match(source, /Redirect Checker workspace/);
+      assert.match(source, /Check redirects/);
+      assert.match(source, /Mac Chrome/);
+      assert.match(source, /Android/);
+      assert.match(source, /redirect-checker__empty/);
+      assert.doesNotMatch(source, /editor-panel__head-tools|URL Parser workspace/);
     } else {
       assert.doesNotMatch(source, /<select/);
       assert.match(source, /editor-panel__head-tools/);
@@ -92,8 +107,8 @@ test("all 26 tool pages are statically rendered with unique SEO signals", async 
       assert.match(source, /fold-icon--collapse/);
     }
   }
-  assert.equal(titles.size, 26);
-  assert.equal(descriptions.size, 26);
+  assert.equal(titles.size, 28);
+  assert.equal(descriptions.size, 28);
 });
 
 test("six editorial guides are statically rendered as technical articles", async () => {
@@ -115,7 +130,7 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("manifest.webmanifest", out), "utf8"),
     readFile(new URL("llms.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 37);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 39);
   assert.match(sitemap, /https:\/\/www\.xxf\.app\/site-map\//);
   assert.match(robots, /Sitemap: https:\/\/www\.xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON & Frontend Tools/);
@@ -171,4 +186,12 @@ test("public host security policy allows the configured AdSense domains", async 
   const source = await readFile(new URL("../deploy/nginx-xxf.conf", import.meta.url), "utf8");
   assert.match(source, /script-src[^;]*https:\/\/\*\.googlesyndication\.com/);
   assert.match(source, /frame-src[^;]*https:\/\/\*\.doubleclick\.net/);
+});
+
+test("redirect checker keeps its server boundary explicit", async () => {
+  const source = await readFile(new URL("../app/api/check-redirects/route.ts", import.meta.url), "utf8");
+  assert.match(source, /redirect: "manual"/);
+  assert.match(source, /AbortSignal\.timeout\(10000\)/);
+  assert.match(source, /isBlockedHost/);
+  assert.match(source, /status: response\.status/);
 });

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ImageCompressorWorkbench } from "@/components/ImageCompressorWorkbench";
 import { PhotoCollageWorkbench } from "@/components/PhotoCollageWorkbench";
+import { RedirectCheckerWorkbench } from "@/components/RedirectCheckerWorkbench";
 import { ToolWorkbench } from "@/components/ToolWorkbench";
+import { UrlParserWorkbench } from "@/components/UrlParserWorkbench";
 import { toolMap, tools } from "@/lib/tools";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -47,6 +49,8 @@ export default async function ToolPage({ params }: Props) {
   if (!tool) notFound();
   const isPhotoCollage = tool.slug === "photo-collage-maker";
   const isImageCompressor = tool.slug === "image-compressor";
+  const isUrlParser = tool.kind === "url-parser";
+  const isRedirectChecker = tool.kind === "redirect-checker";
   const isImageTool = isPhotoCollage || isImageCompressor;
   const canonical = `https://www.xxf.app/tools/${tool.slug}/`;
   const organizationId = "https://www.xxf.app/#organization";
@@ -91,11 +95,15 @@ export default async function ToolPage({ params }: Props) {
         isAccessibleForFree: true,
         publisher: { "@id": organizationId },
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock" },
-        featureList: isPhotoCollage
-          ? ["1–16 photo layouts", "Custom grid editor", "Local image positioning", "Text and shape annotations", "Watermarks", "JPG and PNG export"]
-          : isImageCompressor
-            ? ["Batch image compression", "Smart output selection", "Quality and resize controls", "ZIP download", "Local browser processing"]
-            : ["Local browser processing", "Copy result", "Download output", tool.description],
+        featureList: isUrlParser
+          ? ["URL component breakdown", "Query parameter inspection", "Nested URL expansion", "Copy parameter values"]
+          : isRedirectChecker
+            ? ["Redirect chain tracing", "Desktop and mobile user agents", "HTTP status inspection", "Final destination detection"]
+            : isPhotoCollage
+              ? ["1–16 photo layouts", "Custom grid editor", "Local image positioning", "Text and shape annotations", "Watermarks", "JPG and PNG export"]
+              : isImageCompressor
+                ? ["Batch image compression", "Smart output selection", "Quality and resize controls", "ZIP download", "Local browser processing"]
+                : ["Local browser processing", "Copy result", "Download output", tool.description],
       },
       {
         "@type": "Organization",
@@ -110,8 +118,8 @@ export default async function ToolPage({ params }: Props) {
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(seoSchema) }} />
-      <section className={isImageTool ? (isPhotoCollage ? "photo-tool-page" : "image-compressor-page") : "tool-page-workbench shell"}>
-        {isPhotoCollage ? <PhotoCollageWorkbench /> : isImageCompressor ? <ImageCompressorWorkbench /> : <ToolWorkbench initialSlug={tool.slug} />}
+      <section className={isImageTool ? (isPhotoCollage ? "photo-tool-page" : "image-compressor-page") : (isUrlParser || isRedirectChecker) ? "utility-tool-page" : "tool-page-workbench shell"}>
+        {isPhotoCollage ? <PhotoCollageWorkbench /> : isImageCompressor ? <ImageCompressorWorkbench /> : isUrlParser ? <UrlParserWorkbench /> : isRedirectChecker ? <RedirectCheckerWorkbench /> : <ToolWorkbench initialSlug={tool.slug} />}
       </section>
     </main>
   );
