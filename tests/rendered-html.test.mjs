@@ -14,6 +14,7 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /aria-label="Tool categories"/i);
   assert.match(source, /class="category-tabs"/i);
   assert.match(source, /class="tool-card-grid"/i);
+  assert.match(source, /site-footer__minimal/i);
   assert.match(source, /JSON Formatter/);
   assert.match(source, /Image Compressor/);
   assert.match(source, /Photo Collage Maker/);
@@ -140,6 +141,8 @@ test("tool workspaces and the floating dock use the requested viewport insets", 
   assert.match(source, /\.image-compressor-page \{[^}]*width: calc\(100% - 12px\);[^}]*margin: 0 6px; padding-block: 6px;/);
   assert.match(source, /\.image-compressor-workbench \{[^}]*min-height: calc\(100svh - 12px\);/);
   assert.match(source, /inset: auto 10px 10px auto !important;/);
+  assert.doesNotMatch(source, /\.home-tool-directory \+ \.site-footer \{ display: none; \}/);
+  assert.match(source, /\.site-footer__minimal \{[^}]*min-height: 32px;/);
 });
 
 test("floating dock resets after reload and closes its switcher outside", async () => {
