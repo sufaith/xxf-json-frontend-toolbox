@@ -38,7 +38,7 @@ export function ToolExplorer() {
             </div>
             <h3>{tool.name}</h3>
             <p>{tool.description}</p>
-            <span className="tool-card__open">Open tool <b>↗</b></span>
+            <span className="tool-card__open" aria-hidden="true">↗</span>
           </Link>
         ))}
       </div>

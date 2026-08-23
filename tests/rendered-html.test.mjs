@@ -16,6 +16,7 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /class="tool-card-grid"/i);
   assert.match(source, /JSON Formatter/);
   assert.match(source, /Photo Collage Maker/);
+  assert.doesNotMatch(source, />Open tool</i);
   assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
   assert.match(source, /og:image/);
