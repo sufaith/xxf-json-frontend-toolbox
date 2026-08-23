@@ -49,6 +49,7 @@ test("all 26 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /dock-tool-switcher/);
     assert.match(source, /site-header__drag-handle/);
     assert.match(source, /移动悬浮导航/);
+    assert.doesNotMatch(source, /<small>Guides<\/small>|<small>About<\/small>/);
     if (slug === "image-compressor") {
       assert.match(source, /Image Compressor workspace/);
       assert.match(source, /Drop images here/);
@@ -117,4 +118,13 @@ test("tool workspaces and the floating dock use the requested viewport insets", 
   assert.match(source, /\.image-compressor-page \{[^}]*width: calc\(100% - 12px\);[^}]*margin: 0 6px; padding-block: 6px;/);
   assert.match(source, /\.image-compressor-workbench \{[^}]*min-height: calc\(100svh - 12px\);/);
   assert.match(source, /inset: auto 10px 10px auto !important;/);
+});
+
+test("floating dock resets after reload and closes its switcher outside", async () => {
+  const source = await readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /localStorage|xxf-dock-position/);
+  assert.match(source, /document\.addEventListener\("pointerdown", closeOnOutsideClick\)/);
+  assert.match(source, /switcher\.contains\(event\.target\)/);
+  assert.match(source, /switcher\.open = false/);
+  assert.match(source, /event\.key !== "Escape"/);
 });

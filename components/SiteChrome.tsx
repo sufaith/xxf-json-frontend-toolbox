@@ -7,10 +7,9 @@ import { tools } from "@/lib/tools";
 type DockPoint = { x: number; y: number };
 type DragState = { pointerId: number; pointerX: number; pointerY: number; startX: number; startY: number };
 
-const dockPositionKey = "xxf-dock-position";
-
 export function SiteHeader() {
   const headerRef = useRef<HTMLElement>(null);
+  const switcherRef = useRef<HTMLDetailsElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const positionRef = useRef<DockPoint | null>(null);
   const [position, setPosition] = useState<DockPoint | null>(null);
@@ -46,21 +45,6 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    let frame = 0;
-    try {
-      const saved = window.localStorage.getItem(dockPositionKey);
-      if (!saved) return;
-      const parsed = JSON.parse(saved) as DockPoint;
-      if (Number.isFinite(parsed.x) && Number.isFinite(parsed.y)) {
-        frame = window.requestAnimationFrame(() => updatePosition(clampPoint(parsed.x, parsed.y)));
-      }
-    } catch {
-      window.localStorage.removeItem(dockPositionKey);
-    }
-    return () => window.cancelAnimationFrame(frame);
-  }, [clampPoint, updatePosition]);
-
-  useEffect(() => {
     const resize = () => {
       if (!positionRef.current) return;
       updatePosition(clampPoint(positionRef.current.x, positionRef.current.y));
@@ -68,6 +52,26 @@ export function SiteHeader() {
     window.addEventListener("resize", resize);
     return () => window.removeEventListener("resize", resize);
   }, [clampPoint, updatePosition]);
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event: globalThis.PointerEvent) => {
+      const switcher = switcherRef.current;
+      if (!switcher?.open || !(event.target instanceof Node) || switcher.contains(event.target)) return;
+      switcher.open = false;
+    };
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
+      const switcher = switcherRef.current;
+      if (event.key !== "Escape" || !switcher?.open) return;
+      switcher.open = false;
+      switcher.querySelector<HTMLElement>("summary")?.focus();
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
 
   function startDrag(event: PointerEvent<HTMLButtonElement>) {
     const rect = headerRef.current?.getBoundingClientRect();
@@ -90,7 +94,6 @@ export function SiteHeader() {
     dragRef.current = null;
     setIsDragging(false);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-    if (positionRef.current) window.localStorage.setItem(dockPositionKey, JSON.stringify(positionRef.current));
   }
 
   function moveDockWithKeyboard(event: KeyboardEvent<HTMLButtonElement>) {
@@ -104,14 +107,12 @@ export function SiteHeader() {
     if (!rect) return;
     const next = clampPoint(rect.left + direction.x, rect.top + direction.y);
     updatePosition(next);
-    window.localStorage.setItem(dockPositionKey, JSON.stringify(next));
   }
 
   function resetDock() {
     positionRef.current = null;
     setPosition(null);
     setMenuPlacement("site-header--menu-left site-header--menu-bottom");
-    window.localStorage.removeItem(dockPositionKey);
   }
 
   const dockStyle = position
@@ -135,17 +136,15 @@ export function SiteHeader() {
       <div className="site-header__inner">
         <nav aria-label="Primary navigation">
           <Link href="/" aria-label="XXF Tools home"><span aria-hidden="true">⌂</span><small>Home</small></Link>
-          <details className="dock-tool-switcher">
+          <details ref={switcherRef} className="dock-tool-switcher">
             <summary aria-label="Switch tool"><span aria-hidden="true">{`{}`}</span><small>Switch tool</small></summary>
             <div className="dock-tool-menu">
               <div className="dock-tool-menu__head"><b>Switch tool</b><span>{tools.length} local tools</span></div>
               <div className="dock-tool-menu__list">
-                {tools.map((tool) => <Link href={`/tools/${tool.slug}/`} key={tool.slug}><span>{tool.name}</span><em>{tool.category}</em></Link>)}
+                {tools.map((tool) => <Link href={`/tools/${tool.slug}/`} key={tool.slug} onClick={() => { if (switcherRef.current) switcherRef.current.open = false; }}><span>{tool.name}</span><em>{tool.category}</em></Link>)}
               </div>
             </div>
           </details>
-          <Link href="/#guides"><span aria-hidden="true">≡</span><small>Guides</small></Link>
-          <Link href="/about/"><span aria-hidden="true">i</span><small>About</small></Link>
         </nav>
       </div>
     </header>
