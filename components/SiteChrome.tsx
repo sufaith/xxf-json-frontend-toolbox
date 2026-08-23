@@ -169,6 +169,7 @@ export function SiteFooter() {
           <Link href="/tools/json-to-typescript/">JSON to TypeScript</Link>
           <Link href="/tools/json-to-yaml/">JSON to YAML</Link>
           <Link href="/tools/jwt-decoder/">JWT Decoder</Link>
+          <Link href="/tools/photo-collage-maker/">Photo Collage Maker</Link>
         </div>
         <div>
           <strong>XXF</strong>

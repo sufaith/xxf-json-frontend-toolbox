@@ -1,4 +1,4 @@
-export type ToolCategory = "JSON" | "Data" | "Frontend" | "Encoding";
+export type ToolCategory = "JSON" | "Data" | "Frontend" | "Encoding" | "Image";
 
 export type ToolDefinition = {
   slug: string;
@@ -453,6 +453,33 @@ export const tools: ToolDefinition[] = [
     faq: [sharedPrivacy, { question: "Can SHA-256 hashes be reversed?", answer: "No. SHA-256 is a one-way digest. It is not encryption, and it should not be used alone for password storage." }],
   },
   {
+    slug: "photo-collage-maker",
+    name: "Photo Collage Maker",
+    eyebrow: "Compose images",
+    category: "Image",
+    description: "Arrange up to 16 photos, annotate the canvas and export a polished collage locally.",
+    seoDescription:
+      "Create photo collages online with flexible layouts, custom grids, image positioning, annotations, watermarks and JPG or PNG export. No uploads.",
+    keywords: ["photo collage maker", "online collage maker", "combine photos", "image grid maker"],
+    inputLabel: "Photos",
+    outputLabel: "Collage preview",
+    action: "Create collage",
+    sample: "",
+    fileExtension: "png",
+    usesInput: false,
+    faq: [
+      sharedPrivacy,
+      {
+        question: "How many photos can I add?",
+        answer: "You can combine up to 16 photos using balanced grids, featured layouts or a custom row-and-column layout.",
+      },
+      {
+        question: "Which image formats can I export?",
+        answer: "Export a high-quality JPG, a smaller standard JPG or a lossless PNG. Supported browsers can also copy the rendered image directly to the clipboard.",
+      },
+    ],
+  },
+  {
     slug: "css-formatter-minifier",
     name: "CSS Formatter / Minifier",
     eyebrow: "Clean stylesheets",
@@ -471,7 +498,7 @@ export const tools: ToolDefinition[] = [
   },
 ];
 
-export const categories: ToolCategory[] = ["JSON", "Data", "Frontend", "Encoding"];
+export const categories: ToolCategory[] = ["JSON", "Data", "Frontend", "Encoding", "Image"];
 
 export const toolMap = new Map(tools.map((tool) => [tool.slug, tool]));
 

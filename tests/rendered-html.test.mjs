@@ -12,7 +12,7 @@ test("home page renders the product, privacy promise and SEO metadata", async ()
   const source = await html("index.html");
   assert.match(source, /<h1[^>]*>Choose a tool\./i);
   assert.match(source, /Start instantly/);
-  assert.match(source, /24 tools/);
+  assert.match(source, /25(?:<!-- -->)? tools/);
   assert.match(source, /local by default/i);
   assert.match(source, /JSON Formatter workspace/);
   assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
@@ -25,10 +25,10 @@ test("home page renders the product, privacy promise and SEO metadata", async ()
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
 
-test("all 24 tool pages are statically rendered with unique SEO signals", async () => {
+test("all 25 tool pages are statically rendered with unique SEO signals", async () => {
   const directory = new URL("tools/", out);
   const slugs = (await readdir(directory, { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name);
-  assert.equal(slugs.length, 24);
+  assert.equal(slugs.length, 25);
   const titles = new Set();
   for (const slug of slugs) {
     const source = await html(`tools/${slug}/index.html`);
@@ -41,14 +41,22 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /FAQPage/);
     assert.match(source, /<h1 class="sr-only">/);
     assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer|<select/);
-    assert.match(source, /editor-panel__head-tools/);
     assert.match(source, /dock-tool-switcher/);
     assert.match(source, /site-header__drag-handle/);
     assert.match(source, /移动悬浮导航/);
-    assert.match(source, /editor-toolbar/);
-    assert.match(source, /data-tooltip="显示行号"/);
-    assert.match(source, /data-tooltip="复制"/);
-    assert.match(source, /output-viewer/);
+    if (slug === "photo-collage-maker") {
+      assert.match(source, /Photo Collage Maker workspace/);
+      assert.match(source, /Layout presets/);
+      assert.match(source, /Download image/);
+      assert.match(source, /Interactive collage canvas/);
+      assert.match(source, /Custom grid/);
+    } else {
+      assert.match(source, /editor-panel__head-tools/);
+      assert.match(source, /editor-toolbar/);
+      assert.match(source, /data-tooltip="显示行号"/);
+      assert.match(source, /data-tooltip="复制"/);
+      assert.match(source, /output-viewer/);
+    }
     if (slug === "json-formatter") {
       assert.ok(source.includes("\\u003e"));
       assert.match(source, /保留转义（Encode）/);
@@ -56,7 +64,7 @@ test("all 24 tool pages are statically rendered with unique SEO signals", async 
       assert.match(source, /fold-icon--collapse/);
     }
   }
-  assert.equal(titles.size, 24);
+  assert.equal(titles.size, 25);
 });
 
 test("six editorial guides are statically rendered as technical articles", async () => {
@@ -78,7 +86,7 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("manifest.webmanifest", out), "utf8"),
     readFile(new URL("llms.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 34);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 35);
   assert.match(robots, /Sitemap: https:\/\/www\.xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON & Frontend Tools/);
   assert.match(llms, /All conversions run locally/);

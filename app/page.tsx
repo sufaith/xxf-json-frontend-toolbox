@@ -43,7 +43,7 @@ export default function Home() {
     "@type": "WebSite",
     name: "XXF Tools",
     url: "https://www.xxf.app/",
-    description: "Private browser-based JSON and frontend conversion tools.",
+    description: "Private browser-based JSON, frontend and image tools.",
     potentialAction: {
       "@type": "SearchAction",
       target: "https://www.xxf.app/?q={search_term_string}",
@@ -53,7 +53,7 @@ export default function Home() {
   const appSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "XXF JSON & Frontend Toolbox",
+    name: "XXF JSON, Frontend & Image Toolbox",
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Any modern web browser",
     url: "https://www.xxf.app/",
@@ -80,7 +80,7 @@ export default function Home() {
         <div className="workspace-hero__inner shell">
           <div className="workspace-intro">
             <div>
-              <div className="hero__badge"><span /> 24 tools · local by default</div>
+              <div className="hero__badge"><span /> {tools.length} tools · local by default</div>
               <h1>Choose a tool. <em>Start instantly.</em></h1>
               <p>Format, validate and convert without uploads, accounts or waiting.</p>
             </div>

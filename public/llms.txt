@@ -1,13 +1,13 @@
 # XXF Tools
 
-XXF Tools is a free, browser-based JSON and frontend conversion toolbox at https://www.xxf.app/.
+XXF Tools is a free, browser-based JSON, frontend and image toolbox at https://www.xxf.app/.
 
 ## Core facts
 
 - All conversions run locally in the visitor's browser.
 - User input is not uploaded to XXF for conversion.
 - No account or payment is required.
-- The site includes dedicated pages for 24 tools and practical technical guides.
+- The site includes dedicated pages for 25 tools, including a local photo collage maker, and practical technical guides.
 
 ## Primary sections
 
