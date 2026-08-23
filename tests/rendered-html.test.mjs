@@ -15,6 +15,7 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /class="category-tabs"/i);
   assert.match(source, /class="tool-card-grid"/i);
   assert.match(source, /site-footer__minimal/i);
+  assert.doesNotMatch(source, /class="site-header/);
   assert.match(source, /JSON Formatter/);
   assert.match(source, /Image Compressor/);
   assert.match(source, /Photo Collage Maker/);

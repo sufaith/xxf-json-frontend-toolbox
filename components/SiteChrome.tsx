@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { tools } from "@/lib/tools";
 
@@ -8,6 +9,7 @@ type DockPoint = { x: number; y: number };
 type DragState = { pointerId: number; pointerX: number; pointerY: number; startX: number; startY: number };
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
   const switcherRef = useRef<HTMLDetailsElement>(null);
   const dragRef = useRef<DragState | null>(null);
@@ -118,6 +120,8 @@ export function SiteHeader() {
   const dockStyle = position
     ? { left: `${position.x}px`, top: `${position.y}px`, right: "auto", bottom: "auto" } as CSSProperties
     : undefined;
+
+  if (pathname === "/") return null;
 
   return (
     <header ref={headerRef} className={`site-header ${menuPlacement} ${isDragging ? "site-header--dragging" : ""}`} style={dockStyle}>
