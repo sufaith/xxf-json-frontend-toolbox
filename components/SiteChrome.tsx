@@ -155,31 +155,13 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="shell site-footer__grid">
-        <div>
-          <Link className="brand brand--footer" href="/">
-            <span className="brand__mark">X<span>X</span>F</span>
-            <span className="brand__copy"><b>XXF Tools</b><small>JSON + FRONTEND</small></span>
-          </Link>
-          <p>Fast developer converters that keep your data on your device.</p>
-        </div>
-        <div>
-          <strong>Popular tools</strong>
-          <Link href="/tools/json-formatter/">JSON Formatter</Link>
-          <Link href="/tools/json-to-typescript/">JSON to TypeScript</Link>
-          <Link href="/tools/json-to-yaml/">JSON to YAML</Link>
-          <Link href="/tools/jwt-decoder/">JWT Decoder</Link>
-          <Link href="/tools/photo-collage-maker/">Photo Collage Maker</Link>
-        </div>
-        <div>
-          <strong>XXF</strong>
-          <Link href="/about/">About</Link>
-          <Link href="/privacy/">Privacy</Link>
-          <Link href="/terms/">Terms</Link>
+      <div className="shell site-footer__minimal">
+        <span>© 2026 XXF Tools</span>
+        <nav aria-label="Footer navigation">
           <Link href="/sitemap.xml">Sitemap</Link>
-        </div>
+          <Link href="/privacy/">Privacy Policy</Link>
+        </nav>
       </div>
-      <div className="shell site-footer__bottom"><span>© 2026 XXF Tools</span><span>Built for the browser · No sign-up · No uploads</span></div>
     </footer>
   );
 }

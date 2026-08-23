@@ -38,9 +38,11 @@ test("all 25 tool pages are statically rendered with unique SEO signals", async 
     titles.add(title);
     assert.match(source, new RegExp(`<link rel="canonical" href="https://www\\.xxf\\.app/tools/${slug}/"`, "i"));
     assert.match(source, /SoftwareApplication/);
-    assert.match(source, /HowTo/);
-    assert.match(source, /FAQPage/);
     assert.match(source, /<h1 class="sr-only">/);
+    assert.match(source, /site-footer__minimal/);
+    assert.match(source, /href="\/sitemap\.xml">Sitemap<\/a>/);
+    assert.match(source, /href="\/privacy\/">Privacy Policy<\/a>/);
+    assert.doesNotMatch(source, /HowTo|FAQPage|BreadcrumbList|content-grid|related-section|sidebar-card|Frequently asked questions/);
     assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer|<select/);
     assert.match(source, /dock-tool-switcher/);
     assert.match(source, /site-header__drag-handle/);

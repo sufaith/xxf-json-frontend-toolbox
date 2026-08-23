@@ -291,14 +291,10 @@ button, select { cursor: pointer; }
 .closing-cta h2 { margin-bottom: 34px; }
 
 .site-footer { border-top: 1px solid var(--ink); background: #dedbd2; }
-.site-footer__grid { display: grid; grid-template-columns: 1.6fr .7fr .5fr; gap: 80px; padding-block: 60px; }
-.brand--footer { margin-bottom: 20px; }
-.site-footer__grid > div:first-child p { max-width: 390px; color: #5d6059; font-size: 13px; line-height: 1.65; }
-.site-footer__grid > div:not(:first-child) { display: grid; align-content: start; gap: 11px; }
-.site-footer__grid strong { margin-bottom: 6px; font: 700 10px var(--font-mono), monospace; text-transform: uppercase; letter-spacing: .08em; }
-.site-footer__grid a:not(.brand) { color: #555851; font-size: 12px; }
-.site-footer__grid a:hover { color: var(--ink); }
-.site-footer__bottom { display: flex; justify-content: space-between; border-top: 1px solid #c1beb5; padding-block: 18px; color: #6b6e67; font: 600 9px/1.4 var(--font-mono), monospace; text-transform: uppercase; letter-spacing: .05em; }
+.site-footer__minimal { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; color: #5d6059; font: 650 9px/1.4 var(--font-mono), monospace; letter-spacing: .05em; text-transform: uppercase; }
+.site-footer__minimal nav { display: flex; align-items: center; gap: 22px; }
+.site-footer__minimal a { border-bottom: 1px solid transparent; padding-block: 4px; }
+.site-footer__minimal a:hover { border-color: var(--ink); color: var(--ink); }
 
 /* Tool and editorial pages */
 .breadcrumbs { display: flex; align-items: center; gap: 8px; color: var(--muted); font: 600 10px/1 var(--font-mono), monospace; text-transform: uppercase; }
@@ -432,9 +428,8 @@ button, select { cursor: pointer; }
   .guide-grid { grid-template-columns: 1fr; }
   .faq-layout { grid-template-columns: 1fr; gap: 48px; }
   .faq-layout h2 { font-size: 40px; }
-  .site-footer__grid { grid-template-columns: 1fr 1fr; gap: 45px; }
-  .site-footer__grid > div:first-child { grid-column: 1 / -1; }
-  .site-footer__bottom { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .site-footer__minimal { min-height: 58px; gap: 14px; font-size: 8px; }
+  .site-footer__minimal nav { gap: 13px; }
   .content-grid { padding-block: 65px; }
   .related-grid { grid-template-columns: 1fr; }
   .article-tool-cta { align-items: flex-start; flex-direction: column; }
