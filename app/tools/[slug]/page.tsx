@@ -18,18 +18,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tool = toolMap.get(slug);
   if (!tool) return {};
   return {
-    title: `${tool.name} — Free Online Tool`,
+    title: `Free Online ${tool.name}`,
     description: tool.seoDescription,
     keywords: tool.keywords,
+    category: tool.category,
     alternates: { canonical: `/tools/${tool.slug}/` },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+    },
     openGraph: {
       type: "website",
+      locale: "en_US",
+      siteName: "XXF Tools",
       url: `https://www.xxf.app/tools/${tool.slug}/`,
-      title: `${tool.name} — Free, fast and private`,
+      title: `Free Online ${tool.name} — Private Browser Tool`,
       description: tool.seoDescription,
       images: [{ url: "/og.png", width: 1536, height: 1024, alt: `${tool.name} on XXF Tools` }],
     },
-    twitter: { card: "summary_large_image", title: tool.name, description: tool.seoDescription, images: ["/og.png"] },
+    twitter: { card: "summary_large_image", title: `Free Online ${tool.name}`, description: tool.seoDescription, images: ["/og.png"] },
   };
 }
 
@@ -41,26 +49,67 @@ export default async function ToolPage({ params }: Props) {
   const isImageCompressor = tool.slug === "image-compressor";
   const isImageTool = isPhotoCollage || isImageCompressor;
   const canonical = `https://www.xxf.app/tools/${tool.slug}/`;
-  const applicationSchema = {
+  const organizationId = "https://www.xxf.app/#organization";
+  const applicationId = `${canonical}#application`;
+  const seoSchema = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: tool.name,
-    description: tool.seoDescription,
-    applicationCategory: isImageTool ? "MultimediaApplication" : "DeveloperApplication",
-    operatingSystem: "Any modern browser",
-    url: canonical,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    featureList: isPhotoCollage
-      ? ["1–16 photo layouts", "Custom grid editor", "Local image positioning", "Text and shape annotations", "Watermarks", "JPG and PNG export"]
-      : isImageCompressor
-        ? ["Batch image compression", "Smart output selection", "Quality and resize controls", "ZIP download", "Local browser processing"]
-        : ["Local browser processing", "Copy result", "Download output", tool.description],
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${canonical}#webpage`,
+        url: canonical,
+        name: `Free Online ${tool.name}`,
+        description: tool.seoDescription,
+        inLanguage: "en",
+        isPartOf: { "@id": "https://www.xxf.app/#website" },
+        breadcrumb: { "@id": `${canonical}#breadcrumb` },
+        mainEntity: { "@id": applicationId },
+        dateModified: "2026-08-24",
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${canonical}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://www.xxf.app/" },
+          { "@type": "ListItem", position: 2, name: tool.name, item: canonical },
+        ],
+      },
+      {
+        "@type": "WebApplication",
+        "@id": applicationId,
+        name: tool.name,
+        alternateName: tool.keywords[0],
+        description: tool.seoDescription,
+        applicationCategory: isImageTool ? "MultimediaApplication" : "DeveloperApplication",
+        applicationSubCategory: tool.category,
+        operatingSystem: "Any operating system with a modern web browser",
+        browserRequirements: "Requires JavaScript and a modern web browser",
+        softwareVersion: "1.0",
+        url: canonical,
+        image: "https://www.xxf.app/og.png",
+        inLanguage: "en",
+        isAccessibleForFree: true,
+        publisher: { "@id": organizationId },
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock" },
+        featureList: isPhotoCollage
+          ? ["1–16 photo layouts", "Custom grid editor", "Local image positioning", "Text and shape annotations", "Watermarks", "JPG and PNG export"]
+          : isImageCompressor
+            ? ["Batch image compression", "Smart output selection", "Quality and resize controls", "ZIP download", "Local browser processing"]
+            : ["Local browser processing", "Copy result", "Download output", tool.description],
+      },
+      {
+        "@type": "Organization",
+        "@id": organizationId,
+        name: "XXF Tools",
+        url: "https://www.xxf.app/",
+        logo: { "@type": "ImageObject", url: "https://www.xxf.app/icon-512.png", width: 512, height: 512 },
+      },
+    ],
   };
 
   return (
     <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(applicationSchema) }} />
-      <h1 className="sr-only">{tool.name}</h1>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(seoSchema) }} />
       <section className={isImageTool ? (isPhotoCollage ? "photo-tool-page" : "image-compressor-page") : "tool-page-workbench shell"}>
         {isPhotoCollage ? <PhotoCollageWorkbench /> : isImageCompressor ? <ImageCompressorWorkbench /> : <ToolWorkbench initialSlug={tool.slug} />}
       </section>

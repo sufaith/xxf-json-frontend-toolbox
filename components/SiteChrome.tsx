@@ -157,7 +157,7 @@ export function SiteFooter() {
       <div className="shell site-footer__minimal">
         <span>© 2026 XXF Tools</span>
         <nav aria-label="Footer navigation">
-          <Link href="/sitemap.xml">Sitemap</Link>
+          <Link href="/site-map/">Sitemap</Link>
           <Link href="/privacy/">Privacy Policy</Link>
         </nav>
       </div>

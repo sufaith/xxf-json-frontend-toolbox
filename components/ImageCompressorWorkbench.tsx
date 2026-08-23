@@ -265,7 +265,7 @@ export function ImageCompressorWorkbench() {
   return (
     <section className="image-compressor-workbench" aria-label="Image Compressor workspace">
       <header className="compressor-topbar">
-        <div className="compressor-brand"><span>IC</span><div><b>Image Compressor</b><small>Local · fast · private</small></div></div>
+        <div className="compressor-brand"><span>IC</span><div><h1>Image Compressor</h1><small>Compress PNG, JPEG &amp; WebP locally</small></div></div>
         <div className="compressor-topbar__status"><i /> Browser-local processing</div>
         <div className="compressor-topbar__actions">
           {sources.length > 0 && <button type="button" onClick={clearAll}>Clear</button>}

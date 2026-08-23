@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://www.xxf.app/", lastModified, changeFrequency: "weekly", priority: 1 },
     ...tools.map((tool) => ({ url: `https://www.xxf.app/tools/${tool.slug}/`, lastModified, changeFrequency: "monthly" as const, priority: 0.85 })),
     ...guides.map((guide) => ({ url: `https://www.xxf.app/guides/${guide.slug}/`, lastModified, changeFrequency: "monthly" as const, priority: 0.72 })),
+    { url: "https://www.xxf.app/site-map/", lastModified, changeFrequency: "monthly", priority: 0.5 },
     ...["about", "privacy", "terms"].map((page) => ({ url: `https://www.xxf.app/${page}/`, lastModified, changeFrequency: "yearly" as const, priority: 0.35 })),
   ];
 }

@@ -711,7 +711,7 @@ export function PhotoCollageWorkbench() {
   return (
     <section className={`photo-collage-workbench ${leftCollapsed ? "is-left-collapsed" : ""} ${rightCollapsed ? "is-right-collapsed" : ""}`} aria-label="Photo Collage Maker workspace">
       <header className="collage-topbar">
-        <div><span className="collage-topbar__mark">PX</span><div><b>Photo Collage Maker</b><small>LOCAL CANVAS · NO UPLOADS</small></div></div>
+        <div><span className="collage-topbar__mark">PX</span><div><h1>Photo Collage Maker</h1><small>Combine up to 16 photos locally</small></div></div>
         <span className="collage-topbar__status"><i /> {photos.length}/{photoCount} photos ready</span>
         <div className="collage-topbar__actions">
           <button type="button" onClick={() => uploadRef.current?.click()}>＋ Add photos</button>

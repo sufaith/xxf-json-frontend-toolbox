@@ -170,7 +170,11 @@ export function ToolWorkbench({ initialSlug, compact = false }: Props) {
       <div className={`editor-grid editor-grid--mobile-${mobilePanel}`}>
         <div className="editor-panel">
           <div className="editor-panel__head">
-            <label htmlFor={`input-${tool.slug}`}>{tool.inputLabel}</label>
+            <div className="editor-panel__identity">
+              <h1>{tool.name}</h1>
+              <p>{tool.description}</p>
+              <label className="sr-only" htmlFor={`input-${tool.slug}`}>{tool.inputLabel}</label>
+            </div>
             <div className="editor-panel__head-tools">
               <div className="editor-panel__actions">
                 <button className="ghost-button" type="button" onClick={() => setInput(tool.sample)}>Use sample</button>
