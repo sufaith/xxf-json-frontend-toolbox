@@ -27,7 +27,11 @@ export function ToolExplorer() {
       </div>
       <div className="tool-card-grid">
         {filtered.map((tool, index) => (
-          <Link href={`/tools/${tool.slug}/`} className="tool-card" key={tool.slug}>
+          <Link
+            href={`/tools/${tool.slug}/`}
+            className={`tool-card tool-card--${tool.category.toLowerCase()}`}
+            key={tool.slug}
+          >
             <div className="tool-card__top">
               <span className="tool-number">{String(index + 1).padStart(2, "0")}</span>
               <span className="tool-category">{tool.category}</span>
