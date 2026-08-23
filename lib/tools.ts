@@ -453,6 +453,33 @@ export const tools: ToolDefinition[] = [
     faq: [sharedPrivacy, { question: "Can SHA-256 hashes be reversed?", answer: "No. SHA-256 is a one-way digest. It is not encryption, and it should not be used alone for password storage." }],
   },
   {
+    slug: "image-compressor",
+    name: "Image Compressor",
+    eyebrow: "Shrink image files",
+    category: "Image",
+    description: "Compress PNG, JPEG and WebP images in batches without uploading them.",
+    seoDescription:
+      "Compress PNG, JPEG and WebP images online with quality, format and resize controls. Batch download smaller images with no uploads.",
+    keywords: ["image compressor", "compress png", "compress jpeg", "compress webp", "reduce image size"],
+    inputLabel: "Images",
+    outputLabel: "Compressed images",
+    action: "Compress images",
+    sample: "",
+    fileExtension: "zip",
+    usesInput: false,
+    faq: [
+      sharedPrivacy,
+      {
+        question: "Which image formats are supported?",
+        answer: "XXF compresses PNG, JPEG and WebP images and can keep the original type or export WebP, JPEG or PNG.",
+      },
+      {
+        question: "Can I compress several images at once?",
+        answer: "Yes. Add up to 20 images, compare their savings and download every finished result together as a ZIP file.",
+      },
+    ],
+  },
+  {
     slug: "photo-collage-maker",
     name: "Photo Collage Maker",
     eyebrow: "Compose images",

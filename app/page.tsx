@@ -5,7 +5,7 @@ import { tools } from "@/lib/tools";
 export const metadata: Metadata = {
   title: "Browser Tools for JSON, Frontend & Images",
   description:
-    "Browse 25 free JSON, data, frontend, encoding and image tools that run privately in your browser.",
+    "Browse 26 free JSON, data, frontend, encoding and image tools that run privately in your browser.",
   alternates: { canonical: "/" },
 };
 

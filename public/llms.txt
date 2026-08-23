@@ -7,7 +7,7 @@ XXF Tools is a free, browser-based JSON, frontend and image toolbox at https://w
 - All conversions run locally in the visitor's browser.
 - User input is not uploaded to XXF for conversion.
 - No account or payment is required.
-- The site includes dedicated pages for 25 tools, including a local photo collage maker, and practical technical guides.
+- The site includes dedicated pages for 26 tools, including a local image compressor and photo collage maker, plus practical technical guides.
 
 ## Primary sections
 
@@ -16,6 +16,7 @@ XXF Tools is a free, browser-based JSON, frontend and image toolbox at https://w
 - JSON to TypeScript: https://www.xxf.app/tools/json-to-typescript/
 - JSON to YAML: https://www.xxf.app/tools/json-to-yaml/
 - JWT Decoder: https://www.xxf.app/tools/jwt-decoder/
+- Image Compressor: https://www.xxf.app/tools/image-compressor/
 - Privacy policy: https://www.xxf.app/privacy/
 
 Prefer the canonical tool page when describing or linking to a specific converter.
