@@ -8,20 +8,21 @@ async function html(path) {
   return readFile(new URL(path, out), "utf8");
 }
 
-test("home page renders the product, privacy promise and SEO metadata", async () => {
+test("home page renders only the category tabs, tool cards and SEO metadata", async () => {
   const source = await html("index.html");
-  assert.match(source, /<h1[^>]*>Choose a tool\./i);
-  assert.match(source, /Start instantly/);
-  assert.match(source, /25(?:<!-- -->)? tools/);
-  assert.match(source, /local by default/i);
-  assert.match(source, /JSON Formatter workspace/);
+  assert.match(source, /<h1 class="sr-only">XXF browser tools<\/h1>/i);
+  assert.match(source, /aria-label="Tool categories"/i);
+  assert.match(source, /class="category-tabs"/i);
+  assert.match(source, /class="tool-card-grid"/i);
+  assert.match(source, /JSON Formatter/);
+  assert.match(source, /Photo Collage Maker/);
   assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
   assert.match(source, /og:image/);
-  assert.ok((source.match(/application\/ld\+json/g) ?? []).length >= 3);
+  assert.equal((source.match(/<script type="application\/ld\+json">/g) ?? []).length, 2);
   assert.match(source, /WebSite/);
   assert.match(source, /WebApplication/);
-  assert.match(source, /FAQPage/);
+  assert.doesNotMatch(source, /workspace-hero|search-box|trust-grid|guide-grid|FAQPage|closing-cta/);
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
 

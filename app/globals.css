@@ -226,6 +226,12 @@ button, select { cursor: pointer; }
 .editor-panel--output:fullscreen { width: 100vw; height: 100vh; border: 0; background: #202327; }
 .editor-panel--output:fullscreen .output-viewer { height: calc(100svh - 64px) !important; }
 
+.home-tool-directory { min-height: 100svh; background: #efede6; padding-block: 24px 72px; }
+.home-tool-directory__inner { display: grid; gap: 0; }
+.home-tool-directory + .site-footer { display: none; }
+.home-tool-directory .tool-explorer__bar { position: sticky; top: 0; z-index: 12; margin-bottom: 18px; padding-block: 8px; background: rgba(239,237,230,.9); backdrop-filter: blur(14px); }
+.home-tool-directory .category-tabs { width: 100%; }
+.home-tool-directory .category-tabs button { flex: 1 1 0; }
 .tool-explorer__bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 23px; }
 .search-box { flex: 1; max-width: 520px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 12px; background: white; padding: 0 13px; box-shadow: 0 8px 24px rgba(18,20,22,.04); }
 .search-box > span { font: 800 20px/1 var(--font-mono), monospace; }
@@ -414,6 +420,9 @@ button, select { cursor: pointer; }
   .editor-panel textarea, .output-viewer { height: 245px; }
   .tool-page-workbench { width: calc(100% - 14px); min-height: calc(100svh - 56px); align-items: start; margin-inline: 7px; padding-block: 6px; }
   .tool-page-workbench .editor-panel textarea, .tool-page-workbench .output-viewer { height: clamp(300px, calc(100svh - 165px), 560px); }
+  .home-tool-directory { min-height: calc(100svh - 56px); padding-block: 8px 28px; }
+  .home-tool-directory .tool-explorer__bar { margin-bottom: 10px; padding-block: 5px; }
+  .home-tool-directory .category-tabs button { flex: 0 0 auto; }
   .tool-explorer__bar { align-items: stretch; flex-direction: column; }
   .search-box { max-width: none; }
   .category-tabs { overflow-x: auto; }
