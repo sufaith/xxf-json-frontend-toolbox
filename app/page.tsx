@@ -3,18 +3,18 @@ import { ToolExplorer } from "@/components/ToolExplorer";
 import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
-  title: "Browser Tools for JSON, Frontend & Images",
+  title: "Browser Tools for JSON, Frontend, Image & Video",
   description:
-    "Browse 28 free JSON, data, frontend, encoding and image tools that run privately in your browser.",
+    "Browse 29 free JSON, data, frontend, encoding, image and video tools that run privately in your browser.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://www.xxf.app/",
     siteName: "XXF Tools",
-    title: "Free JSON, Frontend & Image Tools — XXF Tools",
-    description: "Use 28 fast, private browser tools for JSON, data conversion, encoding, frontend work and images.",
-    images: [{ url: "/og.jpg", width: 1536, height: 1024, alt: "XXF JSON, frontend and image tools" }],
+    title: "Free JSON, Frontend, Image & Video Tools — XXF Tools",
+    description: "Use 29 fast, private browser tools for JSON, data conversion, encoding, frontend work, images and video.",
+    images: [{ url: "/og.jpg", width: 1536, height: 1024, alt: "XXF JSON, frontend, image and video tools" }],
   },
 };
 
@@ -34,7 +34,7 @@ export default function Home() {
         "@id": "https://www.xxf.app/#website",
         name: "XXF Tools",
         url: "https://www.xxf.app/",
-        description: "Private browser-based JSON, frontend and image tools.",
+        description: "Private browser-based JSON, frontend, image and video tools.",
         inLanguage: "en",
         publisher: { "@id": "https://www.xxf.app/#organization" },
       },
@@ -42,8 +42,8 @@ export default function Home() {
         "@type": "WebPage",
         "@id": "https://www.xxf.app/#webpage",
         url: "https://www.xxf.app/",
-        name: "Free JSON, Frontend & Image Tools",
-        description: "Use 28 fast, private browser tools for JSON, data conversion, encoding, frontend work and images.",
+        name: "Free JSON, Frontend, Image & Video Tools",
+        description: "Use 29 fast, private browser tools for JSON, data conversion, encoding, frontend work, images and video.",
         inLanguage: "en",
         isPartOf: { "@id": "https://www.xxf.app/#website" },
         about: { "@id": "https://www.xxf.app/#organization" },

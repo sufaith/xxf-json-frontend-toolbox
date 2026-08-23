@@ -4,9 +4,9 @@ export const dynamic = "force-static";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "XXF JSON & Frontend Tools",
+    name: "XXF JSON, Frontend & Video Tools",
     short_name: "XXF Tools",
-    description: "Private browser-based JSON, frontend and image tools.",
+    description: "Private browser-based JSON, frontend, image and video tools.",
     start_url: "/",
     display: "standalone",
     background_color: "#f7f5ef",

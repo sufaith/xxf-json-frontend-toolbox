@@ -20,6 +20,7 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /Photo Collage Maker/);
   assert.match(source, /URL Parser/);
   assert.match(source, /Redirect Checker/);
+  assert.match(source, /M3U8 Video Player/);
   assert.doesNotMatch(source, />Open tool</i);
   assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
@@ -33,10 +34,10 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
 
-test("all 28 tool pages are statically rendered with unique SEO signals", async () => {
+test("all 29 tool pages are statically rendered with unique SEO signals", async () => {
   const directory = new URL("tools/", out);
   const slugs = (await readdir(directory, { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name);
-  assert.equal(slugs.length, 28);
+  assert.equal(slugs.length, 29);
   const titles = new Set();
   const descriptions = new Set();
   for (const slug of slugs) {
@@ -92,6 +93,13 @@ test("all 28 tool pages are statically rendered with unique SEO signals", async 
       assert.match(source, /Android/);
       assert.match(source, /redirect-checker__empty/);
       assert.doesNotMatch(source, /editor-panel__head-tools|URL Parser workspace/);
+    } else if (slug === "m3u8-player") {
+      assert.match(source, /M3U8 Video Player workspace/);
+      assert.match(source, /M3U8 stream URL/);
+      assert.match(source, /Load stream/);
+      assert.match(source, /Native HLS/);
+      assert.match(source, /video-player__placeholder/);
+      assert.doesNotMatch(source, /editor-panel__head-tools|Redirect Checker workspace/);
     } else {
       assert.doesNotMatch(source, /<select/);
       assert.match(source, /editor-panel__head-tools/);
@@ -107,8 +115,8 @@ test("all 28 tool pages are statically rendered with unique SEO signals", async 
       assert.match(source, /fold-icon--collapse/);
     }
   }
-  assert.equal(titles.size, 28);
-  assert.equal(descriptions.size, 28);
+  assert.equal(titles.size, 29);
+  assert.equal(descriptions.size, 29);
 });
 
 test("six editorial guides are statically rendered as technical articles", async () => {
@@ -130,12 +138,12 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("manifest.webmanifest", out), "utf8"),
     readFile(new URL("llms.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 39);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 40);
   assert.match(sitemap, /https:\/\/www\.xxf\.app\/site-map\//);
   assert.match(robots, /Sitemap: https:\/\/www\.xxf\.app\/sitemap\.xml/);
-  assert.match(manifest, /XXF JSON & Frontend Tools/);
-  assert.match(llms, /All conversions run locally/);
-  assert.match(manifest, /Private browser-based JSON, frontend and image tools/);
+  assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
+  assert.match(llms, /Text and image conversions run locally/);
+  assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
   await Promise.all(["og.jpg", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
 });
 
@@ -196,4 +204,12 @@ test("redirect checker keeps its server boundary explicit", async () => {
   assert.match(source, /AbortSignal\.timeout\(10000\)/);
   assert.match(source, /isBlockedHost/);
   assert.match(source, /status: response\.status/);
+});
+
+test("M3U8 player loads HLS support only when a stream is requested", async () => {
+  const source = await readFile(new URL("../components/M3u8PlayerWorkbench.tsx", import.meta.url), "utf8");
+  assert.match(source, /canPlayType\("application\/vnd\.apple\.mpegurl"\)/);
+  assert.match(source, /import\("hls\.js"\)/);
+  assert.match(source, /controls playsInline/);
+  assert.match(source, /CORS/);
 });

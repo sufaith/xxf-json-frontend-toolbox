@@ -5,7 +5,7 @@ import { categories, tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
   title: "Sitemap — All XXF Tools and Guides",
-  description: "Browse every XXF JSON, data, frontend, encoding and image tool, plus technical guides and site policies.",
+  description: "Browse every XXF JSON, data, frontend, encoding, image and video tool, plus technical guides and site policies.",
   alternates: { canonical: "/site-map/" },
 };
 

@@ -1,4 +1,4 @@
-export type ToolCategory = "JSON" | "Data" | "Frontend" | "Encoding" | "Image";
+export type ToolCategory = "JSON" | "Data" | "Frontend" | "Encoding" | "Image" | "Video";
 
 export type ToolDefinition = {
   slug: string;
@@ -17,7 +17,7 @@ export type ToolDefinition = {
   directions?: [string, string];
   usesInput?: boolean;
   faq: Array<{ question: string; answer: string }>;
-  kind?: "standard" | "url-parser" | "redirect-checker";
+  kind?: "standard" | "url-parser" | "redirect-checker" | "m3u8-player";
 };
 
 const sharedPrivacy = {
@@ -554,6 +554,33 @@ export const tools: ToolDefinition[] = [
     ],
   },
   {
+    slug: "m3u8-player",
+    name: "M3U8 Video Player",
+    eyebrow: "Play HLS streams",
+    category: "Video",
+    description: "Play public M3U8 / HLS video streams with a clean browser-based player.",
+    seoDescription:
+      "Play M3U8 and HLS video streams online with a responsive browser player, native Safari support and adaptive playback controls.",
+    keywords: ["m3u8 player", "hls player", "play m3u8 online", "hls video player", "m3u8 online player"],
+    inputLabel: "M3U8 stream URL",
+    outputLabel: "Video player",
+    action: "Load stream",
+    sample: "",
+    fileExtension: "m3u8",
+    kind: "m3u8-player",
+    faq: [
+      sharedPrivacy,
+      {
+        question: "Why does a stream fail to play?",
+        answer: "The stream must be publicly reachable and allow browser playback with CORS headers. DRM-protected, private or region-locked streams may not work.",
+      },
+      {
+        question: "Which browsers support M3U8 playback?",
+        answer: "Safari can use native HLS playback. Chrome, Edge and Firefox use the browser's Media Source Extensions through the HLS playback engine.",
+      },
+    ],
+  },
+  {
     slug: "css-formatter-minifier",
     name: "CSS Formatter / Minifier",
     eyebrow: "Clean stylesheets",
@@ -572,7 +599,7 @@ export const tools: ToolDefinition[] = [
   },
 ];
 
-export const categories: ToolCategory[] = ["JSON", "Data", "Frontend", "Encoding", "Image"];
+export const categories: ToolCategory[] = ["JSON", "Data", "Frontend", "Encoding", "Image", "Video"];
 
 export const toolMap = new Map(tools.map((tool) => [tool.slug, tool]));
 

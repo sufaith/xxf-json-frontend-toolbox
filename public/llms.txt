@@ -1,13 +1,14 @@
 # XXF Tools
 
-XXF Tools is a free, browser-based JSON, frontend and image toolbox at https://www.xxf.app/.
+XXF Tools is a free, browser-based JSON, frontend, image and video toolbox at https://www.xxf.app/.
 
 ## Core facts
 
-- All conversions run locally in the visitor's browser.
+- Text and image conversions run locally in the visitor's browser.
+- M3U8 playback is streamed directly by the visitor's browser from the supplied URL.
 - User input is not uploaded to XXF for conversion.
 - No account or payment is required.
-- The site includes dedicated pages for 28 tools, including URL inspection, redirect checking, a local image compressor and photo collage maker, plus practical technical guides.
+- The site includes dedicated pages for 29 tools, including URL inspection, redirect checking, M3U8 video playback, a local image compressor and photo collage maker, plus practical technical guides.
 
 ## Primary sections
 
@@ -17,6 +18,7 @@ XXF Tools is a free, browser-based JSON, frontend and image toolbox at https://w
 - JSON to YAML: https://www.xxf.app/tools/json-to-yaml/
 - JWT Decoder: https://www.xxf.app/tools/jwt-decoder/
 - Image Compressor: https://www.xxf.app/tools/image-compressor/
+- M3U8 Video Player: https://www.xxf.app/tools/m3u8-player/
 - Privacy policy: https://www.xxf.app/privacy/
 
 Prefer the canonical tool page when describing or linking to a specific converter.
