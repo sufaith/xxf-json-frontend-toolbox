@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "XXF JSON & Frontend Tools",
     short_name: "XXF Tools",
-    description: "Private browser-based JSON and frontend conversion tools.",
+    description: "Private browser-based JSON, frontend and image tools.",
     start_url: "/",
     display: "standalone",
     background_color: "#f7f5ef",

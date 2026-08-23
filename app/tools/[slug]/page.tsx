@@ -35,9 +35,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://www.xxf.app/tools/${tool.slug}/`,
       title: `Free Online ${tool.name} — Private Browser Tool`,
       description: tool.seoDescription,
-      images: [{ url: "/og.png", width: 1536, height: 1024, alt: `${tool.name} on XXF Tools` }],
+      images: [{ url: "/og.jpg", width: 1536, height: 1024, alt: `${tool.name} on XXF Tools` }],
     },
-    twitter: { card: "summary_large_image", title: `Free Online ${tool.name}`, description: tool.seoDescription, images: ["/og.png"] },
+    twitter: { card: "summary_large_image", title: `Free Online ${tool.name}`, description: tool.seoDescription, images: ["/og.jpg"] },
   };
 }
 
@@ -86,7 +86,7 @@ export default async function ToolPage({ params }: Props) {
         browserRequirements: "Requires JavaScript and a modern web browser",
         softwareVersion: "1.0",
         url: canonical,
-        image: "https://www.xxf.app/og.png",
+        image: "https://www.xxf.app/og.jpg",
         inLanguage: "en",
         isAccessibleForFree: true,
         publisher: { "@id": organizationId },

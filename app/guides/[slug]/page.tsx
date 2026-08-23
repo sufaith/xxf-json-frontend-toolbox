@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: guide.title,
     description: guide.description,
     alternates: { canonical: `/guides/${guide.slug}/` },
-    openGraph: { type: "article", url: `https://www.xxf.app/guides/${guide.slug}/`, title: guide.title, description: guide.description, publishedTime: guide.updated, modifiedTime: guide.updated, images: ["/og.png"] },
-    twitter: { card: "summary_large_image", title: guide.title, description: guide.description, images: ["/og.png"] },
+    openGraph: { type: "article", url: `https://www.xxf.app/guides/${guide.slug}/`, title: guide.title, description: guide.description, publishedTime: guide.updated, modifiedTime: guide.updated, images: ["/og.jpg"] },
+    twitter: { card: "summary_large_image", title: guide.title, description: guide.description, images: ["/og.jpg"] },
   };
 }
 

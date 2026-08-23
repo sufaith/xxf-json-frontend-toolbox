@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   applicationName: "XXF Tools",
   category: "technology",
   keywords: ["JSON tools", "frontend tools", "image tools", "developer tools", "JSON converter", "image compressor", "photo collage maker"],
-  authors: [{ name: "XXF Tools", url: "https://www.xxf.app/about/" }],
+  authors: [{ name: "XXF Tools", url: "https://www.xxf.app/" }],
   creator: "XXF Tools",
   publisher: "XXF Tools",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
@@ -24,13 +24,13 @@ export const metadata: Metadata = {
     siteName: "XXF Tools",
     title: "XXF Tools — JSON in. Frontend-ready out.",
     description: "26 private browser-based tools for JSON, frontend data, images and developer workflows.",
-    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "XXF JSON and frontend conversion toolbox" }],
+    images: [{ url: "/og.jpg", width: 1536, height: 1024, alt: "XXF JSON and frontend conversion toolbox" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "XXF Tools — JSON in. Frontend-ready out.",
     description: "26 private browser-based JSON, frontend and image tools.",
-    images: ["/og.png"],
+    images: ["/og.jpg"],
   },
   icons: { icon: "/favicon.ico", apple: "/icon-192.png" },
   manifest: "/manifest.webmanifest",
@@ -42,6 +42,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5078282844971985"

@@ -328,7 +328,7 @@ export function ImageCompressorWorkbench() {
                   const savings = ready ? Math.round((1 - ready.blob.size / source.file.size) * 100) : 0;
                   return (
                     <article className="compressor-card" key={source.id}>
-                      <div className="compressor-card__preview"><img src={source.url} alt="" /><span>{extensionFor(source.file.type).toUpperCase()}</span></div>
+                      <div className="compressor-card__preview"><img src={source.url} alt={source.file.name} loading="lazy" decoding="async" /><span>{extensionFor(source.file.type).toUpperCase()}</span></div>
                       <div className="compressor-card__body">
                         <div className="compressor-card__title"><div><h3 title={source.file.name}>{source.file.name}</h3><small>{formatBytes(source.file.size)}</small></div><button type="button" aria-label={`Remove ${source.file.name}`} onClick={() => removeImage(source.id)}>×</button></div>
                         {result?.status === "error" ? <p className="compressor-card__error">{result.message}</p> : (

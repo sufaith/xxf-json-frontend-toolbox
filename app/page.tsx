@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: "XXF Tools",
     title: "Free JSON, Frontend & Image Tools — XXF Tools",
     description: "Use 26 fast, private browser tools for JSON, data conversion, encoding, frontend work and images.",
-    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "XXF JSON, frontend and image tools" }],
+    images: [{ url: "/og.jpg", width: 1536, height: 1024, alt: "XXF JSON, frontend and image tools" }],
   },
 };
 

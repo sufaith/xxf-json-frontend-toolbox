@@ -120,7 +120,20 @@ test("crawler and app files expose the complete canonical surface", async () => 
   assert.match(robots, /Sitemap: https:\/\/www\.xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON & Frontend Tools/);
   assert.match(llms, /All conversions run locally/);
-  await Promise.all(["og.png", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
+  assert.match(manifest, /Private browser-based JSON, frontend and image tools/);
+  await Promise.all(["og.jpg", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
+});
+
+test("performance hints and image previews are present", async () => {
+  const [layout, compressor] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/ImageCompressorWorkbench.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(layout, /rel="preconnect" href="https:\/\/pagead2\.googlesyndication\.com"/);
+  assert.match(layout, /rel="dns-prefetch" href="https:\/\/pagead2\.googlesyndication\.com"/);
+  assert.match(compressor, /alt=\{source\.file\.name\} loading="lazy" decoding="async"/);
+  assert.doesNotMatch(layout, /og\.png/);
+  assert.doesNotMatch(compressor, /alt=""/);
 });
 
 test("HTML sitemap exposes every tool through crawlable links", async () => {
