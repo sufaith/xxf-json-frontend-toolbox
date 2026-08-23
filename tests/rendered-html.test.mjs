@@ -186,6 +186,8 @@ test("public host security policy allows the configured AdSense domains", async 
   const source = await readFile(new URL("../deploy/nginx-xxf.conf", import.meta.url), "utf8");
   assert.match(source, /script-src[^;]*https:\/\/\*\.googlesyndication\.com/);
   assert.match(source, /frame-src[^;]*https:\/\/\*\.doubleclick\.net/);
+  assert.match(source, /location = \/api\/check-redirects/);
+  assert.match(source, /proxy_pass https:\/\/u\.xxf\.app\/api\/check-redirects/);
 });
 
 test("redirect checker keeps its server boundary explicit", async () => {
