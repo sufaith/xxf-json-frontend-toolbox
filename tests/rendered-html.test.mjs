@@ -169,6 +169,8 @@ test("performance hints and image previews are present", async () => {
   assert.match(globals, /font-weight: 450/);
   assert.match(globals, /-webkit-font-smoothing: antialiased/);
   assert.match(globals, /font-variant-ligatures: none/);
+  assert.match(globals, /\.primary-button \{[^}]*box-shadow: none;/);
+  assert.match(globals, /\.primary-button:focus-visible, \.ghost-button:focus-visible/);
 });
 
 test("HTML sitemap exposes every tool through crawlable links", async () => {
