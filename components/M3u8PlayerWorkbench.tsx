@@ -106,7 +106,7 @@ export function M3u8PlayerWorkbench() {
 
   return (
     <section className="video-player-workbench" aria-label="M3U8 Video Player workspace">
-      <header className="utility-workbench__hero">
+      <header className="utility-workbench__hero video-player__hero">
         <div><h1>M3U8 Video Player</h1><p>Play public M3U8 / HLS video streams with a clean browser-based player.</p></div>
       </header>
       <form className="video-player__form" onSubmit={loadStream}>
