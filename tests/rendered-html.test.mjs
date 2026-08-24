@@ -207,7 +207,9 @@ test("floating dock resets after reload and closes its switcher outside", async 
 test("public host security policy allows the configured AdSense domains", async () => {
   const source = await readFile(new URL("../deploy/nginx-xxf.conf", import.meta.url), "utf8");
   assert.match(source, /script-src[^;]*https:\/\/\*\.googlesyndication\.com/);
-  assert.match(source, /connect-src[^;]*https:\/\/cdn\.jsdelivr\.net/);
+  assert.match(source, /script-src[^;]*https:\/\/static\.cloudflareinsights\.com/);
+  assert.match(source, /connect-src[^;]*https:/);
+  assert.match(source, /media-src[^;]*blob:/);
   assert.match(source, /worker-src 'self' blob:/);
   assert.match(source, /frame-src[^;]*https:\/\/\*\.doubleclick\.net/);
   assert.match(source, /location = \/api\/check-redirects/);
