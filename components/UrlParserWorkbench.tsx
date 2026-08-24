@@ -81,7 +81,7 @@ export function UrlParserWorkbench() {
   return (
     <section className="utility-workbench utility-workbench--url-parser" aria-label="URL Parser workspace">
       <header className="utility-workbench__hero">
-        <div><span className="utility-workbench__eyebrow">Encoding · Inspect query params</span><h1>URL Parser</h1><p>Parse a URL into its components and explore nested query parameters.</p></div>
+        <div><h1>URL Parser</h1><p>Parse a URL into its components and explore nested query parameters.</p></div>
         <div className="utility-workbench__hero-actions"><button type="button" className="ghost-button" onClick={() => setInput(tool?.sample ?? "")}>Use sample</button><button type="button" className="ghost-button" onClick={() => setInput("")}>Clear</button></div>
       </header>
       <div className="utility-workbench__grid">

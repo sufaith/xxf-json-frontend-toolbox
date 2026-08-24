@@ -51,7 +51,7 @@ export function RedirectCheckerWorkbench() {
   return (
     <section className="utility-workbench utility-workbench--redirect-checker" aria-label="Redirect Checker workspace">
       <header className="utility-workbench__hero">
-        <div><span className="utility-workbench__eyebrow">Frontend · Trace HTTP redirects</span><h1>Redirect Checker</h1><p>Trace a URL&apos;s redirect chain and compare responses for common browser user agents.</p></div>
+        <div><h1>Redirect Checker</h1><p>Trace a URL&apos;s redirect chain and compare responses for common browser user agents.</p></div>
       </header>
       <form className="redirect-checker__form" onSubmit={checkRedirects}>
         <label htmlFor="redirect-checker-input">URL to check</label>

@@ -194,7 +194,6 @@ export function VideoToM3u8Workbench() {
     <section className="video-converter-workbench" aria-label="Video to M3U8 workspace">
       <header className="utility-workbench__hero">
         <div>
-          <span className="utility-workbench__eyebrow">Video · Create HLS packages</span>
           <h1>Video to M3U8</h1>
           <p>Convert a local video into an M3U8 playlist and HLS segments directly in your browser.</p>
         </div>
