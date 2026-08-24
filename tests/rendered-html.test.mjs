@@ -156,15 +156,19 @@ test("crawler and app files expose the complete canonical surface", async () => 
 });
 
 test("performance hints and image previews are present", async () => {
-  const [layout, compressor] = await Promise.all([
+  const [layout, compressor, globals] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/ImageCompressorWorkbench.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
   assert.match(layout, /rel="preconnect" href="https:\/\/pagead2\.googlesyndication\.com"/);
   assert.match(layout, /rel="dns-prefetch" href="https:\/\/pagead2\.googlesyndication\.com"/);
   assert.match(compressor, /alt=\{source\.file\.name\} loading="lazy" decoding="async"/);
   assert.doesNotMatch(layout, /og\.png/);
   assert.doesNotMatch(compressor, /alt=""/);
+  assert.match(globals, /font-weight: 450/);
+  assert.match(globals, /-webkit-font-smoothing: antialiased/);
+  assert.match(globals, /font-variant-ligatures: none/);
 });
 
 test("HTML sitemap exposes every tool through crawlable links", async () => {
