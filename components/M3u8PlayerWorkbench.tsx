@@ -30,37 +30,44 @@ export function M3u8PlayerWorkbench() {
       setError("");
       setStatus("Preparing stream…");
       clearPlayer();
-      if (media.canPlayType("application/vnd.apple.mpegurl")) {
-        media.src = streamUrl;
-        media.load();
-        if (!cancelled) {
-          setIsLoading(false);
-          setStatus("Ready · press play");
-        }
-        return;
-      }
 
       try {
         const { default: Hls } = await import("hls.js");
         if (cancelled) return;
-        if (!Hls.isSupported()) throw new Error("This browser cannot play HLS streams.");
-        const player = new Hls({ enableWorker: true, lowLatencyMode: false, backBufferLength: 90 });
-        hlsRef.current = player;
-        player.on(Hls.Events.MANIFEST_PARSED, () => {
-          if (!cancelled) {
+        media.crossOrigin = "anonymous";
+
+        // Chromium can report "maybe" for HLS even though it cannot play an
+        // M3U8 URL directly. Use MSE/Hls.js first, then fall back to native
+        // HLS for Safari and other browsers that genuinely support it.
+        if (Hls.isSupported()) {
+          const player = new Hls({ enableWorker: true, lowLatencyMode: false, backBufferLength: 90 });
+          hlsRef.current = player;
+          player.on(Hls.Events.MANIFEST_PARSED, () => {
+            if (!cancelled) {
+              setIsLoading(false);
+              setStatus("Ready · press play");
+            }
+          });
+          player.on(Hls.Events.ERROR, (_event, data) => {
+            if (!data.fatal || cancelled) return;
             setIsLoading(false);
-            setStatus("Ready · press play");
-          }
-        });
-        player.on(Hls.Events.ERROR, (_event, data) => {
-          if (!data.fatal || cancelled) return;
-          setIsLoading(false);
-          setError(data.type === Hls.ErrorTypes.NETWORK_ERROR ? "The stream could not be reached. Check the URL and CORS settings." : "This HLS stream could not be decoded by the browser.");
-          player.destroy();
-          hlsRef.current = null;
-        });
-        player.loadSource(streamUrl);
-        player.attachMedia(media);
+            setError(data.type === Hls.ErrorTypes.NETWORK_ERROR ? "The stream could not be reached. Check the URL and CORS settings." : "This HLS stream could not be decoded by the browser.");
+            player.destroy();
+            hlsRef.current = null;
+          });
+          player.loadSource(streamUrl);
+          player.attachMedia(media);
+          return;
+        }
+
+        if (media.canPlayType("application/vnd.apple.mpegurl")) {
+          media.src = streamUrl;
+          media.load();
+          if (!cancelled) setStatus("Waiting for native HLS…");
+          return;
+        }
+
+        throw new Error("This browser cannot play HLS streams.");
       } catch (loadError) {
         if (!cancelled) {
           setIsLoading(false);
@@ -108,9 +115,9 @@ export function M3u8PlayerWorkbench() {
         <div className="video-player__actions"><button type="button" className="ghost-button" onClick={() => setInput(sampleStream)}>Use public test stream</button><button type="button" className="ghost-button" onClick={clearStream}>Clear</button><span>Playback stays in your browser · no upload</span></div>
       </form>
       <div className="video-player__stage">
-        {streamUrl ? <video ref={videoRef} controls playsInline preload="metadata" onError={() => { setIsLoading(false); setError("The video element could not load this stream."); }} onLoadedMetadata={() => { setIsLoading(false); setStatus("Ready · press play"); }} /> : <div className="video-player__placeholder"><span aria-hidden="true">▶</span><b>Your stream will appear here</b><small>Paste a public .m3u8 URL above to begin.</small></div>}
+        {streamUrl ? <video ref={videoRef} controls playsInline preload="metadata" crossOrigin="anonymous" onError={(event) => { setIsLoading(false); setError(event.currentTarget.error?.code === 4 ? "The browser could not decode this HLS stream." : "The video element could not load this stream."); }} onLoadedMetadata={() => { setIsLoading(false); setStatus("Ready · press play"); }} /> : <div className="video-player__placeholder"><span aria-hidden="true">▶</span><b>Your stream will appear here</b><small>Paste a public .m3u8 URL above to begin.</small></div>}
       </div>
-      <div className="video-player__status" role="status" aria-live="polite"><span className={error ? "is-error" : ""}>{error || status}</span><span>Native HLS + adaptive playback</span></div>
+      <div className="video-player__status" role="status" aria-live="polite"><span className={error ? "is-error" : ""}>{error || status}</span><span>Hls.js + Native HLS fallback</span></div>
       <p className="video-player__note">The stream host must allow browser playback with CORS headers. DRM-protected, private or region-locked streams may not work.</p>
     </section>
   );

@@ -225,8 +225,10 @@ test("redirect checker keeps its server boundary explicit", async () => {
 test("M3U8 player loads HLS support only when a stream is requested", async () => {
   const source = await readFile(new URL("../components/M3u8PlayerWorkbench.tsx", import.meta.url), "utf8");
   assert.match(source, /canPlayType\("application\/vnd\.apple\.mpegurl"\)/);
+  assert.match(source, /Hls\.isSupported\(\)/);
   assert.match(source, /import\("hls\.js"\)/);
   assert.match(source, /controls playsInline/);
+  assert.match(source, /crossOrigin="anonymous"/);
   assert.match(source, /CORS/);
 });
 
