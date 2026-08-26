@@ -121,7 +121,7 @@ export function SiteHeader() {
     ? { left: `${position.x}px`, top: `${position.y}px`, right: "auto", bottom: "auto" } as CSSProperties
     : undefined;
 
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname.startsWith("/n/")) return null;
 
   return (
     <header ref={headerRef} className={`site-header ${menuPlacement} ${isDragging ? "site-header--dragging" : ""}`} style={dockStyle}>

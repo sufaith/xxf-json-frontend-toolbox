@@ -1,6 +1,7 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { handleNoteSpaceRequest, type NoteSpaceDatabase } from "../lib/note-spaces";
 
 interface AssetFetcher {
   fetch(request: Request): Promise<Response>;
@@ -8,6 +9,7 @@ interface AssetFetcher {
 
 interface Env {
   ASSETS: AssetFetcher;
+  DB?: NoteSpaceDatabase;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -41,6 +43,16 @@ const worker = {
           return result.response();
         },
       }, allowedWidths);
+    }
+
+    if (url.pathname.startsWith("/api/n/")) {
+      return handleNoteSpaceRequest(request, env.DB);
+    }
+
+    if (url.pathname.startsWith("/n/") && url.pathname !== "/n/welcome/") {
+      const rewrittenUrl = new URL(request.url);
+      rewrittenUrl.pathname = "/n/welcome/";
+      return handler.fetch(new Request(rewrittenUrl, request));
     }
 
     return handler.fetch(request, env, ctx);

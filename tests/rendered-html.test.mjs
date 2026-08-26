@@ -234,6 +234,26 @@ test("M3U8 player loads HLS support only when a stream is requested", async () =
   assert.match(source, /CORS/);
 });
 
+test("named spaces use durable storage and an auto-saving full-screen editor", async () => {
+  const [hosting, worker, schema, page, component, chrome] = await Promise.all([
+    readFile(new URL("../.openai/hosting.json", import.meta.url), "utf8"),
+    readFile(new URL("../worker/index.ts", import.meta.url), "utf8"),
+    readFile(new URL("../drizzle/0000_note_spaces.sql", import.meta.url), "utf8"),
+    readFile(new URL("../app/n/[slug]/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/NoteSpaceWorkbench.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.equal(JSON.parse(hosting).d1, "DB");
+  assert.match(schema, /CREATE TABLE IF NOT EXISTS note_spaces/);
+  assert.match(worker, /handleNoteSpaceRequest\(request, env\.DB\)/);
+  assert.match(page, /dynamicParams = false/);
+  assert.match(component, /fetch\(spaceApiUrl\(activeSpaceName\), \{ cache: "no-store" \}/);
+  assert.match(component, /setTimeout\(\(\) => save\(content, version\), 500\)/);
+  assert.match(component, /anyone with this link can access this space/);
+  assert.match(chrome, /pathname\.startsWith\("\/n\/"\)/);
+  assert.match(worker, /rewrittenUrl\.pathname = "\/n\/welcome\/"/);
+});
+
 test("video to M3U8 conversion stays local and packages HLS output", async () => {
   const source = await readFile(new URL("../components/VideoToM3u8Workbench.tsx", import.meta.url), "utf8");
   assert.match(source, /import\("@ffmpeg\/ffmpeg"\)/);
