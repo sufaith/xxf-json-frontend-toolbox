@@ -214,6 +214,10 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /frame-src[^;]*https:\/\/\*\.doubleclick\.net/);
   assert.match(source, /location = \/api\/check-redirects/);
   assert.match(source, /proxy_pass https:\/\/u\.xxf\.app\/api\/check-redirects/);
+  assert.match(source, /location ~ \^\/api\/n\/\[\^\/\]\+\/\?\$ \{/);
+  assert.match(source, /proxy_pass https:\/\/xxf-json-frontend-tools\.xxfapp\.chatgpt\.site;/);
+  assert.match(source, /location ~ \^\/n\/\[\^\/\]\+\/\?\$ \{/);
+  assert.match(source, /try_files \/n\/welcome\/index\.html =404/);
 });
 
 test("redirect checker keeps its server boundary explicit", async () => {
