@@ -1,6 +1,6 @@
 # XXF Tools
 
-XXF Tools is a privacy-first JSON, frontend, image and video toolbox deployed at [www.xxf.app](https://www.xxf.app/).
+XXF Tools is a privacy-first JSON, frontend, image and video toolbox deployed at [xxf.app](https://xxf.app/).
 
 ## Product
 

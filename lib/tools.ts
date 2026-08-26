@@ -39,7 +39,7 @@ export const tools: ToolDefinition[] = [
     inputLabel: "URL to parse",
     outputLabel: "URL details",
     action: "Parse URL",
-    sample: "https://www.xxf.app/tools/json-formatter/?mode=pretty&theme=dark&next=https%3A%2F%2Fexample.com%2F%3Fref%3Ddemo",
+    sample: "https://xxf.app/tools/json-formatter/?mode=pretty&theme=dark&next=https%3A%2F%2Fexample.com%2F%3Fref%3Ddemo",
     fileExtension: "txt",
     kind: "url-parser",
     faq: [
@@ -62,7 +62,7 @@ export const tools: ToolDefinition[] = [
     inputLabel: "URL to check",
     outputLabel: "Redirect chain",
     action: "Check redirects",
-    sample: "https://www.xxf.app/",
+    sample: "https://xxf.app/",
     fileExtension: "txt",
     kind: "redirect-checker",
     faq: [

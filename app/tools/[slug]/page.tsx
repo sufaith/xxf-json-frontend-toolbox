@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       locale: "en_US",
       siteName: "XXF Tools",
-      url: `https://www.xxf.app/tools/${tool.slug}/`,
+      url: `https://xxf.app/tools/${tool.slug}/`,
       title: `Free Online ${tool.name} — Private Browser Tool`,
       description: tool.seoDescription,
       images: [{ url: "/og.jpg", width: 1536, height: 1024, alt: `${tool.name} on XXF Tools` }],
@@ -57,8 +57,8 @@ export default async function ToolPage({ params }: Props) {
   const isVideoConverter = tool.kind === "video-to-m3u8";
   const isVideoTool = isVideoPlayer || isVideoConverter;
   const isImageTool = isPhotoCollage || isImageCompressor;
-  const canonical = `https://www.xxf.app/tools/${tool.slug}/`;
-  const organizationId = "https://www.xxf.app/#organization";
+  const canonical = `https://xxf.app/tools/${tool.slug}/`;
+  const organizationId = "https://xxf.app/#organization";
   const applicationId = `${canonical}#application`;
   const seoSchema = {
     "@context": "https://schema.org",
@@ -70,7 +70,7 @@ export default async function ToolPage({ params }: Props) {
         name: `Free Online ${tool.name}`,
         description: tool.seoDescription,
         inLanguage: "en",
-        isPartOf: { "@id": "https://www.xxf.app/#website" },
+        isPartOf: { "@id": "https://xxf.app/#website" },
         breadcrumb: { "@id": `${canonical}#breadcrumb` },
         mainEntity: { "@id": applicationId },
         dateModified: "2026-08-24",
@@ -79,7 +79,7 @@ export default async function ToolPage({ params }: Props) {
         "@type": "BreadcrumbList",
         "@id": `${canonical}#breadcrumb`,
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://www.xxf.app/" },
+          { "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://xxf.app/" },
           { "@type": "ListItem", position: 2, name: tool.name, item: canonical },
         ],
       },
@@ -95,7 +95,7 @@ export default async function ToolPage({ params }: Props) {
         browserRequirements: "Requires JavaScript and a modern web browser",
         softwareVersion: "1.0",
         url: canonical,
-        image: "https://www.xxf.app/og.jpg",
+        image: "https://xxf.app/og.jpg",
         inLanguage: "en",
         isAccessibleForFree: true,
         publisher: { "@id": organizationId },
@@ -118,8 +118,8 @@ export default async function ToolPage({ params }: Props) {
         "@type": "Organization",
         "@id": organizationId,
         name: "XXF Tools",
-        url: "https://www.xxf.app/",
-        logo: { "@type": "ImageObject", url: "https://www.xxf.app/icon-512.png", width: 512, height: 512 },
+        url: "https://xxf.app/",
+        logo: { "@type": "ImageObject", url: "https://xxf.app/icon-512.png", width: 512, height: 512 },
       },
     ],
   };

@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: guide.title,
     description: guide.description,
     alternates: { canonical: `/guides/${guide.slug}/` },
-    openGraph: { type: "article", url: `https://www.xxf.app/guides/${guide.slug}/`, title: guide.title, description: guide.description, publishedTime: guide.updated, modifiedTime: guide.updated, images: ["/og.jpg"] },
+    openGraph: { type: "article", url: `https://xxf.app/guides/${guide.slug}/`, title: guide.title, description: guide.description, publishedTime: guide.updated, modifiedTime: guide.updated, images: ["/og.jpg"] },
     twitter: { card: "summary_large_image", title: guide.title, description: guide.description, images: ["/og.jpg"] },
   };
 }
@@ -24,8 +24,8 @@ export default async function GuidePage({ params }: Props) {
   const { slug } = await params;
   const guide = guideMap.get(slug);
   if (!guide) notFound();
-  const articleSchema = { "@context": "https://schema.org", "@type": "TechArticle", headline: guide.title, description: guide.description, datePublished: guide.updated, dateModified: guide.updated, author: { "@type": "Organization", name: "XXF Tools", url: "https://www.xxf.app/" }, publisher: { "@type": "Organization", name: "XXF Tools" }, mainEntityOfPage: `https://www.xxf.app/guides/${guide.slug}/` };
-  const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://www.xxf.app/" }, { "@type": "ListItem", position: 2, name: "Guides", item: "https://www.xxf.app/#guides" }, { "@type": "ListItem", position: 3, name: guide.title, item: `https://www.xxf.app/guides/${guide.slug}/` }] };
+  const articleSchema = { "@context": "https://schema.org", "@type": "TechArticle", headline: guide.title, description: guide.description, datePublished: guide.updated, dateModified: guide.updated, author: { "@type": "Organization", name: "XXF Tools", url: "https://xxf.app/" }, publisher: { "@type": "Organization", name: "XXF Tools" }, mainEntityOfPage: `https://xxf.app/guides/${guide.slug}/` };
+  const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://xxf.app/" }, { "@type": "ListItem", position: 2, name: "Guides", item: "https://xxf.app/#guides" }, { "@type": "ListItem", position: 3, name: guide.title, item: `https://xxf.app/guides/${guide.slug}/` }] };
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />

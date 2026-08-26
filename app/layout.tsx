@@ -7,20 +7,20 @@ const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.xxf.app"),
+  metadataBase: new URL("https://xxf.app"),
   title: { default: "XXF Tools — JSON, Frontend, Image & Video Tools", template: "%s | XXF Tools" },
   description: "Private, fast JSON, frontend, image and video tools with browser-local conversion and playback.",
   applicationName: "XXF Tools",
   category: "technology",
   keywords: ["JSON tools", "frontend tools", "image tools", "video tools", "M3U8 player", "M3U8 converter", "HLS player", "video to HLS", "developer tools", "URL parser", "redirect checker", "JSON converter", "image compressor", "photo collage maker"],
-  authors: [{ name: "XXF Tools", url: "https://www.xxf.app/" }],
+  authors: [{ name: "XXF Tools", url: "https://xxf.app/" }],
   creator: "XXF Tools",
   publisher: "XXF Tools",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://www.xxf.app/",
+    url: "https://xxf.app/",
     siteName: "XXF Tools",
     title: "XXF Tools — JSON in. Frontend-ready out.",
   description: "30 private browser-based tools for JSON, frontend data, images, video and developer workflows.",

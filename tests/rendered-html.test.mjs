@@ -24,7 +24,7 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /M3U8 Video Player/);
   assert.match(source, /Video to M3U8/);
   assert.doesNotMatch(source, />Open tool</i);
-  assert.match(source, /<link rel="canonical" href="https:\/\/www\.xxf\.app\/"/i);
+  assert.match(source, /<link rel="canonical" href="https:\/\/xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
   assert.match(source, /og:image/);
   assert.equal((source.match(/<script type="application\/ld\+json">/g) ?? []).length, 1);
@@ -50,7 +50,7 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.ok(description, `${slug} has a description`);
     titles.add(title);
     descriptions.add(description);
-    assert.match(source, new RegExp(`<link rel="canonical" href="https://www\\.xxf\\.app/tools/${slug}/"`, "i"));
+    assert.match(source, new RegExp(`<link rel="canonical" href="https://xxf\\.app/tools/${slug}/"`, "i"));
     assert.match(source, /WebApplication/);
     assert.match(source, /WebPage/);
     assert.match(source, /BreadcrumbList/);
@@ -135,7 +135,7 @@ test("six editorial guides are statically rendered as technical articles", async
     const source = await html(`guides/${slug}/index.html`);
     assert.match(source, /TechArticle/);
     assert.match(source, /BreadcrumbList/);
-    assert.match(source, new RegExp(`https://www\\.xxf\\.app/guides/${slug}/`));
+    assert.match(source, new RegExp(`https://xxf\\.app/guides/${slug}/`));
   }
 });
 
@@ -147,8 +147,8 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("llms.txt", out), "utf8"),
   ]);
   assert.equal((sitemap.match(/<url>/g) ?? []).length, 41);
-  assert.match(sitemap, /https:\/\/www\.xxf\.app\/site-map\//);
-  assert.match(robots, /Sitemap: https:\/\/www\.xxf\.app\/sitemap\.xml/);
+  assert.match(sitemap, /https:\/\/xxf\.app\/site-map\//);
+  assert.match(robots, /Sitemap: https:\/\/xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
   assert.match(llms, /Text, image and video conversions run locally/);
   assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
@@ -216,6 +216,8 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /proxy_pass https:\/\/u\.xxf\.app\/api\/check-redirects/);
   assert.match(source, /location ~ \^\/api\/n\/\[\^\/\]\+\/\?\$ \{/);
   assert.match(source, /proxy_pass https:\/\/xxf-json-frontend-tools\.xxfapp\.chatgpt\.site;/);
+  assert.match(source, /server_name xxf\.app;/);
+  assert.match(source, /server_name www\.xxf\.app;[\s\S]*return 301 https:\/\/xxf\.app\$request_uri;/);
   assert.match(source, /location ~ \^\/n\/\[\^\/\]\+\/\?\$ \{/);
   assert.match(source, /try_files \/n\/welcome\/index\.html =404/);
 });

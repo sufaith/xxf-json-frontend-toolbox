@@ -73,7 +73,7 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         run: |
           for attempt in {1..10}; do
-            if curl --fail --silent --show-error --location --max-time 15 https://www.xxf.app/ | grep -q "Frontend-ready" && test "$(curl --insecure --silent --show-error --resolve "xxf.app:443:$DEPLOY_HOST" --output /dev/null --write-out '%{redirect_url}' https://xxf.app/)" = "https://www.xxf.app/"; then
+            if curl --fail --silent --show-error --location --max-time 15 https://xxf.app/ | grep -q "Frontend-ready" && test "$(curl --insecure --silent --show-error --resolve "www.xxf.app:443:$DEPLOY_HOST" --output /dev/null --write-out '%{redirect_url}' https://www.xxf.app/)" = "https://xxf.app/"; then
               exit 0
             fi
             sleep 6
