@@ -132,7 +132,7 @@ export function AnimalMuseum() {
   return (
     <main className="animal-museum-page" id="top">
       <div className="animal-museum-viewer" ref={stageRef}>
-        <Image className="animal-museum-viewer__background" src="/animal/museum-bg.jpg" alt="A prehistoric animal museum diorama" fill priority sizes="100vw" style={{ objectPosition: scenePosition }} />
+        <Image className="animal-museum-viewer__background" src="/animal/museum-bg-v2.jpg" alt="A prehistoric animal museum diorama" fill priority sizes="100vw" style={{ objectPosition: scenePosition }} />
         <div className="animal-museum-viewer__wash" aria-hidden="true" />
 
         <header className="animal-museum-viewer__topbar">
