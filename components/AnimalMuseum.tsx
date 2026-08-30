@@ -159,7 +159,7 @@ export function AnimalMuseum() {
 
         <div className="animal-museum-viewer__model-stage" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onWheel={onWheel} role="region" aria-label={`${copy(selected.name, locale)} ${showModel ? t.modelView : t.sceneView}`}>
           <div className="animal-museum-viewer__model-glow" aria-hidden="true" />
-          {showModel && <Image className="animal-museum-viewer__model" src="/animal/stegosaurus.webp" alt="3D-style Stegosaurus museum specimen" width={1100} height={1100} style={modelStyle} priority />}
+          {showModel && <Image className="animal-museum-viewer__model" src="/animal/stegosaurus.webp" alt="3D-style Stegosaurus museum specimen" width={720} height={469} style={modelStyle} priority />}
           {!showModel && <div className="animal-museum-viewer__scene-tag"><span>{t.sceneView}</span><strong>{selected.glyph}</strong></div>}
           <span className="animal-museum-viewer__hint">{t.rotate}</span>
         </div>
