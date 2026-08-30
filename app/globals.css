@@ -774,6 +774,101 @@ button, select { cursor: pointer; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
+/* Immersive prehistoric museum viewer */
+.animal-museum-page { min-height: 100svh; padding: 0; overflow: hidden; background: #121716; }
+.animal-museum-viewer { position: relative; isolation: isolate; width: 100%; height: 100svh; min-height: 620px; overflow: hidden; color: #f7f4e9; background: #26372f; }
+.animal-museum-viewer:fullscreen { width: 100vw; height: 100vh; }
+.animal-museum-viewer__background { z-index: -4; object-fit: cover; object-position: center; filter: saturate(.88) contrast(1.05) brightness(.8); transform: scale(1.04); }
+.animal-museum-viewer__wash { position: absolute; z-index: -3; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(9,18,16,.72) 0%, rgba(9,18,16,.2) 35%, rgba(9,18,16,.04) 62%, rgba(9,18,16,.48) 100%), linear-gradient(0deg, rgba(7,14,13,.72), transparent 32%, rgba(7,14,13,.2)); }
+.animal-museum-viewer__wash::after { content: ""; position: absolute; inset: 0; opacity: .14; mix-blend-mode: soft-light; background-image: radial-gradient(rgba(255,255,255,.9) .6px, transparent .7px); background-size: 5px 5px; }
+.animal-museum-viewer__topbar { position: absolute; z-index: 10; top: 18px; left: 20px; right: 20px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.animal-museum-viewer__brand { display: inline-flex; align-items: center; gap: 10px; min-height: 42px; border: 1px solid rgba(255,255,255,.36); border-radius: 999px; background: rgba(242,240,227,.84); color: #29483e; padding: 7px 15px 7px 8px; box-shadow: 0 10px 30px rgba(0,0,0,.16); backdrop-filter: blur(14px); }
+.animal-museum-viewer__brand-mark { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #315d4d; color: #e4f3c3; font: 850 9px/1 var(--font-mono),monospace; letter-spacing: -.08em; }
+.animal-museum-viewer__brand > span:last-child { font: 750 11px/1 var(--font-mono),monospace; letter-spacing: .03em; }
+.animal-museum-viewer__tools { display: flex; align-items: center; gap: 5px; border: 1px solid rgba(255,255,255,.38); border-radius: 999px; background: rgba(245,243,232,.84); padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,.16); backdrop-filter: blur(14px); }
+.animal-museum-viewer__tools button { display: inline-grid; place-items: center; min-width: 34px; height: 32px; border: 0; border-radius: 999px; background: transparent; color: #315246; padding: 0 8px; font: 800 10px/1 var(--font-mono),monospace; }
+.animal-museum-viewer__tools button:hover, .animal-museum-viewer__tools button:focus-visible { background: #315d4d; color: #f6f3e8; outline: 0; }
+.animal-museum-viewer__tools button:first-child { min-width: 62px; }
+.animal-museum-viewer__tools button:nth-child(2) b { font-size: 17px; font-weight: 500; }
+.animal-museum-viewer__info { position: absolute; z-index: 8; top: clamp(95px, 15vh, 150px); left: clamp(20px, 4vw, 58px); width: min(390px, calc(100vw - 40px)); border: 1px solid rgba(255,255,255,.64); border-radius: 24px; background: rgba(247,245,235,.88); color: #29483e; padding: 25px 25px 20px; box-shadow: 0 24px 70px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.95); backdrop-filter: blur(18px); }
+.animal-museum-viewer__info-brand { display: flex; align-items: center; gap: 8px; color: #4a645b; font: 750 10px/1 var(--font-mono),monospace; letter-spacing: .02em; }
+.animal-museum-viewer__info-brand > span:last-child { color: #97a49a; font-weight: 650; }
+.animal-museum-viewer__leaf { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: #3c6c59; color: #ebf1d2; font-size: 14px; }
+.animal-museum-viewer__eyebrow { margin: 42px 0 0; color: #9b6544; font: 750 10px/1.2 var(--font-mono),monospace; letter-spacing: .05em; }
+.animal-museum-viewer__eyebrow i { margin: 0 6px; color: #b4ab9b; font-style: normal; }
+.animal-museum-viewer__info h1 { margin: 13px 0 16px; color: #2c5748; font-size: clamp(48px, 5.4vw, 72px); font-weight: 790; line-height: .86; letter-spacing: -.08em; }
+.animal-museum-viewer__story { max-width: 330px; margin: 0; color: #496259; font-size: 14px; line-height: 1.62; }
+.animal-museum-viewer__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 25px; }
+.animal-museum-viewer__actions button, .animal-museum-viewer__back { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid rgba(49,93,77,.22); border-radius: 999px; background: rgba(255,255,255,.5); color: #315d4d; padding: 12px 12px; font: 800 10px/1 var(--font-mono),monospace; transition: background .2s, color .2s, transform .2s; }
+.animal-museum-viewer__actions button span, .animal-museum-viewer__back span { font-size: 16px; }
+.animal-museum-viewer__actions button:hover, .animal-museum-viewer__actions button:focus-visible, .animal-museum-viewer__back:hover, .animal-museum-viewer__back:focus-visible { background: #315d4d; color: #f5f2e7; transform: translateY(-1px); outline: 0; }
+.animal-museum-viewer__actions .is-primary { border-color: #315d4d; background: #315d4d; color: #f5f2e7; }
+.animal-museum-viewer__actions .is-primary:hover, .animal-museum-viewer__actions .is-primary:focus-visible { background: #1f4437; }
+.animal-museum-viewer__guide { margin-top: 12px; border-top: 1px solid rgba(49,93,77,.18); padding-top: 13px; color: #526c61; font-size: 11px; line-height: 1.5; }
+.animal-museum-viewer__guide strong { color: #9b6544; font: 800 9px/1 var(--font-mono),monospace; letter-spacing: .08em; text-transform: uppercase; }
+.animal-museum-viewer__guide p { margin: 8px 0 0; }
+.animal-museum-viewer__back { width: 100%; margin-top: 8px; border-radius: 14px; background: rgba(255,255,255,.32); }
+.animal-museum-viewer__model-stage { position: absolute; z-index: 2; inset: 0; display: grid; place-items: center; padding: 70px 7vw 120px 32vw; cursor: grab; touch-action: none; }
+.animal-museum-viewer__model-stage:active { cursor: grabbing; }
+.animal-museum-viewer__model-glow { position: absolute; width: min(58vw, 720px); aspect-ratio: 1; border-radius: 50%; opacity: .34; background: radial-gradient(circle, rgba(234,206,132,.54), rgba(234,206,132,0) 68%); filter: blur(10px); pointer-events: none; }
+.animal-museum-viewer__model { position: relative; z-index: 2; width: min(69vw, 920px); height: auto; max-height: 79vh; object-fit: contain; filter: drop-shadow(0 32px 22px rgba(10,18,12,.45)); transform: perspective(1100px) rotateX(var(--model-rotate-x)) rotateY(var(--model-rotate-y)) scale(var(--model-scale)); transition: transform .18s ease-out; user-select: none; pointer-events: none; }
+.animal-museum-viewer__scene-tag { position: relative; z-index: 2; display: grid; place-items: center; gap: 10px; width: 156px; height: 156px; border: 1px solid rgba(255,255,255,.6); border-radius: 50%; background: rgba(247,245,235,.82); color: #315d4d; box-shadow: 0 20px 50px rgba(0,0,0,.2); backdrop-filter: blur(12px); }
+.animal-museum-viewer__scene-tag span { font: 750 8px/1 var(--font-mono),monospace; letter-spacing: .09em; text-transform: uppercase; }
+.animal-museum-viewer__scene-tag strong { font: 850 24px/1 var(--font-mono),monospace; }
+.animal-museum-viewer__hint { position: absolute; z-index: 3; right: 7vw; bottom: 132px; border: 1px solid rgba(255,255,255,.46); border-radius: 999px; background: rgba(247,245,235,.78); color: #416154; padding: 9px 14px; font: 750 9px/1 var(--font-mono),monospace; backdrop-filter: blur(10px); }
+.animal-museum-viewer__side-controls { position: absolute; z-index: 9; right: 20px; top: 50%; display: grid; width: 45px; overflow: hidden; transform: translateY(-50%); border: 1px solid rgba(255,255,255,.4); border-radius: 24px; background: rgba(34,52,45,.72); box-shadow: 0 12px 30px rgba(0,0,0,.25); backdrop-filter: blur(12px); }
+.animal-museum-viewer__side-controls button { height: 43px; border: 0; border-bottom: 1px solid rgba(255,255,255,.14); background: transparent; color: #e7ebd9; font: 650 18px/1 var(--font-mono),monospace; }
+.animal-museum-viewer__side-controls button:last-child { border-bottom: 0; }
+.animal-museum-viewer__side-controls button:hover, .animal-museum-viewer__side-controls button:focus-visible { background: #d6f85c; color: #243d33; outline: 0; }
+.animal-museum-viewer__carousel { position: absolute; z-index: 8; right: clamp(70px, 6vw, 96px); bottom: 17px; left: clamp(390px, 37vw, 530px); display: flex; align-items: center; gap: 10px; min-height: 105px; border: 1px solid rgba(255,255,255,.64); border-radius: 24px; background: rgba(247,245,235,.9); padding: 9px 10px; box-shadow: 0 20px 55px rgba(0,0,0,.25), inset 0 1px rgba(255,255,255,.95); backdrop-filter: blur(18px); }
+.animal-museum-viewer__carousel-list { display: flex; align-items: stretch; gap: 5px; min-width: 0; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; }
+.animal-museum-viewer__carousel-list::-webkit-scrollbar { display: none; }
+.animal-museum-viewer__carousel-item { position: relative; display: grid; flex: 0 0 112px; justify-items: center; gap: 5px; min-height: 84px; border: 1px solid transparent; border-radius: 14px; background: transparent; color: #29483e; padding: 6px 5px 8px; font: inherit; transition: background .18s, border-color .18s, transform .18s; }
+.animal-museum-viewer__carousel-item:hover, .animal-museum-viewer__carousel-item:focus-visible { background: rgba(255,255,255,.56); outline: 0; transform: translateY(-2px); }
+.animal-museum-viewer__carousel-item.is-selected { border-color: #9e704f; background: rgba(255,255,255,.54); box-shadow: inset 0 -2px #9e704f; }
+.animal-museum-viewer__thumb { display: grid; place-items: center; width: 49px; height: 42px; border-radius: 11px; background: linear-gradient(135deg, color-mix(in srgb, var(--thumb-color) 70%, #fff), color-mix(in srgb, var(--thumb-color) 30%, #315d4d)); box-shadow: inset 0 1px rgba(255,255,255,.6); }
+.animal-museum-viewer__thumb span { color: rgba(28,58,46,.78); font: 850 8px/1 var(--font-mono),monospace; }
+.animal-museum-viewer__carousel-item strong { max-width: 104px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; letter-spacing: -.02em; }
+.animal-museum-viewer__carousel-item small { color: #89958b; font: 750 8px/1 var(--font-mono),monospace; }
+.animal-museum-viewer__carousel-arrow { flex: 0 0 43px; width: 43px; height: 55px; border: 1px solid rgba(49,93,77,.13); border-radius: 14px; background: rgba(255,255,255,.7); color: #315d4d; font-size: 30px; line-height: 1; }
+.animal-museum-viewer__carousel-arrow:hover, .animal-museum-viewer__carousel-arrow:focus-visible { border-color: #315d4d; background: #315d4d; color: white; outline: 0; }
+
+@media (max-width: 900px) {
+  .animal-museum-viewer__info { top: 86px; width: min(330px, calc(100vw - 40px)); padding: 19px; }
+  .animal-museum-viewer__info-brand { font-size: 9px; }
+  .animal-museum-viewer__eyebrow { margin-top: 26px; }
+  .animal-museum-viewer__info h1 { font-size: clamp(42px, 7vw, 60px); }
+  .animal-museum-viewer__model-stage { padding-left: 27vw; padding-bottom: 130px; }
+  .animal-museum-viewer__model { width: min(74vw, 760px); }
+  .animal-museum-viewer__carousel { left: 28%; right: 74px; }
+}
+
+@media (max-width: 640px) {
+  .animal-museum-viewer { min-height: 700px; height: auto; min-height: 100svh; overflow-y: auto; }
+  .animal-museum-viewer__topbar { top: 10px; left: 10px; right: 10px; }
+  .animal-museum-viewer__brand { max-width: 52vw; padding-right: 10px; }
+  .animal-museum-viewer__brand > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 8px; }
+  .animal-museum-viewer__tools { gap: 2px; padding: 3px; }
+  .animal-museum-viewer__tools button { min-width: 28px; height: 28px; padding: 0 5px; font-size: 8px; }
+  .animal-museum-viewer__tools button:first-child { min-width: 47px; }
+  .animal-museum-viewer__info { top: 72px; left: 12px; width: calc(100vw - 24px); border-radius: 20px; padding: 16px; }
+  .animal-museum-viewer__eyebrow { margin-top: 18px; }
+  .animal-museum-viewer__info h1 { margin: 10px 0 10px; font-size: clamp(43px, 14vw, 66px); }
+  .animal-museum-viewer__story { font-size: 12px; line-height: 1.45; }
+  .animal-museum-viewer__actions { margin-top: 14px; }
+  .animal-museum-viewer__actions button { padding: 10px; }
+  .animal-museum-viewer__back { padding: 9px; }
+  .animal-museum-viewer__model-stage { position: relative; inset: auto; height: 480px; min-height: 480px; padding: 270px 5vw 0; }
+  .animal-museum-viewer__model { width: 110vw; max-height: 330px; }
+  .animal-museum-viewer__model-glow { width: 80vw; margin-top: 130px; }
+  .animal-museum-viewer__hint { right: auto; bottom: 9px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 8px; }
+  .animal-museum-viewer__side-controls { top: 400px; right: 12px; width: 38px; border-radius: 20px; }
+  .animal-museum-viewer__side-controls button { height: 36px; font-size: 15px; }
+  .animal-museum-viewer__carousel { position: relative; right: auto; bottom: auto; left: auto; min-height: 104px; margin: 0 12px 12px; border-radius: 19px; }
+  .animal-museum-viewer__carousel-item { flex-basis: 92px; }
+  .animal-museum-viewer__carousel-arrow { flex-basis: 34px; width: 34px; height: 48px; font-size: 25px; }
+}
+
 /* Browser-local image compressor */
 .image-compressor-page { width: calc(100% - 12px); min-height: 100svh; margin: 0 6px; padding-block: 6px; }
 .image-compressor-workbench { --compressor-dark: #17191c; --compressor-panel: #202327; --compressor-line: #393d40; min-height: calc(100svh - 12px); display: grid; grid-template-rows: auto minmax(0,1fr) auto; overflow: hidden; border: 1px solid #c7c5bd; border-radius: 18px; background: var(--compressor-dark); color: #f1f2ed; box-shadow: var(--shadow); }
@@ -1075,3 +1170,4 @@ button, select { cursor: pointer; }
   .collage-modal__card > header h2 { font-size: 20px; }
   .collage-modal__card > footer { align-items: flex-start; flex-direction: column; }
 }
+
