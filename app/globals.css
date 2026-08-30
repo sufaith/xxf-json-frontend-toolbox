@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 :root {
+  --font-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
   --paper: #f7f5ef;
   --paper-2: #eeece4;
   --ink: #121416;
@@ -303,6 +305,16 @@ button, select { cursor: pointer; }
 .tool-card p { position: relative; z-index: 1; display: -webkit-box; margin: 0; overflow: hidden; padding-right: 24px; color: #62655e; font-size: 11px; line-height: 1.48; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .tool-card__open { position: absolute; right: 13px; bottom: 13px; z-index: 3; display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: var(--ink); color: white; opacity: 0; pointer-events: none; transform: translate(4px,4px) scale(.82); font: 750 10px/1 var(--font-mono), monospace; transition: background .18s, color .18s, opacity .18s, transform .18s; }
 .tool-card:hover .tool-card__open, .tool-card:focus-visible .tool-card__open { background: var(--tool-accent); color: var(--ink); opacity: 1; transform: none; }
+.museum-feature { position: relative; display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 13px; min-height: 68px; margin-bottom: 10px; overflow: hidden; border: 1px solid rgba(18,20,22,.14); border-radius: 15px; background: linear-gradient(100deg, rgba(255,255,255,.76), rgba(245,241,255,.74)); padding: 11px 15px; box-shadow: 0 6px 18px rgba(18,20,22,.04), inset 0 1px rgba(255,255,255,.86); transition: border-color .2s, background .2s, transform .2s, box-shadow .2s; }
+.museum-feature::after { content: ""; position: absolute; right: 10%; top: -48px; width: 116px; height: 116px; border-radius: 50%; background: var(--acid); opacity: .16; pointer-events: none; }
+.museum-feature:hover, .museum-feature:focus-visible { border-color: rgba(18,20,22,.62); background: #fff; transform: translateY(-2px); box-shadow: 0 15px 32px rgba(18,20,22,.1); outline: 0; }
+.museum-feature__mark { position: relative; z-index: 1; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: var(--ink); color: var(--acid); font-size: 18px; box-shadow: 3px 3px 0 var(--violet); }
+.museum-feature__copy { position: relative; z-index: 1; display: grid; gap: 3px; min-width: 0; }
+.museum-feature__copy small { color: #7c8077; font: 700 8px/1 var(--font-mono),monospace; letter-spacing: .12em; }
+.museum-feature__copy strong { overflow: hidden; font-size: 16px; letter-spacing: -.035em; text-overflow: ellipsis; white-space: nowrap; }
+.museum-feature__copy em { overflow: hidden; color: #656960; font: 600 9px/1.2 var(--font-mono),monospace; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
+.museum-feature__arrow { position: relative; z-index: 1; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: white; font: 750 10px/1 var(--font-mono),monospace; transition: background .18s, color .18s, transform .18s; }
+.museum-feature:hover .museum-feature__arrow, .museum-feature:focus-visible .museum-feature__arrow { background: var(--acid); color: var(--ink); transform: rotate(8deg); }
 .utility-tool-page { width: calc(100% - 12px); min-height: calc(100svh - 12px); margin: 0 6px; padding-block: 6px; }
 .utility-workbench { width: min(1180px,100%); min-height: calc(100svh - 24px); margin: 0 auto; padding: 18px clamp(14px,4vw,52px) 24px; border: 1px solid rgba(18,20,22,.14); border-radius: 20px; background: rgba(250,249,245,.88); box-shadow: 0 18px 60px rgba(18,20,22,.08); }
 .utility-workbench__hero { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 20px; }
@@ -511,6 +523,81 @@ button, select { cursor: pointer; }
 .site-map-page__group a { color: #555850; font-size: 12px; line-height: 1.4; }
 .site-map-page__group a:hover { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
 
+/* Original interactive prehistoric animal museum */
+.animal-museum-page { min-height: 100svh; overflow: hidden; background: radial-gradient(circle at 8% 5%, rgba(102,87,236,.13), transparent 31rem), radial-gradient(circle at 94% 27%, rgba(200,255,77,.16), transparent 34rem), #f1efe8; padding: 6px; }
+.animal-museum { width: min(1280px, calc(100% - 4px)); min-height: calc(100svh - 12px); margin-inline: auto; border: 1px solid rgba(18,20,22,.14); border-radius: 24px; background: rgba(250,249,245,.7); box-shadow: 0 18px 70px rgba(18,20,22,.08); }
+.animal-museum__header { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 60px; padding: 12px clamp(18px,3vw,38px); border-bottom: 1px solid rgba(18,20,22,.1); }
+.animal-museum__brand { display: inline-flex; align-items: center; gap: 9px; color: #696d64; font: 700 9px/1 var(--font-mono),monospace; letter-spacing: .08em; }
+.animal-museum__brand span { color: var(--ink); font-size: 12px; letter-spacing: -.08em; }
+.animal-museum__brand i { color: #afb2aa; font-style: normal; }
+.animal-museum__brand b { color: #72766e; font-weight: 700; }
+.animal-museum__header nav { display: flex; align-items: center; gap: 18px; }
+.animal-museum__header nav a, .animal-museum__header nav button { border: 0; border-bottom: 1px solid transparent; background: transparent; color: #666a62; padding: 4px 0; font: 700 9px/1 var(--font-mono),monospace; letter-spacing: .06em; }
+.animal-museum__header nav a:hover, .animal-museum__header nav button:hover, .animal-museum__header nav a:focus-visible, .animal-museum__header nav button:focus-visible { border-color: var(--ink); color: var(--ink); outline: 0; }
+.animal-museum__hero { display: grid; grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); align-items: stretch; gap: clamp(22px,5vw,76px); padding: clamp(38px,6vw,82px) clamp(18px,5vw,70px) clamp(46px,6vw,78px); }
+.animal-museum__hero-copy { align-self: center; max-width: 540px; padding-block: 18px; }
+.animal-museum__eyebrow { margin: 0; color: #858a80; font: 700 9px/1.2 var(--font-mono),monospace; letter-spacing: .13em; text-transform: uppercase; }
+.animal-museum__hero h1 { max-width: 560px; margin: 22px 0 18px; color: var(--ink); font-size: clamp(52px,6.5vw,92px); font-weight: 760; line-height: .89; letter-spacing: -.085em; }
+.animal-museum__intro { max-width: 410px; margin: 0; color: #62665e; font-size: clamp(15px,1.45vw,18px); line-height: 1.55; letter-spacing: -.015em; }
+.animal-museum__hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; margin-top: 31px; }
+.animal-museum__primary { display: inline-flex; align-items: center; gap: 14px; border: 1px solid var(--ink); border-radius: 999px; background: var(--ink); color: white; padding: 11px 13px 11px 16px; font-size: 11px; font-weight: 720; transition: background .16s, color .16s, transform .16s; }
+.animal-museum__primary span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--acid); color: var(--ink); font: 800 13px/1 var(--font-mono),monospace; }
+.animal-museum__primary:hover, .animal-museum__primary:focus-visible { background: #34383b; transform: translateY(-1px); outline: 0; }
+.animal-museum__meta { color: #858980; font: 650 8px/1.2 var(--font-mono),monospace; letter-spacing: .05em; text-transform: uppercase; }
+.animal-museum__meta strong { color: var(--ink); font-size: 12px; }
+.animal-museum__meta i { margin-inline: 7px; color: #b5b7ae; font-style: normal; }
+.animal-museum__hero-art { position: relative; min-height: 450px; overflow: hidden; border: 1px solid rgba(18,20,22,.14); border-radius: 22px; background: #d9d4c7; box-shadow: 0 22px 60px rgba(18,20,22,.12); }
+.animal-museum__hero-art img { object-fit: cover; object-position: center; }
+.animal-museum__hero-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(247,245,239,.25), transparent 40%), linear-gradient(0deg, rgba(18,20,22,.14), transparent 27%); pointer-events: none; }
+.animal-museum__hero-stamp { position: absolute; left: 18px; bottom: 18px; z-index: 1; display: grid; place-items: center; width: 76px; height: 76px; border: 1px solid rgba(18,20,22,.25); border-radius: 50%; background: rgba(247,245,239,.76); color: var(--ink); font: 760 21px/.8 var(--font-mono),monospace; text-align: center; backdrop-filter: blur(6px); }
+.animal-museum__hero-stamp small { font-size: 6px; letter-spacing: .07em; }
+.animal-museum__hero-line { position: absolute; right: 25px; bottom: 24px; z-index: 1; width: 82px; height: 1px; background: rgba(18,20,22,.48); }
+.animal-museum__hero-line::after { content: "FIELD NOTE / 001"; position: absolute; right: 0; bottom: 8px; width: max-content; color: rgba(18,20,22,.7); font: 700 7px/1 var(--font-mono),monospace; letter-spacing: .1em; }
+.animal-museum__collection { border-top: 1px solid rgba(18,20,22,.1); padding: clamp(42px,6vw,78px) clamp(18px,5vw,70px) 30px; }
+.animal-museum__section-head { display: grid; grid-template-columns: minmax(0,1fr) minmax(260px,.68fr); align-items: end; gap: 35px; }
+.animal-museum__section-head h2 { margin: 14px 0 0; font-size: clamp(38px,5vw,62px); line-height: .92; letter-spacing: -.07em; }
+.animal-museum__section-head > p { max-width: 355px; margin: 0 0 3px; color: #73776e; font-size: 13px; line-height: 1.55; }
+.animal-museum__filters { display: flex; gap: 6px; margin-top: 32px; }
+.animal-museum__filters button { border: 1px solid rgba(18,20,22,.15); border-radius: 999px; background: rgba(255,255,255,.48); color: #6b7067; padding: 8px 13px; font: 700 9px/1 var(--font-mono),monospace; transition: background .16s, border-color .16s, color .16s, transform .16s; }
+.animal-museum__filters button:hover { border-color: var(--ink); color: var(--ink); transform: translateY(-1px); }
+.animal-museum__filters button.is-active { border-color: var(--ink); background: var(--ink); color: white; }
+.animal-museum__collection-layout { display: grid; grid-template-columns: minmax(0,1.12fr) minmax(330px,.88fr); gap: 12px; margin-top: 14px; }
+.animal-museum__cards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-content: start; gap: 6px; }
+.animal-exhibit-card { position: relative; display: grid; grid-template-columns: 25px 45px minmax(0,1fr) 22px; align-items: center; gap: 9px; min-height: 74px; border: 1px solid rgba(18,20,22,.12); border-radius: 13px; background: rgba(255,255,255,.52); padding: 9px 10px; color: var(--ink); text-align: left; transition: border-color .18s, background .18s, transform .18s, box-shadow .18s; }
+.animal-exhibit-card:hover, .animal-exhibit-card:focus-visible { z-index: 1; border-color: rgba(18,20,22,.58); background: #fff; transform: translateY(-2px); box-shadow: 0 10px 24px rgba(18,20,22,.08); outline: 0; }
+.animal-exhibit-card.is-selected { border-color: var(--ink); background: #fff; box-shadow: inset 3px 0 0 var(--acid); }
+.animal-exhibit-card__index { align-self: start; color: #9a9d95; padding-top: 4px; font: 700 8px/1 var(--font-mono),monospace; }
+.animal-exhibit-card__glyph { display: grid; place-items: center; width: 45px; height: 45px; border-radius: 50%; background: color-mix(in srgb, var(--exhibit-color) 42%, white); color: #41463f; font: 800 8px/1 var(--font-mono),monospace; letter-spacing: .04em; }
+.animal-exhibit-card__copy { min-width: 0; display: grid; gap: 5px; }
+.animal-exhibit-card__copy strong { overflow: hidden; font-size: 12px; letter-spacing: -.025em; text-overflow: ellipsis; white-space: nowrap; }
+.animal-exhibit-card__copy small { overflow: hidden; color: #858980; font: 600 8px/1.2 var(--font-mono),monospace; text-overflow: ellipsis; white-space: nowrap; }
+.animal-exhibit-card__arrow { color: #a0a39b; font: 750 11px/1 var(--font-mono),monospace; transition: color .16s, transform .16s; }
+.animal-exhibit-card:hover .animal-exhibit-card__arrow, .animal-exhibit-card.is-selected .animal-exhibit-card__arrow { color: var(--ink); transform: translate(2px,-2px); }
+.animal-museum__detail { position: relative; min-height: 100%; overflow: hidden; border: 1px solid rgba(18,20,22,.14); border-radius: 17px; background: var(--ink); color: #f2f3ed; padding: 19px 20px 16px; box-shadow: 0 18px 42px rgba(18,20,22,.12); }
+.animal-museum__detail::before { content: ""; position: absolute; top: -100px; right: -80px; width: 260px; height: 260px; border-radius: 50%; background: var(--exhibit-color, var(--acid)); opacity: .25; }
+.animal-museum__detail-top { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.animal-museum__detail-top .animal-museum__eyebrow { color: #9ca198; }
+.animal-museum__detail-top > span { border-radius: 999px; background: color-mix(in srgb, var(--acid) 24%, #202327); color: var(--acid); padding: 5px 8px; font: 700 8px/1 var(--font-mono),monospace; text-transform: uppercase; }
+.animal-museum__specimen { position: relative; z-index: 1; display: grid; place-items: center; width: 138px; height: 138px; margin: 25px 0 18px; border: 1px solid color-mix(in srgb, var(--exhibit-color) 70%, #fff); border-radius: 50%; background: radial-gradient(circle at 36% 28%, color-mix(in srgb, var(--exhibit-color) 78%, white), color-mix(in srgb, var(--exhibit-color) 19%, #202327) 70%); color: var(--ink); box-shadow: 0 0 0 12px rgba(255,255,255,.05), 0 20px 45px rgba(0,0,0,.25); }
+.animal-museum__specimen span { font: 850 22px/1 var(--font-mono),monospace; letter-spacing: .02em; }
+.animal-museum__specimen i { position: absolute; right: 17px; bottom: 18px; width: 14px; height: 14px; border: 2px solid var(--ink); border-left-color: transparent; border-bottom-color: transparent; border-radius: 50%; transform: rotate(23deg); }
+.animal-museum__detail h3 { position: relative; z-index: 1; margin: 0; font-size: clamp(26px,3vw,38px); line-height: .95; letter-spacing: -.06em; }
+.animal-museum__story { position: relative; z-index: 1; max-width: 440px; margin: 13px 0 0; color: #b8bcb4; font-size: 12px; line-height: 1.6; }
+.animal-museum__facts { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; margin: 24px 0 0; }
+.animal-museum__facts div { display: grid; gap: 6px; min-width: 0; border-top: 1px solid #3b3f43; padding-top: 9px; }
+.animal-museum__facts dt { color: #7f857d; font: 700 7px/1 var(--font-mono),monospace; letter-spacing: .08em; text-transform: uppercase; }
+.animal-museum__facts dd { overflow: hidden; margin: 0; color: #e6e8e1; font: 600 9px/1.35 var(--font-mono),monospace; text-overflow: ellipsis; }
+.animal-museum__field-note { position: relative; z-index: 1; margin-top: 23px; border-top: 1px solid #3b3f43; padding-top: 13px; }
+.animal-museum__field-note > span { color: var(--acid); font: 700 8px/1 var(--font-mono),monospace; letter-spacing: .1em; text-transform: uppercase; }
+.animal-museum__field-note p { margin: 9px 0 0; color: #aeb3aa; font: 600 10px/1.45 var(--font-mono),monospace; }
+.animal-museum__next { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 20px; border: 1px solid #4b5053; border-radius: 9px; background: transparent; color: #e9ebe4; padding: 9px 11px; font: 700 9px/1 var(--font-mono),monospace; transition: background .16s, border-color .16s, color .16s; }
+.animal-museum__next span { color: var(--acid); font-size: 13px; }
+.animal-museum__next:hover, .animal-museum__next:focus-visible { border-color: var(--acid); background: var(--acid); color: var(--ink); outline: 0; }
+.animal-museum__next:hover span, .animal-museum__next:focus-visible span { color: var(--ink); }
+.animal-museum__footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-height: 38px; border-top: 1px solid rgba(18,20,22,.1); color: #8b8e86; padding: 10px clamp(18px,5vw,70px); font: 650 8px/1.3 var(--font-mono),monospace; }
+.animal-museum__footer a { color: #6c7068; }
+.animal-museum__footer a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
 @media (max-width: 1020px) {
   .hero { grid-template-columns: 1fr; gap: 52px; padding-top: 64px; }
   .hero__copy { max-width: 720px; }
@@ -636,6 +723,34 @@ button, select { cursor: pointer; }
   .video-converter__dropzone { min-height: 220px; }
   .video-converter__actions > span { width: 100%; margin-left: 0; }
   .video-converter__status { align-items: flex-start; flex-direction: column; gap: 5px; }
+  .museum-feature { min-height: 62px; padding: 9px 11px; }
+  .museum-feature__mark { width: 34px; height: 34px; font-size: 16px; }
+  .museum-feature__copy strong { font-size: 14px; }
+  .animal-museum-page { padding: 0; }
+  .animal-museum { width: 100%; min-height: 100svh; border-right: 0; border-left: 0; border-radius: 0; }
+  .animal-museum__header { min-height: 52px; padding: 9px 15px; }
+  .animal-museum__brand b { max-width: 42vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .animal-museum__header nav { gap: 12px; }
+  .animal-museum__hero { grid-template-columns: 1fr; gap: 26px; padding: 36px 15px 42px; }
+  .animal-museum__hero-copy { padding: 0; }
+  .animal-museum__hero h1 { margin: 16px 0 15px; font-size: clamp(50px, 14vw, 74px); }
+  .animal-museum__intro { font-size: 15px; }
+  .animal-museum__hero-actions { align-items: flex-start; flex-direction: column; gap: 14px; margin-top: 24px; }
+  .animal-museum__hero-art { min-height: 300px; border-radius: 17px; }
+  .animal-museum__collection { padding: 43px 15px 22px; }
+  .animal-museum__section-head { grid-template-columns: 1fr; gap: 15px; }
+  .animal-museum__section-head h2 { margin-top: 11px; font-size: 47px; }
+  .animal-museum__section-head > p { font-size: 12px; }
+  .animal-museum__filters { margin-top: 23px; overflow-x: auto; padding-bottom: 2px; }
+  .animal-museum__filters button { flex: 0 0 auto; }
+  .animal-museum__collection-layout { grid-template-columns: 1fr; gap: 10px; }
+  .animal-museum__cards { order: 2; }
+  .animal-museum__detail { order: 1; min-height: auto; padding: 17px 16px 15px; }
+  .animal-museum__specimen { width: 104px; height: 104px; margin: 20px 0 16px; }
+  .animal-museum__specimen span { font-size: 17px; }
+  .animal-museum__detail h3 { font-size: 32px; }
+  .animal-museum__facts { margin-top: 20px; }
+  .animal-museum__footer { align-items: flex-start; flex-direction: column; gap: 6px; padding: 12px 15px 16px; }
 }
 
 @media (max-width: 480px) {
@@ -644,6 +759,12 @@ button, select { cursor: pointer; }
   .dock-tool-menu__list { grid-template-columns: 1fr; }
   .tool-card-grid { grid-template-columns: 1fr; }
   .tool-card { min-height: 150px; }
+  .museum-feature__copy em { display: none; }
+  .animal-museum__hero-art { min-height: 245px; }
+  .animal-museum__cards { grid-template-columns: 1fr; }
+  .animal-exhibit-card { min-height: 68px; }
+  .animal-museum__facts { gap: 5px; }
+  .animal-museum__facts dd { font-size: 8px; }
   .hero__stats dd { font-size: 8px; }
   .preview-window__bar b { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
