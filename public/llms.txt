@@ -8,11 +8,12 @@ XXF Tools is a free, browser-based JSON, frontend, image and video toolbox at ht
 - M3U8 playback is streamed directly by the visitor's browser from the supplied URL.
 - User input is not uploaded to XXF for conversion.
 - No account or payment is required.
-- The site includes dedicated pages for 30 tools, including URL inspection, redirect checking, M3U8 video playback, video-to-M3U8 conversion, a local image compressor and photo collage maker, plus practical technical guides.
+- The site includes dedicated pages for 30 tools, an interactive prehistoric animal museum, including URL inspection, redirect checking, M3U8 video playback, video-to-M3U8 conversion, a local image compressor and photo collage maker, plus practical technical guides.
 
 ## Primary sections
 
 - Home and tool directory: https://xxf.app/
+- Prehistoric Animal Museum: https://xxf.app/animal/
 - JSON Formatter: https://xxf.app/tools/json-formatter/
 - JSON to TypeScript: https://xxf.app/tools/json-to-typescript/
 - JSON to YAML: https://xxf.app/tools/json-to-yaml/
