@@ -1173,3 +1173,18 @@ button, select { cursor: pointer; }
 
 
 .animal-museum-page + .site-footer { display: none; }
+
+
+/* Keep the museum controls compact and preserve the specimen's natural aspect ratio. */
+.animal-museum-viewer__model { width: min(72vw, 980px); max-height: 72vh; }
+.animal-museum-viewer__carousel { min-height: 92px; border-radius: 20px; padding: 7px 8px; }
+.animal-museum-viewer__carousel-item { flex-basis: 100px; min-height: 70px; padding: 4px 4px 6px; }
+.animal-museum-viewer__thumb { width: 44px; height: 36px; }
+.animal-museum-viewer__carousel-item strong { font-size: 9.5px; }
+.animal-museum-viewer__carousel-arrow { flex-basis: 38px; width: 38px; height: 48px; }
+
+@media (max-width: 640px) {
+  .animal-museum-viewer__model { width: 110vw; max-height: 330px; }
+  .animal-museum-viewer__carousel { min-height: 96px; }
+  .animal-museum-viewer__carousel-item { flex-basis: 90px; min-height: 74px; }
+}
