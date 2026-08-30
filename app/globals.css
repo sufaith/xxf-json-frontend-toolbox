@@ -1171,3 +1171,5 @@ button, select { cursor: pointer; }
   .collage-modal__card > footer { align-items: flex-start; flex-direction: column; }
 }
 
+
+.animal-museum-page + .site-footer { display: none; }
