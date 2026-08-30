@@ -1228,3 +1228,21 @@ button, select { cursor: pointer; }
   .animal-museum-viewer__model-stage { padding-bottom: 0; }
   .animal-museum-viewer__model { width: 110vw; max-height: 330px; }
 }
+
+/* Final alignment and cache-safe control placement */
+.animal-museum-viewer__topbar { justify-content: flex-end; }
+.animal-museum-viewer__info h1 { font-size: clamp(48px, 4vw, 58px); line-height: .9; letter-spacing: -.07em; }
+.animal-museum-viewer__field-note { max-width: 300px; font-size: 18.5px; line-height: 1.55; }
+.animal-museum-viewer__actions { margin-top: 30px; }
+.animal-museum-viewer__actions button, .animal-museum-viewer__back { padding-block: 15px; }
+.animal-museum-viewer__model-stage { padding-bottom: 200px; }
+.animal-museum-viewer__model { width: min(42vw, 840px); max-height: 62vh; }
+.animal-museum-viewer__side-controls { display: none; }
+@media (max-width: 900px) {
+  .animal-museum-viewer__model-stage { padding-bottom: 130px; }
+  .animal-museum-viewer__model { width: min(50vw, 760px); }
+}
+@media (max-width: 640px) {
+  .animal-museum-viewer__model-stage { padding-bottom: 0; }
+  .animal-museum-viewer__model { width: 110vw; max-height: 330px; }
+}
