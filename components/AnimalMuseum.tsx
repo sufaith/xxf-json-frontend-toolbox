@@ -56,7 +56,7 @@ function copy(text: LocalizedText, locale: Locale) {
 export function AnimalMuseum() {
   const [locale, setLocale] = useState<Locale>("en");
   const [habitat, setHabitat] = useState<Habitat>("all");
-  const [selectedId, setSelectedId] = useState(exhibits[0].id);
+  const [selectedId, setSelectedId] = useState("stegosaurus");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
