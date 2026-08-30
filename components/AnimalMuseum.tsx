@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type WheelEvent } from "react";
 
 type Locale = "en" | "zh";
 type Habitat = "all" | "land" | "air" | "water";
@@ -45,8 +45,8 @@ const exhibits: Exhibit[] = [
 ];
 
 const labels = {
-  en: { back: "XXF Tools", eyebrow: "XXF FIELD MUSEUM · 01", title: "Meet the giants of deep time.", intro: "A calm, browser-first museum for curious minds. Explore 18 prehistoric animals, one specimen at a time.", explore: "Explore the collection", exhibits: "Exhibits", quiet: "Quietly interactive", collection: "The collection", collectionIntro: "Filter by habitat, then choose a specimen to open its field notes.", all: "All", land: "Land", air: "Air", water: "Water", selected: "Selected specimen", period: "Period", size: "Scale", diet: "Diet", fieldNote: "Field note", browse: "Browse another specimen", top: "Back to top", lang: "中文", new: "New destination", footer: "An original XXF experience inspired by the wonder of natural history." },
-  zh: { back: "XXF 工具箱", eyebrow: "XXF 远古生命博物馆 · 01", title: "认识深时的巨兽。", intro: "一个安静、直接在浏览器中运行的远古生命博物馆。逐一探索 18 种史前动物。", explore: "探索展馆", exhibits: "展品", quiet: "安静的互动体验", collection: "展品目录", collectionIntro: "按栖息环境筛选，再选择一个展品打开它的考察笔记。", all: "全部", land: "陆地", air: "天空", water: "水域", selected: "当前展品", period: "年代", size: "尺度", diet: "食性", fieldNote: "考察笔记", browse: "继续浏览展品", top: "回到顶部", lang: "EN", new: "新体验", footer: "XXF 原创体验，献给自然历史的好奇心。" },
+  en: { back: "Back to XXF Tools", museum: "Prehistoric Animal Museum", meet: "Meet today’s friend", dinosaur: "dinosaur", listen: "Listen", guide: "Guide", backMuseum: "Back to museum", language: "Change language", fullscreen: "Fullscreen", exitFullscreen: "Exit fullscreen", reset: "Reset view", rotate: "Drag to turn · scroll to zoom", selected: "Selected specimen", period: "Period", size: "Scale", diet: "Diet", all: "All", land: "Land", air: "Air", water: "Water", fieldNote: "Field note", exhibits: "Exhibits", sceneView: "Scene view", modelView: "3D exhibit", guideTitle: "Field guide", close: "Close", next: "Next animal", previous: "Previous animal", intro: "A browser-first natural history room for curious minds." },
+  zh: { back: "返回 XXF 工具箱", museum: "远古生命博物馆", meet: "今天遇见", dinosaur: "恐龙", listen: "聆听", guide: "导览", backMuseum: "返回展馆", language: "切换语言", fullscreen: "全屏观看", exitFullscreen: "退出全屏", reset: "重置视角", rotate: "拖动旋转 · 滚动缩放", selected: "当前展品", period: "年代", size: "尺度", diet: "食性", all: "全部", land: "陆地", air: "天空", water: "水域", fieldNote: "考察笔记", exhibits: "展品", sceneView: "场景视图", modelView: "3D 展品", guideTitle: "现场导览", close: "关闭", next: "下一个展品", previous: "上一个展品", intro: "一个直接在浏览器中运行的自然历史展厅。" },
 } satisfies Record<Locale, Record<string, string>>;
 
 function copy(text: LocalizedText, locale: Locale) {
@@ -57,76 +57,129 @@ export function AnimalMuseum() {
   const [locale, setLocale] = useState<Locale>("en");
   const [habitat, setHabitat] = useState<Habitat>("all");
   const [selectedId, setSelectedId] = useState(exhibits[0].id);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef({ active: false, x: 0, y: 0, rotationX: 0, rotationY: 0 });
   const t = labels[locale];
   const filteredExhibits = useMemo(() => habitat === "all" ? exhibits : exhibits.filter((exhibit) => exhibit.group === habitat), [habitat]);
   const selected = exhibits.find((exhibit) => exhibit.id === selectedId) ?? exhibits[0];
+
+  useEffect(() => {
+    const onFullscreenChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  function selectExhibit(id: string) {
+    setSelectedId(id);
+    setRotation({ x: 0, y: 0 });
+    setZoom(1);
+  }
 
   function changeHabitat(next: Habitat) {
     setHabitat(next);
     if (next !== "all" && selected.group !== next) {
       const first = exhibits.find((exhibit) => exhibit.group === next);
-      if (first) setSelectedId(first.id);
+      if (first) selectExhibit(first.id);
     }
   }
 
+  function onPointerDown(event: PointerEvent<HTMLDivElement>) {
+    dragRef.current = { active: true, x: event.clientX, y: event.clientY, rotationX: rotation.x, rotationY: rotation.y };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function onPointerMove(event: PointerEvent<HTMLDivElement>) {
+    if (!dragRef.current.active) return;
+    setRotation({ x: Math.max(-12, Math.min(12, dragRef.current.rotationX - (event.clientY - dragRef.current.y) * 0.12)), y: dragRef.current.rotationY + (event.clientX - dragRef.current.x) * 0.18 });
+  }
+
+  function onPointerUp(event: PointerEvent<HTMLDivElement>) {
+    dragRef.current.active = false;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+
+  function onWheel(event: WheelEvent<HTMLDivElement>) {
+    event.preventDefault();
+    setZoom((value) => Math.max(.82, Math.min(1.25, value - event.deltaY * .0008)));
+  }
+
+  async function toggleFullscreen() {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else await stageRef.current?.requestFullscreen();
+  }
+
+  function resetView() {
+    setRotation({ x: 0, y: 0 });
+    setZoom(1);
+  }
+
+  function listen() {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(`${selected.name.en}. ${selected.story.en}`);
+    utterance.lang = locale === "zh" ? "zh-CN" : "en-US";
+    window.speechSynthesis.speak(utterance);
+  }
+
+  const scenePosition = selected.id === "stegosaurus" ? "center" : selected.group === "air" ? "26% 20%" : selected.group === "water" ? "20% 70%" : "72% 60%";
+  const showModel = selected.id === "stegosaurus";
+  const modelStyle = { "--model-rotate-x": `${rotation.x}deg`, "--model-rotate-y": `${rotation.y}deg`, "--model-scale": zoom } as CSSProperties;
+
   return (
     <main className="animal-museum-page" id="top">
-      <div className="animal-museum shell">
-        <header className="animal-museum__header">
-          <Link className="animal-museum__brand" href="/" aria-label={t.back}><span>XXF</span><i>/</i><b>{locale === "en" ? "FIELD MUSEUM" : "远古生命博物馆"}</b></Link>
-          <nav aria-label="Museum navigation">
-            <a href="#collection">{t.collection}</a>
-            <button type="button" onClick={() => setLocale(locale === "en" ? "zh" : "en")} aria-label="Switch language">{t.lang}</button>
-          </nav>
+      <div className="animal-museum-viewer" ref={stageRef}>
+        <Image className="animal-museum-viewer__background" src="/animal/museum-bg.jpg" alt="A prehistoric animal museum diorama" fill priority sizes="100vw" style={{ objectPosition: scenePosition }} />
+        <div className="animal-museum-viewer__wash" aria-hidden="true" />
+
+        <header className="animal-museum-viewer__topbar">
+          <Link className="animal-museum-viewer__brand" href="/" aria-label={t.back}><span className="animal-museum-viewer__brand-mark">XXF</span><span>{t.museum}</span></Link>
+          <div className="animal-museum-viewer__tools">
+            <button type="button" onClick={() => setLocale(locale === "en" ? "zh" : "en")} aria-label={`${t.language} / 中文`}><span aria-hidden="true">文</span> {locale.toUpperCase()}</button>
+            <button type="button" onClick={toggleFullscreen} aria-label={isFullscreen ? t.exitFullscreen : t.fullscreen}><span aria-hidden="true">↗</span><b>{isFullscreen ? "×" : "⛶"}</b></button>
+            <button type="button" onClick={resetView} aria-label={t.reset}>↻</button>
+          </div>
         </header>
 
-        <section className="animal-museum__hero" aria-labelledby="animal-museum-title">
-          <div className="animal-museum__hero-copy">
-            <p className="animal-museum__eyebrow">{t.eyebrow}</p>
-            <h1 id="animal-museum-title">{t.title}</h1>
-            <p className="animal-museum__intro">{t.intro}</p>
-            <div className="animal-museum__hero-actions">
-              <a className="animal-museum__primary" href="#collection">{t.explore}<span aria-hidden="true">↓</span></a>
-              <span className="animal-museum__meta"><strong>18</strong> {t.exhibits}<i>·</i><strong>03</strong> {t.quiet}</span>
-            </div>
+        <section className="animal-museum-viewer__info" aria-labelledby="animal-museum-title">
+          <div className="animal-museum-viewer__info-brand"><span className="animal-museum-viewer__leaf">◒</span><strong>{t.museum}</strong><span>· XXF</span></div>
+          <p className="animal-museum-viewer__eyebrow">{t.meet} <i>|</i> {copy(selected.groupLabel, locale)} {t.dinosaur}</p>
+          <h1 id="animal-museum-title">{copy(selected.name, locale)}</h1>
+          <p className="animal-museum-viewer__story">{copy(selected.story, locale)}</p>
+          <div className="animal-museum-viewer__actions">
+            <button type="button" className="is-primary" onClick={listen}><span aria-hidden="true">◖</span>{t.listen}</button>
+            <button type="button" onClick={() => setGuideOpen(!guideOpen)}><span aria-hidden="true">▱</span>{guideOpen ? t.close : t.guide}</button>
           </div>
-          <div className="animal-museum__hero-art">
-            <Image src="/animal-museum-hero.jpg" alt="A calm prehistoric animal museum with a stegosaurus, pterosaur and marine reptile" fill priority sizes="(max-width: 760px) 100vw, 58vw" />
-            <span className="animal-museum__hero-stamp">18<br /><small>SPECIMENS</small></span>
-            <span className="animal-museum__hero-line" aria-hidden="true" />
-          </div>
+          {guideOpen && <div className="animal-museum-viewer__guide"><strong>{t.guideTitle}</strong><p>{copy(selected.facts[0], locale)}</p><p>{copy(selected.facts[1], locale)}</p></div>}
+          <button className="animal-museum-viewer__back" type="button" onClick={() => document.getElementById("animal-collection")?.scrollIntoView({ behavior: "smooth" })}><span aria-hidden="true">▦</span>{t.backMuseum}</button>
         </section>
 
-        <section className="animal-museum__collection" id="collection" aria-labelledby="collection-title">
-          <div className="animal-museum__section-head">
-            <div><p className="animal-museum__eyebrow">02 · {t.collection}</p><h2 id="collection-title">{t.collection}</h2></div>
-            <p>{t.collectionIntro}</p>
-          </div>
-          <div className="animal-museum__filters" role="group" aria-label="Filter exhibits">
-            {(["all", "land", "air", "water"] as Habitat[]).map((item) => <button type="button" key={item} className={habitat === item ? "is-active" : ""} onClick={() => changeHabitat(item)} aria-pressed={habitat === item}>{t[item]}</button>)}
-          </div>
-          <div className="animal-museum__collection-layout">
-            <div className="animal-museum__cards" aria-label={t.collection}>
-              {filteredExhibits.map((exhibit, index) => <button type="button" key={exhibit.id} className={`animal-exhibit-card ${selected.id === exhibit.id ? "is-selected" : ""}`} onClick={() => setSelectedId(exhibit.id)} aria-pressed={selected.id === exhibit.id}>
-                <span className="animal-exhibit-card__index">{String(index + 1).padStart(2, "0")}</span>
-                <span className="animal-exhibit-card__glyph" style={{ "--exhibit-color": exhibit.color } as CSSProperties}>{exhibit.glyph}</span>
-                <span className="animal-exhibit-card__copy"><strong>{copy(exhibit.name, locale)}</strong><small>{copy(exhibit.period, locale)}</small></span>
-                <span className="animal-exhibit-card__arrow" aria-hidden="true">↗</span>
-              </button>)}
-            </div>
-            <article className="animal-museum__detail" aria-live="polite">
-              <div className="animal-museum__detail-top"><p className="animal-museum__eyebrow">{t.selected}</p><span>{copy(selected.groupLabel, locale)}</span></div>
-              <div className="animal-museum__specimen" style={{ "--exhibit-color": selected.color } as CSSProperties}><span>{selected.glyph}</span><i aria-hidden="true" /></div>
-              <h3>{copy(selected.name, locale)}</h3>
-              <p className="animal-museum__story">{copy(selected.story, locale)}</p>
-              <dl className="animal-museum__facts"><div><dt>{t.period}</dt><dd>{copy(selected.period, locale)}</dd></div><div><dt>{t.size}</dt><dd>{copy(selected.size, locale)}</dd></div><div><dt>{t.diet}</dt><dd>{copy(selected.diet, locale)}</dd></div></dl>
-              <div className="animal-museum__field-note"><span>{t.fieldNote}</span><p>{copy(selected.facts[0], locale)}</p><p>{copy(selected.facts[1], locale)}</p></div>
-              <button className="animal-museum__next" type="button" onClick={() => { const nextIndex = (exhibits.findIndex((exhibit) => exhibit.id === selected.id) + 1) % exhibits.length; setSelectedId(exhibits[nextIndex].id); }}>{t.browse}<span aria-hidden="true">→</span></button>
-            </article>
-          </div>
-        </section>
+        <div className="animal-museum-viewer__model-stage" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onWheel={onWheel} role="region" aria-label={`${copy(selected.name, locale)} ${showModel ? t.modelView : t.sceneView}`}>
+          <div className="animal-museum-viewer__model-glow" aria-hidden="true" />
+          {showModel && <Image className="animal-museum-viewer__model" src="/animal/stegosaurus.webp" alt="3D-style Stegosaurus museum specimen" width={1100} height={1100} style={modelStyle} priority />}
+          {!showModel && <div className="animal-museum-viewer__scene-tag"><span>{t.sceneView}</span><strong>{selected.glyph}</strong></div>}
+          <span className="animal-museum-viewer__hint">{t.rotate}</span>
+        </div>
 
-        <footer className="animal-museum__footer"><span>{t.footer}</span><a href="#top">{t.top} ↑</a></footer>
+        <div className="animal-museum-viewer__side-controls" aria-label="Exhibit controls">
+          <button type="button" onClick={resetView} aria-label={t.reset}>⌂</button>
+          <button type="button" onClick={() => setZoom((value) => Math.min(1.25, value + .08))} aria-label="Zoom in">＋</button>
+          <button type="button" onClick={() => setZoom((value) => Math.max(.82, value - .08))} aria-label="Zoom out">−</button>
+        </div>
+
+        <section className="animal-museum-viewer__carousel" id="animal-collection" aria-label={t.exhibits}>
+          <button type="button" className="animal-museum-viewer__carousel-arrow" onClick={() => { const index = Math.max(0, filteredExhibits.findIndex((item) => item.id === selected.id) - 1); selectExhibit(filteredExhibits[index].id); }} aria-label={t.previous}>‹</button>
+          <div className="animal-museum-viewer__carousel-list">
+            {filteredExhibits.map((exhibit, index) => <button type="button" key={exhibit.id} className={`animal-museum-viewer__carousel-item ${selected.id === exhibit.id ? "is-selected" : ""}`} onClick={() => selectExhibit(exhibit.id)} aria-pressed={selected.id === exhibit.id}>
+              <span className="animal-museum-viewer__thumb" style={{ "--thumb-color": exhibit.color } as CSSProperties}><span>{exhibit.glyph}</span></span>
+              <strong>{copy(exhibit.name, locale)}</strong><small>{String(index + 1).padStart(2, "0")}</small>
+            </button>)}
+          </div>
+          <button type="button" className="animal-museum-viewer__carousel-arrow" onClick={() => { const index = (filteredExhibits.findIndex((item) => item.id === selected.id) + 1) % filteredExhibits.length; selectExhibit(filteredExhibits[index].id); }} aria-label={t.next}>›</button>
+        </section>
       </div>
     </main>
   );
