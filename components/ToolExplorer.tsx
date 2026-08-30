@@ -25,6 +25,11 @@ export function ToolExplorer() {
           ))}
         </div>
       </div>
+      <Link href="/animal/" className="museum-feature">
+        <span className="museum-feature__mark" aria-hidden="true">✦</span>
+        <span className="museum-feature__copy"><small>NEW DESTINATION</small><strong>Prehistoric Animal Museum</strong><em>18 interactive specimens · English / 中文</em></span>
+        <span className="museum-feature__arrow" aria-hidden="true">↗</span>
+      </Link>
       <div className="tool-card-grid">
         {filtered.map((tool, index) => (
           <Link

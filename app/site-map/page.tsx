@@ -28,6 +28,12 @@ export default function SiteMapPage() {
             </section>
           ))}
           <section className="site-map-page__group">
+            <h2>Experiences</h2>
+            <nav aria-label="Interactive experiences">
+              <Link href="/animal/">Prehistoric Animal Museum</Link>
+            </nav>
+          </section>
+          <section className="site-map-page__group">
             <h2>Guides</h2>
             <nav aria-label="Technical guides">
               {guides.map((guide) => <Link href={`/guides/${guide.slug}/`} key={guide.slug}>{guide.title}</Link>)}
