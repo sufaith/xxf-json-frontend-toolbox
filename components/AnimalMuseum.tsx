@@ -148,7 +148,7 @@ export function AnimalMuseum() {
           <div className="animal-museum-viewer__info-brand"><span className="animal-museum-viewer__leaf">◒</span><strong>{t.museum}</strong><span>· XXF</span></div>
           <p className="animal-museum-viewer__eyebrow">{t.meet} <i>|</i> {copy(selected.groupLabel, locale)} {t.dinosaur}</p>
           <h1 id="animal-museum-title">{copy(selected.name, locale)}</h1>
-          <p className="animal-museum-viewer__story">{copy(selected.story, locale)}</p>
+          <p className="animal-museum-viewer__field-note"><span aria-hidden="true">◉</span>{copy(selected.facts[0], locale)}</p>
           <div className="animal-museum-viewer__actions">
             <button type="button" className="is-primary" onClick={listen}><span aria-hidden="true">◖</span>{t.listen}</button>
             <button type="button" onClick={() => setGuideOpen(!guideOpen)}><span aria-hidden="true">▱</span>{guideOpen ? t.close : t.guide}</button>
