@@ -23,6 +23,7 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /Redirect Checker/);
   assert.match(source, /M3U8 Video Player/);
   assert.match(source, /Video to M3U8/);
+  assert.match(source, /Prehistoric Animal Museum/);
   assert.doesNotMatch(source, />Open tool</i);
   assert.match(source, /<link rel="canonical" href="https:\/\/xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
@@ -146,13 +147,29 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("manifest.webmanifest", out), "utf8"),
     readFile(new URL("llms.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 41);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 42);
+  assert.match(sitemap, /https:\/\/xxf\.app\/animal\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/site-map\//);
   assert.match(robots, /Sitemap: https:\/\/xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
   assert.match(llms, /Text, image and video conversions run locally/);
   assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
-  await Promise.all(["og.jpg", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
+  await Promise.all(["og.jpg", "animal-museum-hero.jpg", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
+});
+
+test("prehistoric animal museum has its own indexable experience page", async () => {
+  const source = await html("animal/index.html");
+  assert.match(source, /<title>Prehistoric Animal Museum — Interactive Natural History \| XXF Tools<\/title>/i);
+  assert.match(source, /href="https:\/\/xxf\.app\/animal\//i);
+  assert.match(source, /Prehistoric Animal Museum/);
+  assert.match(source, /18/);
+  assert.match(source, /animal-museum-hero\.jpg/);
+  assert.doesNotMatch(source, /_next\/image\/\?url=/);
+  assert.match(source, /CollectionPage/);
+  assert.match(source, /Tyrannosaurus/);
+  assert.match(source, /Triceratops/);
+  assert.match(source, /中文/);
+  assert.doesNotMatch(source, /site-header/);
 });
 
 test("performance hints and image previews are present", async () => {
