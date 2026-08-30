@@ -1188,3 +1188,24 @@ button, select { cursor: pointer; }
   .animal-museum-viewer__carousel { min-height: 96px; }
   .animal-museum-viewer__carousel-item { flex-basis: 90px; min-height: 74px; }
 }
+
+
+/* Reference-aligned museum composition */
+.animal-museum-viewer__background { filter: saturate(.94) contrast(1.02) brightness(1.02); transform: scale(1.02); }
+.animal-museum-viewer__wash { background: linear-gradient(90deg, rgba(9,18,16,.38) 0%, rgba(9,18,16,.1) 35%, rgba(9,18,16,.02) 62%, rgba(9,18,16,.2) 100%), linear-gradient(0deg, rgba(7,14,13,.25), transparent 32%, rgba(7,14,13,.04)); }
+.animal-museum-viewer__topbar > .animal-museum-viewer__brand { display: none; }
+.animal-museum-viewer__info { top: clamp(118px, 17vh, 150px); left: 18px; width: min(390px, calc(100vw - 36px)); }
+.animal-museum-viewer__model { width: min(50vw, 840px); max-height: 68vh; }
+.animal-museum-viewer__carousel { right: clamp(96px, 9.5vw, 132px); left: clamp(390px, 38.8vw, 740px); min-height: 92px; border-radius: 20px; padding: 7px 8px; }
+.animal-museum-viewer__carousel-item { flex-basis: clamp(100px, 10vw, 142px); min-height: 70px; padding: 4px 4px 6px; }
+.animal-museum-viewer__thumb { width: 58px; height: 44px; }
+.animal-museum-viewer__carousel-item strong { max-width: 128px; }
+@media (max-width: 900px) {
+  .animal-museum-viewer__model { width: min(50vw, 760px); }
+}
+@media (max-width: 640px) {
+  .animal-museum-viewer__info { left: 12px; width: calc(100vw - 24px); }
+  .animal-museum-viewer__model { width: 110vw; max-height: 330px; }
+  .animal-museum-viewer__carousel { right: auto; left: auto; min-height: 96px; }
+  .animal-museum-viewer__carousel-item { flex-basis: 90px; min-height: 74px; }
+}
