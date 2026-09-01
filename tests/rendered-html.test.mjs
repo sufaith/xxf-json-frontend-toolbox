@@ -8,7 +8,7 @@ async function html(path) {
   return readFile(new URL(path, out), "utf8");
 }
 
-test("home page renders only the category tabs, tool cards and SEO metadata", async () => {
+test("home page keeps the tool directory and adds useful editorial content below it", async () => {
   const source = await html("index.html");
   assert.match(source, /<h1 class="sr-only">XXF browser tools<\/h1>/i);
   assert.match(source, /aria-label="Tool categories"/i);
@@ -28,12 +28,17 @@ test("home page renders only the category tabs, tool cards and SEO metadata", as
   assert.match(source, /<link rel="canonical" href="https:\/\/xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
   assert.match(source, /og:image/);
-  assert.equal((source.match(/<script type="application\/ld\+json">/g) ?? []).length, 1);
+  assert.equal((source.match(/<script type="application\/ld\+json">/g) ?? []).length, 2);
   assert.match(source, /WebSite/);
   assert.match(source, /WebPage/);
   assert.match(source, /ItemList/);
   assert.match(source, /Organization/);
-  assert.doesNotMatch(source, /workspace-hero|search-box|trust-grid|guide-grid|FAQPage|closing-cta/);
+  assert.match(source, /FAQPage/);
+  assert.match(source, /class="trust-grid"/);
+  assert.match(source, /class="guide-grid"/);
+  assert.match(source, /class="home-faq-section"/);
+  assert.match(source, /A useful result includes the edges/);
+  assert.doesNotMatch(source, /workspace-hero|search-box|closing-cta/);
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
 
@@ -61,8 +66,19 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.doesNotMatch(source, /<h1 class="sr-only">/);
     assert.match(source, /site-footer__minimal/);
     assert.match(source, /href="\/site-map\/">Sitemap<\/a>/);
+    assert.match(source, /href="\/about\/">About<\/a>/);
+    assert.match(source, /href="\/contact\/">Contact<\/a>/);
+    assert.match(source, /href="\/terms\/">Terms<\/a>/);
     assert.match(source, /href="\/privacy\/">Privacy Policy<\/a>/);
-    assert.doesNotMatch(source, /HowTo|FAQPage|content-grid|related-section|sidebar-card|Frequently asked questions/);
+    assert.match(source, /HowTo/);
+    assert.match(source, /FAQPage/);
+    assert.match(source, /class="tool-editorial shell"/);
+    assert.match(source, /class="step-list"/);
+    assert.match(source, /When this tool helps/);
+    assert.match(source, /Accuracy and safety notes/);
+    assert.match(source, /Frequently asked questions/);
+    assert.match(source, /class="related-section"/);
+    assert.match(source, /class="sidebar-card"/);
     assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer/);
     assert.match(source, /dock-tool-switcher/);
     assert.match(source, /site-header__drag-handle/);
@@ -141,20 +157,24 @@ test("six editorial guides are statically rendered as technical articles", async
 });
 
 test("crawler and app files expose the complete canonical surface", async () => {
-  const [sitemap, robots, manifest, llms] = await Promise.all([
+  const [sitemap, robots, manifest, llms, ads] = await Promise.all([
     readFile(new URL("sitemap.xml", out), "utf8"),
     readFile(new URL("robots.txt", out), "utf8"),
     readFile(new URL("manifest.webmanifest", out), "utf8"),
     readFile(new URL("llms.txt", out), "utf8"),
+    readFile(new URL("ads.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 42);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 43);
   assert.match(sitemap, /https:\/\/xxf\.app\/animal\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/site-map\//);
+  assert.match(sitemap, /https:\/\/xxf\.app\/contact\//);
   assert.match(robots, /Sitemap: https:\/\/xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
   assert.match(llms, /Text, image and video conversions run locally/);
+  assert.match(llms, /Contact and public issue tracker/);
+  assert.equal(ads.trim(), "google.com, pub-5078282844971985, DIRECT, f08c47fec0942fa0");
   assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
-  await Promise.all(["og.jpg", "animal-museum-hero.jpg", "icon-192.png", "icon-512.png", "favicon.ico"].map((asset) => access(new URL(asset, out))));
+  await Promise.all(["og.jpg", "animal-museum-hero.jpg", "icon-192.png", "icon-512.png", "favicon.ico", "ads.txt"].map((asset) => access(new URL(asset, out))));
 });
 
 test("prehistoric animal museum has its own indexable experience page", async () => {

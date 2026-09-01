@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ImageCompressorWorkbench } from "@/components/ImageCompressorWorkbench";
 import { M3u8PlayerWorkbench } from "@/components/M3u8PlayerWorkbench";
@@ -7,7 +8,9 @@ import { RedirectCheckerWorkbench } from "@/components/RedirectCheckerWorkbench"
 import { ToolWorkbench } from "@/components/ToolWorkbench";
 import { UrlParserWorkbench } from "@/components/UrlParserWorkbench";
 import { VideoToM3u8Workbench } from "@/components/VideoToM3u8Workbench";
-import { toolMap, tools } from "@/lib/tools";
+import { guideMap } from "@/lib/guides";
+import { toolEditorial } from "@/lib/tool-editorial";
+import { getRelatedTools, toolMap, tools } from "@/lib/tools";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -49,6 +52,10 @@ export default async function ToolPage({ params }: Props) {
   const { slug } = await params;
   const tool = toolMap.get(slug);
   if (!tool) notFound();
+  const editorial = toolEditorial[tool.slug];
+  if (!editorial) notFound();
+  const related = getRelatedTools(tool);
+  const relatedGuides = editorial.guideSlugs.map((guideSlug) => guideMap.get(guideSlug)).filter((guide) => Boolean(guide));
   const isPhotoCollage = tool.slug === "photo-collage-maker";
   const isImageCompressor = tool.slug === "image-compressor";
   const isUrlParser = tool.kind === "url-parser";
@@ -73,7 +80,7 @@ export default async function ToolPage({ params }: Props) {
         isPartOf: { "@id": "https://xxf.app/#website" },
         breadcrumb: { "@id": `${canonical}#breadcrumb` },
         mainEntity: { "@id": applicationId },
-        dateModified: "2026-08-24",
+        dateModified: "2026-09-01",
       },
       {
         "@type": "BreadcrumbList",
@@ -123,12 +130,77 @@ export default async function ToolPage({ params }: Props) {
       },
     ],
   };
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `How to use ${tool.name}`,
+    description: tool.description,
+    step: editorial.steps.map((step, index) => ({ "@type": "HowToStep", position: index + 1, text: step })),
+  };
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: tool.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
 
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(seoSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className={isImageTool ? (isPhotoCollage ? "photo-tool-page" : "image-compressor-page") : (isUrlParser || isRedirectChecker) ? "utility-tool-page" : isVideoTool ? "video-tool-page" : "tool-page-workbench shell"}>
         {isPhotoCollage ? <PhotoCollageWorkbench /> : isImageCompressor ? <ImageCompressorWorkbench /> : isUrlParser ? <UrlParserWorkbench /> : isRedirectChecker ? <RedirectCheckerWorkbench /> : isVideoPlayer ? <M3u8PlayerWorkbench /> : isVideoConverter ? <VideoToM3u8Workbench /> : <ToolWorkbench initialSlug={tool.slug} />}
+      </section>
+
+      <section className="tool-editorial shell" aria-labelledby="tool-guide-title">
+        <article className="tool-editorial__article prose">
+          <span className="kicker">Practical guide</span>
+          <h2 id="tool-guide-title">How to use {tool.name}</h2>
+          {editorial.overview.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+
+          <h3>A reliable workflow</h3>
+          <ol className="step-list">
+            {editorial.steps.map((step) => <li key={step}>{step}</li>)}
+          </ol>
+
+          <h3>When this tool helps</h3>
+          <ul className="editorial-checklist">
+            {editorial.useCases.map((useCase) => <li key={useCase}>{useCase}</li>)}
+          </ul>
+
+          <h3>Accuracy and safety notes</h3>
+          <ul className="editorial-notes">
+            {editorial.notes.map((note) => <li key={note}>{note}</li>)}
+          </ul>
+
+          <h3>Frequently asked questions</h3>
+          <div className="faq-list faq-list--light">
+            {tool.faq.map((item) => <details key={item.question}><summary>{item.question}<span>+</span></summary><p>{item.answer}</p></details>)}
+          </div>
+        </article>
+
+        <aside className="tool-editorial__aside" aria-label="Related resources">
+          <div className="sidebar-card">
+            <span>{tool.category} toolkit</span>
+            <h3>Continue the workflow</h3>
+            <p>Move to a related tool without sending your working data to XXF</p>
+            {related.map((item) => <Link href={`/tools/${item.slug}/`} key={item.slug}><span>{item.name}</span><b>↗</b></Link>)}
+          </div>
+          {relatedGuides.length > 0 && <div className="editorial-guides"><span className="kicker">Related reading</span>{relatedGuides.map((guide) => guide && <Link href={`/guides/${guide.slug}/`} key={guide.slug}><strong>{guide.title}</strong><small>{guide.readTime}</small></Link>)}</div>}
+        </aside>
+      </section>
+
+      <section className="related-section">
+        <div className="shell">
+          <span className="kicker">Related tools</span>
+          <div className="related-grid">
+            {related.map((item) => <Link className="related-card" href={`/tools/${item.slug}/`} key={item.slug}><span>{item.category}</span><h3>{item.name}</h3><p>{item.description}</p><b>Open tool ↗</b></Link>)}
+          </div>
+        </div>
       </section>
     </main>
   );
