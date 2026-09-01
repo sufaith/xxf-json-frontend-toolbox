@@ -29,7 +29,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Enter a public http or https URL", "Choose the desktop or mobile user agent and run the check", "Review every status code, destination and the final response before changing server rules"],
     useCases: ["Confirm an HTTP-to-HTTPS or www-to-apex migration", "Find long redirect chains that waste crawl time", "Compare desktop and mobile routing for the same landing page"],
     notes: ["Private, loopback and local-network destinations are blocked to protect the service", "A browser may still behave differently when cookies, authentication or JavaScript navigation are involved"],
-    guideSlugs: [],
+    guideSlugs: ["diagnose-http-redirect-chains"],
   },
   "json-formatter": {
     overview: [
@@ -149,7 +149,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Paste valid JSON with a clear root object", "Convert and inspect repeated array elements", "Add any required namespaces, attributes or schema-specific wrapper elements"],
     useCases: ["Prototype a legacy API payload", "Create readable XML from internal JSON data", "Compare tree structure during a format migration"],
     notes: ["JSON keys must be valid or transformable XML element names for the target system", "XML schemas, namespaces and mixed text content require manual domain-specific work"],
-    guideSlugs: [],
+    guideSlugs: ["map-json-and-xml-without-losing-meaning"],
   },
   "xml-to-json": {
     overview: [
@@ -159,7 +159,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Paste a complete XML document", "Convert and inspect attributes, repeated children and text nodes", "Compare the result with the source schema before using it as an API contract"],
     useCases: ["Inspect an XML API response", "Prepare legacy feed data for frontend code", "Build a fixture while migrating an integration"],
     notes: ["Whitespace and mixed text-and-element content may not map cleanly to a simple JSON object", "Do not discard namespace meaning when element names overlap"],
-    guideSlugs: [],
+    guideSlugs: ["map-json-and-xml-without-losing-meaning"],
   },
   "json-to-html-table": {
     overview: [
@@ -229,7 +229,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Paste Unix seconds, Unix milliseconds or a parseable date string", "Convert and compare ISO, UTC and local representations", "Copy the unit explicitly required by the destination API"],
     useCases: ["Read exp and iat claims from a token", "Debug log times across time zones", "Convert a date into API-ready epoch units"],
     notes: ["A Unix timestamp does not contain a timezone", "Ambiguous human date strings can parse differently, so prefer ISO 8601 with an explicit offset"],
-    guideSlugs: [],
+    guideSlugs: ["unix-timestamps-without-timezone-bugs"],
   },
   "color-converter": {
     overview: [
@@ -239,7 +239,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Enter a 3- or 6-digit HEX, rgb() or hsl() color", "Convert and compare the normalized representations", "Copy the format that matches the project's design tokens or stylesheet"],
     useCases: ["Translate a design token between codebases", "Read an RGB value as editable HSL", "Normalize shorthand HEX before documentation"],
     notes: ["This tool intentionally excludes alpha channels", "Contrast and accessibility depend on foreground-background pairs, not one color in isolation"],
-    guideSlugs: [],
+    guideSlugs: ["format-and-minify-css-safely"],
   },
   "uuid-generator": {
     overview: [
@@ -249,7 +249,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Enter the number of UUIDs required from 1 to 100", "Generate and review the newline-separated values", "Copy or download them for fixtures, records or local development"],
     useCases: ["Seed database fixtures", "Create client-side identifiers before synchronization", "Prepare example resource IDs for documentation"],
     notes: ["UUIDs are not access tokens and should not be relied on for authorization", "Check whether the destination system expects lowercase, uppercase, braces or another UUID version"],
-    guideSlugs: [],
+    guideSlugs: ["sha256-hashes-and-random-uuids"],
   },
   "sha256-hash": {
     overview: [
@@ -259,7 +259,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Paste the exact text, including intentional whitespace", "Generate the SHA-256 digest", "Compare hashes only when both systems use the same encoding and normalization rules"],
     useCases: ["Verify a text fixture has not changed", "Create a reproducible cache key from public input", "Check a documented SHA-256 example"],
     notes: ["SHA-256 is one-way hashing, not encryption", "Passwords require a slow salted password-hashing algorithm such as Argon2, scrypt or bcrypt"],
-    guideSlugs: [],
+    guideSlugs: ["sha256-hashes-and-random-uuids"],
   },
   "image-compressor": {
     overview: [
@@ -269,7 +269,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Drop or choose up to 20 supported images", "Select smart, WebP, JPEG or PNG output and adjust quality or dimensions", "Compare savings and previews, then download individual files or one ZIP"],
     useCases: ["Prepare product and article images for the web", "Resize oversized screenshots before sharing", "Create lighter WebP alternatives from JPEG or PNG sources"],
     notes: ["PNG is lossless and may remain larger for photographs", "Browser canvas export can remove metadata such as EXIF orientation, location and camera details"],
-    guideSlugs: [],
+    guideSlugs: ["prepare-images-for-the-web"],
   },
   "photo-collage-maker": {
     overview: [
@@ -279,7 +279,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Add up to 16 photos and choose a layout that matches their orientation", "Pan crops, set spacing and background, then add only necessary annotations", "Preview the final ratio and export as JPG or PNG"],
     useCases: ["Create a before-and-after comparison", "Assemble a product contact sheet or moodboard", "Publish a labeled social image without uploading source photos"],
     notes: ["Keep the tab open until the finished file is downloaded", "Very large images are resampled by the browser, so keep original files for future edits"],
-    guideSlugs: [],
+    guideSlugs: ["prepare-images-for-the-web"],
   },
   "m3u8-player": {
     overview: [
@@ -289,7 +289,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Paste a public M3U8 playlist URL", "Load the stream and review the reported playback mode", "Use browser media controls while watching network or console errors when diagnosing failures"],
     useCases: ["Test a public HLS master playlist", "Compare Safari native playback with another browser", "Confirm that playlist and segment CORS headers allow web playback"],
     notes: ["The tool does not bypass DRM, authentication or geographic restrictions", "A playlist can load while segments fail because each resource needs compatible access headers"],
-    guideSlugs: [],
+    guideSlugs: ["understand-m3u8-hls-playback"],
   },
   "video-to-m3u8": {
     overview: [
@@ -299,7 +299,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Choose a supported local video and a segment duration", "Start conversion and keep the tab open while the browser processes the file", "Download the ZIP, extract all files together and test the hosted playlist in an HLS player"],
     useCases: ["Prototype HLS delivery from a short MP4", "Create a local test package for player development", "Understand playlist and segment structure before building a server pipeline"],
     notes: ["Large or long videos require substantial memory and are better processed with native FFmpeg", "This single-rendition output is not an adaptive bitrate ladder"],
-    guideSlugs: [],
+    guideSlugs: ["understand-m3u8-hls-playback"],
   },
   "css-formatter-minifier": {
     overview: [
@@ -309,6 +309,6 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     steps: ["Choose Format or Minify and paste the stylesheet", "Run the conversion and inspect complex rules, comments and data URLs", "Test the result in the target browser set before replacing a production asset"],
     useCases: ["Read a compact third-party stylesheet during debugging", "Shrink a small standalone CSS snippet", "Normalize a generated style block for code review"],
     notes: ["Keep an unminified source file and source map for maintenance", "Use a parser-based build tool for complex production optimization"],
-    guideSlugs: [],
+    guideSlugs: ["format-and-minify-css-safely"],
   },
 };

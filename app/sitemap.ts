@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date("2026-09-01T00:00:00.000Z");
   return [
     { url: "https://xxf.app/", lastModified, changeFrequency: "weekly", priority: 1 },
+    { url: "https://xxf.app/guides/", lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: "https://xxf.app/animal/", lastModified, changeFrequency: "monthly", priority: 0.82 },
     ...tools.map((tool) => ({ url: `https://xxf.app/tools/${tool.slug}/`, lastModified, changeFrequency: "monthly" as const, priority: 0.85 })),
     ...guides.map((guide) => ({ url: `https://xxf.app/guides/${guide.slug}/`, lastModified, changeFrequency: "monthly" as const, priority: 0.72 })),

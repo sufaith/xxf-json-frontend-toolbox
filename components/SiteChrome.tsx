@@ -162,6 +162,7 @@ export function SiteFooter() {
         <span>© 2026 XXF Tools</span>
         <nav aria-label="Footer navigation">
           <Link href="/site-map/">Sitemap</Link>
+          <Link href="/guides/">Guides</Link>
           <Link href="/about/">About</Link>
           <Link href="/contact/">Contact</Link>
           <Link href="/terms/">Terms</Link>

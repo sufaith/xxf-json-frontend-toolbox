@@ -36,6 +36,7 @@ export default function SiteMapPage() {
           <section className="site-map-page__group">
             <h2>Guides</h2>
             <nav aria-label="Technical guides">
+              <Link href="/guides/">All technical guides</Link>
               {guides.map((guide) => <Link href={`/guides/${guide.slug}/`} key={guide.slug}>{guide.title}</Link>)}
             </nav>
           </section>
@@ -44,6 +45,7 @@ export default function SiteMapPage() {
             <nav aria-label="Site information">
               <Link href="/">Home</Link>
               <Link href="/about/">About</Link>
+              <Link href="/guides/">Guides</Link>
               <Link href="/contact/">Contact</Link>
               <Link href="/privacy/">Privacy Policy</Link>
               <Link href="/terms/">Terms</Link>

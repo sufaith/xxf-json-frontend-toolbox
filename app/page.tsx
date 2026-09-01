@@ -119,8 +119,9 @@ export default function Home() {
           <p>Original guides cover syntax, runtime validation, data-shape mismatches and security boundaries that are easy to miss in a one-click workflow</p>
         </div>
         <div className="guide-grid">
-          {guides.map((guide, index) => <Link className="guide-card" href={`/guides/${guide.slug}/`} key={guide.slug}><span>{String(index + 1).padStart(2, "0")} · {guide.readTime}</span><h3>{guide.title}</h3><p>{guide.description}</p><b>Read guide ↗</b></Link>)}
+          {guides.slice(0, 6).map((guide, index) => <Link className="guide-card" href={`/guides/${guide.slug}/`} key={guide.slug}><span>{String(index + 1).padStart(2, "0")} · {guide.readTime}</span><h3>{guide.title}</h3><p>{guide.description}</p><b>Read guide ↗</b></Link>)}
         </div>
+        <div className="guide-hub-link"><Link className="primary-button primary-button--large" href="/guides/">Browse all {guides.length} guides <span>↗</span></Link></div>
       </section>
 
       <section className="home-faq-section">

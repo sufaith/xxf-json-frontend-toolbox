@@ -13,6 +13,7 @@ XXF Tools is a free, browser-based JSON, frontend, image and video toolbox at ht
 ## Primary sections
 
 - Home and tool directory: https://xxf.app/
+- Technical guide library: https://xxf.app/guides/
 - Prehistoric Animal Museum: https://xxf.app/animal/
 - JSON Formatter: https://xxf.app/tools/json-formatter/
 - JSON to TypeScript: https://xxf.app/tools/json-to-typescript/

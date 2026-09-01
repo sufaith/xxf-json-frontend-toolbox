@@ -38,6 +38,7 @@ test("home page keeps the tool directory and adds useful editorial content below
   assert.match(source, /class="guide-grid"/);
   assert.match(source, /class="home-faq-section"/);
   assert.match(source, /A useful result includes the edges/);
+  assert.match(source, /href="\/guides\/">Browse all/);
   assert.doesNotMatch(source, /workspace-hero|search-box|closing-cta/);
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
@@ -66,6 +67,7 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.doesNotMatch(source, /<h1 class="sr-only">/);
     assert.match(source, /site-footer__minimal/);
     assert.match(source, /href="\/site-map\/">Sitemap<\/a>/);
+    assert.match(source, /href="\/guides\/">Guides<\/a>/);
     assert.match(source, /href="\/about\/">About<\/a>/);
     assert.match(source, /href="\/contact\/">Contact<\/a>/);
     assert.match(source, /href="\/terms\/">Terms<\/a>/);
@@ -79,6 +81,7 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /Frequently asked questions/);
     assert.match(source, /class="related-section"/);
     assert.match(source, /class="sidebar-card"/);
+    assert.match(source, /class="editorial-guides"/);
     assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer/);
     assert.match(source, /dock-tool-switcher/);
     assert.match(source, /site-header__drag-handle/);
@@ -144,16 +147,34 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
   assert.equal(descriptions.size, 30);
 });
 
-test("six editorial guides are statically rendered as technical articles", async () => {
+test("thirteen editorial guides include primary references and relevant tools", async () => {
   const directory = new URL("guides/", out);
   const slugs = (await readdir(directory, { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name);
-  assert.equal(slugs.length, 6);
+  assert.equal(slugs.length, 13);
   for (const slug of slugs) {
     const source = await html(`guides/${slug}/index.html`);
     assert.match(source, /TechArticle/);
     assert.match(source, /BreadcrumbList/);
+    assert.match(source, /articleSection/);
+    assert.match(source, /citation/);
+    assert.match(source, /class="article-references"/);
+    assert.match(source, /Primary references/);
+    assert.match(source, /class="article-tool-links"/);
+    assert.match(source, /href="\/tools\//);
+    assert.match(source, /href="\/guides\/">Guides<\/a>/);
     assert.match(source, new RegExp(`https://xxf\\.app/guides/${slug}/`));
   }
+});
+
+test("guide hub exposes every article by topic", async () => {
+  const source = await html("guides/index.html");
+  assert.match(source, /CollectionPage/);
+  assert.match(source, /Use the tool/);
+  assert.match(source, /Understand the edge/);
+  assert.match(source, /Primary references included/);
+  assert.match(source, /Editorial method/);
+  assert.equal((source.match(/class="guide-index-card"/g) ?? []).length, 13);
+  assert.match(source, /https:\/\/xxf\.app\/guides\//);
 });
 
 test("crawler and app files expose the complete canonical surface", async () => {
@@ -164,10 +185,11 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("llms.txt", out), "utf8"),
     readFile(new URL("ads.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 43);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 51);
   assert.match(sitemap, /https:\/\/xxf\.app\/animal\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/site-map\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/contact\//);
+  assert.match(sitemap, /https:\/\/xxf\.app\/guides\//);
   assert.match(robots, /Sitemap: https:\/\/xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
   assert.match(llms, /Text, image and video conversions run locally/);
@@ -210,12 +232,15 @@ test("performance hints and image previews are present", async () => {
   assert.match(globals, /\.primary-button:focus-visible, \.ghost-button:focus-visible/);
 });
 
-test("HTML sitemap exposes every tool through crawlable links", async () => {
+test("HTML sitemap exposes every tool and guide through crawlable links", async () => {
   const source = await html("site-map/index.html");
   assert.match(source, /<h1>Everything on XXF\.<\/h1>/);
   assert.match(source, /href="\/sitemap\.xml">XML Sitemap<\/a>/);
   for (const slug of (await readdir(new URL("tools/", out), { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name)) {
     assert.match(source, new RegExp(`href="/tools/${slug}/"`));
+  }
+  for (const slug of (await readdir(new URL("guides/", out), { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name)) {
+    assert.match(source, new RegExp(`href="/guides/${slug}/"`));
   }
 });
 
