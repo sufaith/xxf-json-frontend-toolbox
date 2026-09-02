@@ -329,7 +329,9 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /server_name xxf\.app;/);
   assert.match(source, /server_name www\.xxf\.app;[\s\S]*return 301 https:\/\/xxf\.app\$request_uri;/);
   assert.match(source, /location ~ \^\/n\/\[\^\/\]\+\/\?\$ \{/);
-  assert.match(source, /add_header X-Robots-Tag "noindex, nofollow, noarchive" always;/);
+  assert.match(source, /map \$uri \$xxf_robots_tag \{[\s\S]*~\^\/n\/ "noindex, nofollow, noarchive";/);
+  assert.match(source, /add_header X-Robots-Tag \$xxf_robots_tag always;/);
+  assert.doesNotMatch(source, /location ~ \^\/n\/\[\^\/\]\+\/\?\$ \{\s*add_header/);
   assert.match(source, /try_files \/n\/welcome\/index\.html =404/);
 });
 
