@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdSenseScript } from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "Contact and Feedback",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="legal-page">
+      <AdSenseScript />
       <div className="legal-page__inner shell">
         <span className="kicker">Contact and feedback</span>
         <h1>Help improve XXF</h1>

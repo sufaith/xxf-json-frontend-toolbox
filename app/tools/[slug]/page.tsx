@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdSenseScript } from "@/components/AdSenseScript";
 import { ImageCompressorWorkbench } from "@/components/ImageCompressorWorkbench";
 import { M3u8PlayerWorkbench } from "@/components/M3u8PlayerWorkbench";
 import { PhotoCollageWorkbench } from "@/components/PhotoCollageWorkbench";
@@ -158,6 +159,7 @@ export default async function ToolPage({ params }: Props) {
 
   return (
     <main>
+      <AdSenseScript />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(seoSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />

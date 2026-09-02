@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdSenseScript } from "@/components/AdSenseScript";
 import { guideMap, guides } from "@/lib/guides";
 import { toolMap } from "@/lib/tools";
 
@@ -30,6 +31,7 @@ export default async function GuidePage({ params }: Props) {
   const breadcrumbSchema = { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "XXF Tools", item: "https://xxf.app/" }, { "@type": "ListItem", position: 2, name: "Guides", item: "https://xxf.app/guides/" }, { "@type": "ListItem", position: 3, name: guide.title, item: `https://xxf.app/guides/${guide.slug}/` }] };
   return (
     <main>
+      <AdSenseScript />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <article className="article-shell">

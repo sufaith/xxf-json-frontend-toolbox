@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdSenseScript } from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <main className="legal-page">
+      <AdSenseScript />
       <div className="legal-page__inner shell">
         <span className="kicker">Last updated September 2, 2026</span>
         <h1>Terms of Use</h1>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdSenseScript } from "@/components/AdSenseScript";
 import { guideTopics, guides } from "@/lib/guides";
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function GuidesPage() {
 
   return (
     <main className="guide-index">
+      <AdSenseScript />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
       <header className="guide-index__hero shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span>Guides</span></nav>

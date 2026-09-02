@@ -8,6 +8,11 @@ async function html(path) {
   return readFile(new URL(path, out), "utf8");
 }
 
+function exportedHtmlPath(pathname) {
+  if (pathname === "/") return "index.html";
+  return `${pathname.replace(/^\//, "").replace(/\/$/, "")}/index.html`;
+}
+
 test("home page keeps the tool directory and adds useful editorial content below it", async () => {
   const source = await html("index.html");
   assert.match(source, /<h1 class="sr-only">XXF browser tools<\/h1>/i);
@@ -257,15 +262,15 @@ test("prehistoric animal museum has its own indexable experience page", async ()
 });
 
 test("performance hints and image previews are present", async () => {
-  const [layout, compressor, globals] = await Promise.all([
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+  const [adsense, compressor, globals] = await Promise.all([
+    readFile(new URL("../components/AdSenseScript.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/ImageCompressorWorkbench.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-  assert.match(layout, /rel="preconnect" href="https:\/\/pagead2\.googlesyndication\.com"/);
-  assert.match(layout, /rel="dns-prefetch" href="https:\/\/pagead2\.googlesyndication\.com"/);
+  assert.match(adsense, /rel="preconnect" href="https:\/\/pagead2\.googlesyndication\.com"/);
+  assert.match(adsense, /rel="dns-prefetch" href="https:\/\/pagead2\.googlesyndication\.com"/);
   assert.match(compressor, /alt=\{source\.file\.name\} loading="lazy" decoding="async"/);
-  assert.doesNotMatch(layout, /og\.png/);
+  assert.doesNotMatch(adsense, /og\.png/);
   assert.doesNotMatch(compressor, /alt=""/);
   assert.match(globals, /font-weight: 450/);
   assert.match(globals, /-webkit-font-smoothing: antialiased/);
@@ -324,7 +329,72 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /server_name xxf\.app;/);
   assert.match(source, /server_name www\.xxf\.app;[\s\S]*return 301 https:\/\/xxf\.app\$request_uri;/);
   assert.match(source, /location ~ \^\/n\/\[\^\/\]\+\/\?\$ \{/);
+  assert.match(source, /add_header X-Robots-Tag "noindex, nofollow, noarchive" always;/);
   assert.match(source, /try_files \/n\/welcome\/index\.html =404/);
+});
+
+test("AdSense stays off private, navigational and error-only screens", async () => {
+  const [home, tool, note, siteMap, notFound] = await Promise.all([
+    html("index.html"),
+    html("tools/json-formatter/index.html"),
+    html("n/welcome/index.html"),
+    html("site-map/index.html"),
+    html("404.html"),
+  ]);
+  const adScript = /pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js/i;
+  assert.match(home, adScript);
+  assert.match(tool, adScript);
+  assert.doesNotMatch(note, adScript);
+  assert.doesNotMatch(siteMap, adScript);
+  assert.doesNotMatch(notFound, adScript);
+  assert.match(note, /<meta name="robots" content="noindex, nofollow"/i);
+});
+
+test("every indexable page has unique metadata and an intentional ad decision", async () => {
+  const sitemap = await readFile(new URL("sitemap.xml", out), "utf8");
+  const paths = [...sitemap.matchAll(/<loc>https:\/\/xxf\.app(.*?)<\/loc>/g)].map((match) => match[1]);
+  const titles = new Set();
+  const descriptions = new Set();
+  const canonicals = new Set();
+  const adScript = /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i;
+
+  assert.equal(paths.length, 52);
+  for (const pathname of paths) {
+    const source = await html(exportedHtmlPath(pathname));
+    const title = source.match(/<title>(.*?)<\/title>/i)?.[1];
+    const description = source.match(/<meta name="description" content="(.*?)"/i)?.[1];
+    const canonical = source.match(/<link rel="canonical" href="(.*?)"/i)?.[1];
+    assert.ok(title, `${pathname} has a title`);
+    assert.ok(description, `${pathname} has a description`);
+    assert.equal(canonical, `https://xxf.app${pathname}`);
+    assert.match(source, /<h1(?:\s[^>]*)?>/i, `${pathname} has an H1`);
+    assert.equal(titles.has(title), false, `${pathname} has a unique title`);
+    assert.equal(descriptions.has(description), false, `${pathname} has a unique description`);
+    assert.equal(canonicals.has(canonical), false, `${pathname} has a unique canonical`);
+    titles.add(title);
+    descriptions.add(description);
+    canonicals.add(canonical);
+    if (pathname === "/site-map/") assert.doesNotMatch(source, adScript);
+    else assert.match(source, adScript, `${pathname} includes the approved site script`);
+  }
+});
+
+test("crawlable internal links resolve to exported pages or public files", async () => {
+  const sitemap = await readFile(new URL("sitemap.xml", out), "utf8");
+  const paths = [...sitemap.matchAll(/<loc>https:\/\/xxf\.app(.*?)<\/loc>/g)].map((match) => match[1]);
+  const checked = new Set();
+
+  for (const pathname of paths) {
+    const source = await html(exportedHtmlPath(pathname));
+    for (const match of source.matchAll(/href="(\/[^"#?]*)[^\"]*"/g)) {
+      const href = match[1];
+      if (checked.has(href) || href.startsWith("/_next/") || href.startsWith("/api/")) continue;
+      checked.add(href);
+      const target = href === "/" ? "index.html" : /\.[a-z0-9]+$/i.test(href) ? href.slice(1) : exportedHtmlPath(href);
+      await access(new URL(target, out));
+    }
+  }
+  assert.ok(checked.size >= 50, "the link audit covers the public navigation surface");
 });
 
 test("redirect checker keeps its server boundary explicit", async () => {

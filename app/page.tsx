@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdSenseScript } from "@/components/AdSenseScript";
 import { ToolExplorer } from "@/components/ToolExplorer";
 import { guides } from "@/lib/guides";
 import { tools } from "@/lib/tools";
@@ -99,6 +100,7 @@ export default function Home() {
 
   return (
     <main className="home-tool-directory">
+      <AdSenseScript />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <h1 className="sr-only">XXF browser tools</h1>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AdSenseScript } from "@/components/AdSenseScript";
 import { AnimalMuseum } from "@/components/AnimalMuseum";
 
 export const dynamic = "force-static";
@@ -21,6 +22,5 @@ export default function AnimalPage() {
     { "@type": "CollectionPage", "@id": `${canonical}#collection`, url: canonical, name: "Prehistoric Animal Museum Collection", description: "Explore 18 prehistoric animals with short field notes and facts.", isAccessibleForFree: true, inLanguage: ["en", "zh-Hans"], image: ["https://xxf.app/animal/museum-bg-v2.jpg", "https://xxf.app/animal-museum-hero.jpg"], publisher: { "@id": "https://xxf.app/#organization" }, mainEntity: { "@type": "ItemList", numberOfItems: exhibits.length, itemListElement: exhibits.map((name, index) => ({ "@type": "ListItem", position: index + 1, name })) } },
     { "@type": "Organization", "@id": "https://xxf.app/#organization", name: "XXF Tools", url: "https://xxf.app/", logo: { "@type": "ImageObject", url: "https://xxf.app/icon-512.png", width: 512, height: 512 } },
   ] };
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /><AnimalMuseum /></>;
+  return <><AdSenseScript /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /><AnimalMuseum /></>;
 }
-
