@@ -14,6 +14,8 @@ export default function ContactPage() {
         <span className="kicker">Contact and feedback</span>
         <h1>Help improve XXF</h1>
         <p>XXF Tools is maintained as a public software project. Bug reports, reproducible conversion examples and focused feature requests help improve both the tools and their documentation.</p>
+        <h2>Correct documentation</h2>
+        <p>Report an inaccurate worked example, limitation or source link through the issue tracker. The <Link className="text-link" href="/editorial-policy/">editorial standards</Link> explain how technical claims are checked and corrected.</p>
         <h2>Report a tool problem</h2>
         <p>Open a GitHub issue and include the tool name, browser, expected result and a minimal sample that contains no credentials or personal information.</p>
         <p><a className="text-link" href="https://github.com/sufaith/xxf-json-frontend-toolbox/issues" target="_blank" rel="noreferrer">Open the public issue tracker ↗</a></p>

@@ -39,6 +39,9 @@ test("home page keeps the tool directory and adds useful editorial content below
   assert.match(source, /class="home-faq-section"/);
   assert.match(source, /A useful result includes the edges/);
   assert.match(source, /href="\/guides\/">Browse all/);
+  assert.match(source, /href="\/editorial-policy\/">Review standards/);
+  assert.match(source, /publishingPrinciples/);
+  assert.match(source, /lastReviewed/);
   assert.doesNotMatch(source, /workspace-hero|search-box|closing-cta/);
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);
 });
@@ -63,11 +66,14 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /BreadcrumbList/);
     assert.match(source, /Organization/);
     assert.match(source, /isAccessibleForFree/);
+    assert.match(source, /publishingPrinciples/);
+    assert.match(source, /lastReviewed/);
     assert.match(source, /<h1(?:\s[^>]*)?>/);
     assert.doesNotMatch(source, /<h1 class="sr-only">/);
     assert.match(source, /site-footer__minimal/);
     assert.match(source, /href="\/site-map\/">Sitemap<\/a>/);
     assert.match(source, /href="\/guides\/">Guides<\/a>/);
+    assert.match(source, /href="\/editorial-policy\/">Editorial<\/a>/);
     assert.match(source, /href="\/about\/">About<\/a>/);
     assert.match(source, /href="\/contact\/">Contact<\/a>/);
     assert.match(source, /href="\/terms\/">Terms<\/a>/);
@@ -76,6 +82,11 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /FAQPage/);
     assert.match(source, /class="tool-editorial shell"/);
     assert.match(source, /class="step-list"/);
+    assert.match(source, /class="worked-example"/);
+    assert.match(source, /Worked example/);
+    assert.match(source, /What to notice/);
+    assert.match(source, /Reviewed September 2, 2026/);
+    assert.match(source, /How XXF reviews tool guidance/);
     assert.match(source, /When this tool helps/);
     assert.match(source, /Accuracy and safety notes/);
     assert.match(source, /Frequently asked questions/);
@@ -87,6 +98,9 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /site-header__drag-handle/);
     assert.match(source, /移动悬浮导航/);
     assert.doesNotMatch(source, /<small>Guides<\/small>|<small>About<\/small>/);
+    if (!["image-compressor", "photo-collage-maker", "m3u8-player", "video-to-m3u8"].includes(slug)) {
+      assert.match(source, /Included sample input/);
+    }
     if (slug === "image-compressor") {
       assert.match(source, /Image Compressor workspace/);
       assert.match(source, /Drop images here/);
@@ -157,11 +171,14 @@ test("thirteen editorial guides include primary references and relevant tools", 
     assert.match(source, /BreadcrumbList/);
     assert.match(source, /articleSection/);
     assert.match(source, /citation/);
+    assert.match(source, /publishingPrinciples/);
     assert.match(source, /class="article-references"/);
     assert.match(source, /Primary references/);
     assert.match(source, /class="article-tool-links"/);
     assert.match(source, /href="\/tools\//);
     assert.match(source, /href="\/guides\/">Guides<\/a>/);
+    assert.match(source, /By XXF Tools/);
+    assert.match(source, /Implementation-checked by the XXF Tools editorial team/);
     assert.match(source, new RegExp(`https://xxf\\.app/guides/${slug}/`));
   }
 });
@@ -173,6 +190,7 @@ test("guide hub exposes every article by topic", async () => {
   assert.match(source, /Understand the edge/);
   assert.match(source, /Primary references included/);
   assert.match(source, /Editorial method/);
+  assert.match(source, /Read the full review standards/);
   assert.equal((source.match(/class="guide-index-card"/g) ?? []).length, 13);
   assert.match(source, /https:\/\/xxf\.app\/guides\//);
 });
@@ -185,18 +203,42 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("llms.txt", out), "utf8"),
     readFile(new URL("ads.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 51);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 52);
   assert.match(sitemap, /https:\/\/xxf\.app\/animal\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/site-map\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/contact\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/guides\//);
+  assert.match(sitemap, /https:\/\/xxf\.app\/editorial-policy\//);
   assert.match(robots, /Sitemap: https:\/\/xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
   assert.match(llms, /Text, image and video conversions run locally/);
   assert.match(llms, /Contact and public issue tracker/);
+  assert.match(llms, /Link-accessible \/n\/ note spaces/);
+  assert.match(llms, /Editorial standards and review process/);
   assert.equal(ads.trim(), "google.com, pub-5078282844971985, DIRECT, f08c47fec0942fa0");
   assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
   await Promise.all(["og.jpg", "animal-museum-hero.jpg", "icon-192.png", "icon-512.png", "favicon.ico", "ads.txt"].map((asset) => access(new URL(asset, out))));
+});
+
+test("editorial and privacy pages disclose review and data boundaries", async () => {
+  const [editorial, privacy, about, terms] = await Promise.all([
+    html("editorial-policy/index.html"),
+    html("privacy/index.html"),
+    html("about/index.html"),
+    html("terms/index.html"),
+  ]);
+  assert.match(editorial, /Editorial standards/);
+  assert.match(editorial, /How a tool page is reviewed/);
+  assert.match(editorial, /Advertising independence/);
+  assert.match(editorial, /lastReviewed/);
+  assert.match(editorial, /reviewedBy/);
+  assert.match(privacy, /Shared note spaces/);
+  assert.match(privacy, /Google advertising and cookies/);
+  assert.match(privacy, /policies\.google\.com\/technologies\/partner-sites/);
+  assert.match(privacy, /adssettings\.google\.com/);
+  assert.match(about, /Maintained by XXF Tools/);
+  assert.match(about, /href="\/editorial-policy\/">editorial standards page<\/a>/);
+  assert.match(terms, /Shared spaces/);
 });
 
 test("prehistoric animal museum has its own indexable experience page", async () => {
@@ -236,6 +278,7 @@ test("HTML sitemap exposes every tool and guide through crawlable links", async 
   const source = await html("site-map/index.html");
   assert.match(source, /<h1>Everything on XXF\.<\/h1>/);
   assert.match(source, /href="\/sitemap\.xml">XML Sitemap<\/a>/);
+  assert.match(source, /href="\/editorial-policy\/">Editorial Standards<\/a>/);
   for (const slug of (await readdir(new URL("tools/", out), { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name)) {
     assert.match(source, new RegExp(`href="/tools/${slug}/"`));
   }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type WheelEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type WheelEvent } from "react";
 
 type Locale = "en" | "zh";
 type Habitat = "all" | "land" | "air" | "water";
@@ -55,7 +55,6 @@ function copy(text: LocalizedText, locale: Locale) {
 
 export function AnimalMuseum() {
   const [locale, setLocale] = useState<Locale>("en");
-  const [habitat, setHabitat] = useState<Habitat>("all");
   const [selectedId, setSelectedId] = useState("stegosaurus");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
@@ -64,7 +63,7 @@ export function AnimalMuseum() {
   const stageRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef({ active: false, x: 0, y: 0, rotationX: 0, rotationY: 0 });
   const t = labels[locale];
-  const filteredExhibits = useMemo(() => habitat === "all" ? exhibits : exhibits.filter((exhibit) => exhibit.group === habitat), [habitat]);
+  const filteredExhibits = exhibits;
   const selected = exhibits.find((exhibit) => exhibit.id === selectedId) ?? exhibits[0];
 
   useEffect(() => {
@@ -77,14 +76,6 @@ export function AnimalMuseum() {
     setSelectedId(id);
     setRotation({ x: 0, y: 0 });
     setZoom(1);
-  }
-
-  function changeHabitat(next: Habitat) {
-    setHabitat(next);
-    if (next !== "all" && selected.group !== next) {
-      const first = exhibits.find((exhibit) => exhibit.group === next);
-      if (first) selectExhibit(first.id);
-    }
   }
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
@@ -184,4 +175,3 @@ export function AnimalMuseum() {
     </main>
   );
 }
-

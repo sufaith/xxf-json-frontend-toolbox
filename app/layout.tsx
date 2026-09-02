@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   applicationName: "XXF Tools",
   category: "technology",
   keywords: ["JSON tools", "frontend tools", "image tools", "video tools", "M3U8 player", "M3U8 converter", "HLS player", "video to HLS", "developer tools", "URL parser", "redirect checker", "JSON converter", "image compressor", "photo collage maker"],
-  authors: [{ name: "XXF Tools", url: "https://xxf.app/" }],
+  authors: [{ name: "XXF Tools editorial team", url: "https://xxf.app/about/" }],
   creator: "XXF Tools",
   publisher: "XXF Tools",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },

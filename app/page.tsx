@@ -49,6 +49,8 @@ export default function Home() {
         name: "XXF Tools",
         url: "https://xxf.app/",
         logo: { "@type": "ImageObject", url: "https://xxf.app/icon-512.png", width: 512, height: 512 },
+        sameAs: ["https://github.com/sufaith/xxf-json-frontend-toolbox"],
+        publishingPrinciples: "https://xxf.app/editorial-policy/",
       },
       {
         "@type": "WebSite",
@@ -69,7 +71,10 @@ export default function Home() {
         isPartOf: { "@id": "https://xxf.app/#website" },
         about: { "@id": "https://xxf.app/#organization" },
         mainEntity: { "@id": "https://xxf.app/#tools" },
-        dateModified: "2026-09-01",
+        reviewedBy: { "@id": "https://xxf.app/#organization" },
+        lastReviewed: "2026-09-02",
+        publishingPrinciples: "https://xxf.app/editorial-policy/",
+        dateModified: "2026-09-02",
       },
       {
         "@type": "ItemList",
@@ -107,8 +112,8 @@ export default function Home() {
           <p>XXF combines focused browser tools with explanations of what each conversion preserves, what it cannot infer and what deserves review before production use</p>
         </div>
         <div className="trust-grid">
-          <article className="trust-card trust-card--dark"><span>01</span><h3>Local by default</h3><p>JSON, text, image and video transformations run on your device, keeping work-in-progress payloads out of an upload queue</p><b>Browser processing →</b></article>
-          <article className="trust-card"><span>02</span><h3>Specific guidance</h3><p>Every tool page explains its expected input, repeatable workflow, useful scenarios and format-specific limitations</p><b>30 practical guides →</b></article>
+          <article className="trust-card trust-card--dark"><span>01</span><h3>Local by default</h3><p>JSON, text, image and video transformations run on your device, keeping work-in-progress payloads out of an upload queue</p><b><Link href="/privacy/">Review data boundaries →</Link></b></article>
+          <article className="trust-card"><span>02</span><h3>Specific guidance</h3><p>Every tool page includes a reproducible example, workflow, useful scenarios, format-specific limitations and a visible review date</p><b><Link href="/editorial-policy/">Review standards →</Link></b></article>
           <article className="trust-card trust-card--accent"><span>03</span><h3>Reviewable output</h3><p>Keep the source visible, inspect errors, compare the result and copy or download only after it matches the destination contract</p><b>Input → review → output</b></article>
         </div>
       </section>

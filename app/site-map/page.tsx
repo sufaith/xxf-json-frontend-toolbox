@@ -45,6 +45,7 @@ export default function SiteMapPage() {
             <nav aria-label="Site information">
               <Link href="/">Home</Link>
               <Link href="/about/">About</Link>
+              <Link href="/editorial-policy/">Editorial Standards</Link>
               <Link href="/guides/">Guides</Link>
               <Link href="/contact/">Contact</Link>
               <Link href="/privacy/">Privacy Policy</Link>

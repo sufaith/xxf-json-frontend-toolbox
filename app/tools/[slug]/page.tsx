@@ -10,6 +10,7 @@ import { UrlParserWorkbench } from "@/components/UrlParserWorkbench";
 import { VideoToM3u8Workbench } from "@/components/VideoToM3u8Workbench";
 import { guideMap } from "@/lib/guides";
 import { toolEditorial } from "@/lib/tool-editorial";
+import { toolExamples } from "@/lib/tool-examples";
 import { getRelatedTools, toolMap, tools } from "@/lib/tools";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -54,6 +55,8 @@ export default async function ToolPage({ params }: Props) {
   if (!tool) notFound();
   const editorial = toolEditorial[tool.slug];
   if (!editorial) notFound();
+  const example = toolExamples[tool.slug];
+  if (!example) notFound();
   const related = getRelatedTools(tool);
   const relatedGuides = editorial.guideSlugs.map((guideSlug) => guideMap.get(guideSlug)).filter((guide) => Boolean(guide));
   const isPhotoCollage = tool.slug === "photo-collage-maker";
@@ -80,7 +83,11 @@ export default async function ToolPage({ params }: Props) {
         isPartOf: { "@id": "https://xxf.app/#website" },
         breadcrumb: { "@id": `${canonical}#breadcrumb` },
         mainEntity: { "@id": applicationId },
-        dateModified: "2026-09-01",
+        author: { "@id": organizationId },
+        reviewedBy: { "@id": organizationId },
+        lastReviewed: "2026-09-02",
+        publishingPrinciples: "https://xxf.app/editorial-policy/",
+        dateModified: "2026-09-02",
       },
       {
         "@type": "BreadcrumbList",
@@ -127,6 +134,8 @@ export default async function ToolPage({ params }: Props) {
         name: "XXF Tools",
         url: "https://xxf.app/",
         logo: { "@type": "ImageObject", url: "https://xxf.app/icon-512.png", width: 512, height: 512 },
+        sameAs: ["https://github.com/sufaith/xxf-json-frontend-toolbox"],
+        publishingPrinciples: "https://xxf.app/editorial-policy/",
       },
     ],
   };
@@ -167,6 +176,15 @@ export default async function ToolPage({ params }: Props) {
             {editorial.steps.map((step) => <li key={step}>{step}</li>)}
           </ol>
 
+          <h3>Worked example</h3>
+          <div className="worked-example">
+            <span>Scenario</span>
+            <p>{example.scenario}</p>
+            {tool.sample && <div className="worked-example__input"><small>Included sample input</small><pre><code>{tool.sample}</code></pre></div>}
+            <span>What to notice</span>
+            <p>{example.observation}</p>
+          </div>
+
           <h3>When this tool helps</h3>
           <ul className="editorial-checklist">
             {editorial.useCases.map((useCase) => <li key={useCase}>{useCase}</li>)}
@@ -181,6 +199,7 @@ export default async function ToolPage({ params }: Props) {
           <div className="faq-list faq-list--light">
             {tool.faq.map((item) => <details key={item.question}><summary>{item.question}<span>+</span></summary><p>{item.answer}</p></details>)}
           </div>
+          <footer className="editorial-byline"><span>Reviewed September 2, 2026</span><p>Written and implementation-checked by the XXF Tools editorial team</p><Link href="/editorial-policy/">How XXF reviews tool guidance →</Link></footer>
         </article>
 
         <aside className="tool-editorial__aside" aria-label="Related resources">

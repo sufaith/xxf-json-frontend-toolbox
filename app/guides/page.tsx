@@ -41,7 +41,7 @@ export default function GuidesPage() {
       </div>
 
       <section className="guide-method">
-        <div className="shell"><span className="kicker">Editorial method</span><h2>Grounded in the implementation</h2><div><p>Each guide is checked against the corresponding XXF tool so documented inputs, outputs and limitations match the behavior visitors can test</p><p>Normative specifications and primary platform documentation appear at the end of every article for readers who need the authoritative details</p><p>Examples use synthetic data and call out decisions that require application-specific validation rather than presenting generated output as a finished production contract</p></div></div>
+        <div className="shell"><span className="kicker">Editorial method</span><h2>Grounded in the implementation</h2><div><p>Each guide is checked against the corresponding XXF tool so documented inputs, outputs and limitations match the behavior visitors can test</p><p>Normative specifications and primary platform documentation appear at the end of every article for readers who need the authoritative details</p><p>Examples use synthetic data and call out decisions that require application-specific validation <Link href="/editorial-policy/">Read the full review standards →</Link></p></div></div>
       </section>
     </main>
   );
