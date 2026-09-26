@@ -608,7 +608,7 @@ button, select { cursor: pointer; }
   .note-space-page + .site-footer { display: none; }
   .note-space { min-height: 100svh; }
   .note-space__editor { padding: 24px 16px 28px; font-size: 16px; line-height: 1.7; }
-  .note-space__hint { align-items: flex-end; gap: 10px; min-height: 58px; padding: 10px 12px 12px; font-size: 9px; }
+  .note-space__hint { align-items: center; gap: 10px; min-height: 58px; padding: 10px 12px; font-size: 9px; }
   .note-space__meta { flex-wrap: wrap; gap: 8px 10px; }
   .note-space__status { max-width: 46vw; }
   .note-space__copy { padding: 7px 10px; }
