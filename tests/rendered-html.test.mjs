@@ -272,7 +272,9 @@ test("named spaces use durable storage and an auto-saving full-screen editor", a
   assert.match(page, /dynamicParams = false/);
   assert.match(component, /fetch\(spaceApiUrl\(activeSpaceName\), \{ cache: "no-store" \}/);
   assert.match(component, /setTimeout\(\(\) => save\(content, version\), 500\)/);
-  assert.match(component, /anyone with this link can access this space/);
+  assert.match(component, /Auto-saves as you type/);
+  assert.match(component, /note-space__space-id/);
+  assert.match(component, /copied \? "Copied" : "Copy"/);
   assert.match(chrome, /pathname\.startsWith\("\/n\/"\)/);
   assert.match(worker, /rewrittenUrl\.pathname = "\/n\/welcome\/"/);
 });

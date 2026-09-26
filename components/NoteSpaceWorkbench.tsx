@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type Props = { spaceName: string };
@@ -117,16 +116,6 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
 
   return (
     <section className="note-space" aria-label={`${activeSpaceName} shared space`}>
-      <header className="note-space__bar">
-        <Link className="note-space__brand" href="/" aria-label="XXF Tools home">XXF<span>.</span></Link>
-        <div className="note-space__identity"><span>/n/</span><strong>{activeSpaceName}</strong></div>
-        <div className="note-space__actions">
-          <span className={`note-space__status note-space__status--${saveState}`} role="status" aria-live="polite">
-            {saveState === "loading" ? "Opening" : saveState === "saving" ? "Saving" : saveState === "error" ? "Not saved" : "Saved"}
-          </span>
-          <button type="button" className="note-space__copy" onClick={copySpaceLink}>{copied ? "Copied" : "Share"}</button>
-        </div>
-      </header>
       <textarea
         className="note-space__editor"
         value={content}
@@ -146,8 +135,14 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
         spellCheck
       />
       <footer className="note-space__hint">
-        <span>{error || "Auto-saves as you type · anyone with this link can access this space"}</span>
-        <span>{content.length.toLocaleString()} characters</span>
+        <span className="note-space__space-id">/n/{activeSpaceName}</span>
+        <div className="note-space__meta">
+          <span className={`note-space__status note-space__status--${saveState}`} role="status" aria-live="polite">
+            {error || "Auto-saves as you type"}
+          </span>
+          <span>{content.length.toLocaleString()} characters</span>
+          <button type="button" className="note-space__copy" onClick={copySpaceLink}>{copied ? "Copied" : "Copy"}</button>
+        </div>
       </footer>
     </section>
   );
