@@ -436,7 +436,10 @@ test("named spaces use durable storage and an auto-saving full-screen editor", a
   assert.match(component, /note-space__space-id/);
   assert.match(component, /saveState === "saving" \? "Saving" : "Saved"/);
   assert.match(component, /className="note-space__save" onClick=\{saveNow\}/);
-  assert.match(component, /copied \? "Copied" : "Copy"/);
+  assert.match(component, /aria-label=\{copied \? "Copied" : "Copy space link"\}/);
+  assert.match(component, /setTimeout\(\(\) => setCopied\(false\), 2000\)/);
+  assert.match(component, /note-space__copy-icon--copied/);
+  assert.doesNotMatch(component, /className="note-space__copy"/);
   assert.match(chrome, /pathname\.startsWith\("\/n\/"\)/);
   assert.match(worker, /rewrittenUrl\.pathname = "\/n\/welcome\/"/);
 });

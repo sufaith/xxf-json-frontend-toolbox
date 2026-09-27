@@ -19,6 +19,7 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
   const isLoaded = useRef(false);
   const skipNextSave = useRef(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveQueue = useRef(Promise.resolve());
   const changeVersion = useRef(0);
 
@@ -91,6 +92,7 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
     return () => {
       cancelled = true;
       if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (copyResetTimer.current) clearTimeout(copyResetTimer.current);
     };
   }, [activeSpaceName, routeResolved]);
 
@@ -110,8 +112,9 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
 
   async function copySpaceLink() {
     await navigator.clipboard.writeText(window.location.href);
+    if (copyResetTimer.current) clearTimeout(copyResetTimer.current);
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    copyResetTimer.current = setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -135,7 +138,25 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
         spellCheck
       />
       <footer className="note-space__hint">
-        <span className="note-space__space-id">/n/{activeSpaceName}</span>
+        <div className="note-space__identity">
+          <span className="note-space__space-id">/n/{activeSpaceName}</span>
+          <button
+            type="button"
+            className={`note-space__copy-icon${copied ? " note-space__copy-icon--copied" : ""}`}
+            onClick={copySpaceLink}
+            aria-label={copied ? "Copied" : "Copy space link"}
+            title={copied ? "Copied" : "Copy space link"}
+          >
+            {copied ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-8" /></svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="9" y="9" width="10" height="10" rx="2" />
+                <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+              </svg>
+            )}
+          </button>
+        </div>
         <div className="note-space__meta">
           <span>{content.length.toLocaleString()} characters</span>
           {saveState === "error" ? (
@@ -148,7 +169,6 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
               {saveState === "saving" ? "Saving" : "Saved"}
             </span>
           )}
-          <button type="button" className="note-space__copy" onClick={copySpaceLink}>{copied ? "Copied" : "Copy"}</button>
         </div>
       </footer>
     </section>
