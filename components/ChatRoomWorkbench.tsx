@@ -19,6 +19,7 @@ type ChatMessage = {
 
 const DEVICE_KEY = "xxf-chat-device-v1";
 const MAX_FILE_BYTES = 50 * 1024 * 1024;
+const CHAT_MEDIA_UPLOAD_URL = "https://xxf-chat-media.suwdoit.workers.dev/upload";
 const nicknameFirst = ["Quiet", "Silver", "Mellow", "Bright", "Little", "Lucky", "Amber", "Velvet", "Cosmic", "Gentle", "Indigo", "Sunny"];
 const nicknameSecond = ["Otter", "Panda", "Robin", "Fox", "Koala", "Whale", "Finch", "Gecko", "Moth", "Lynx", "Badger", "Turtle"];
 const avatarColors = ["#c8ff4d", "#c9d7ff", "#ffc7b8", "#d8caff", "#bee8da", "#ffe49a", "#bdd9ff", "#f2c7df"];
@@ -228,9 +229,14 @@ export function ChatRoomWorkbench({ roomName }: Props) {
     setError("");
     try {
       for (const file of accepted) {
-        const upload = await fetch(`/api/c/${encodeURIComponent(activeRoom)}/upload`, {
+        const upload = await fetch(CHAT_MEDIA_UPLOAD_URL, {
           method: "POST",
-          headers: { "Content-Type": file.type, "X-File-Name": encodeURIComponent(file.name), "X-Device-Id": identity.deviceId },
+          headers: {
+            "Content-Type": file.type,
+            "X-File-Name": encodeURIComponent(file.name),
+            "X-Device-Id": identity.deviceId,
+            "X-Room": encodeURIComponent(activeRoom),
+          },
           body: file,
         });
         const media = await upload.json() as ChatMedia & { error?: string };

@@ -330,6 +330,7 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /client_max_body_size 52m/);
   assert.match(source, /proxy_request_buffering off/);
   assert.match(source, /img-src[^;]*https:\/\/xxf-json-frontend-tools\.xxfapp\.chatgpt\.site/);
+  assert.match(source, /img-src[^;]*https:\/\/r\.xxf\.app/);
   assert.match(source, /proxy_pass https:\/\/xxf-json-frontend-tools\.xxfapp\.chatgpt\.site;/);
   assert.match(source, /server_name xxf\.app;/);
   assert.match(source, /server_name www\.xxf\.app;[\s\S]*return 301 https:\/\/xxf\.app\$request_uri;/);
@@ -455,12 +456,13 @@ test("named spaces use durable storage and an auto-saving full-screen editor", a
 });
 
 test("named chat rooms persist messages and R2 media with a device profile", async () => {
-  const [hosting, worker, schema, page, component, chrome, chatShell] = await Promise.all([
+  const [hosting, worker, schema, page, component, chatApi, chrome, chatShell] = await Promise.all([
     readFile(new URL("../.openai/hosting.json", import.meta.url), "utf8"),
     readFile(new URL("../worker/index.ts", import.meta.url), "utf8"),
     readFile(new URL("../drizzle/0001_chat.sql", import.meta.url), "utf8"),
     readFile(new URL("../app/c/[slug]/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/ChatRoomWorkbench.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/chat.ts", import.meta.url), "utf8"),
     readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8"),
     html("c/welcome/index.html"),
   ]);
@@ -477,6 +479,10 @@ test("named chat rooms persist messages and R2 media with a device profile", asy
   assert.match(component, /setInterval\([\s\S]*2000\)/);
   assert.match(component, /accept="image\/\*,video\/\*"/);
   assert.match(component, /MAX_FILE_BYTES = 50 \* 1024 \* 1024/);
+  assert.match(component, /https:\/\/xxf-chat-media\.suwdoit\.workers\.dev\/upload/);
+  assert.match(component, /"X-Room": encodeURIComponent\(activeRoom\)/);
+  assert.match(chatApi, /https:\/\/r\.xxf\.app\//);
+  assert.match(chatApi, /publicR2Prefix = `r2\/\$\{legacyPrefix\}`/);
   assert.match(component, /Shift \+ Enter/);
   assert.match(chrome, /pathname\.startsWith\("\/c\/"\)/);
   assert.match(chatShell, /<meta name="robots" content="noindex, nofollow"/i);

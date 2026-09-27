@@ -81,6 +81,14 @@ function cleanIdentity(value: unknown, maxLength: number) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
 }
 
+function mediaUrlForKey(key: string) {
+  if (key.startsWith("r2/")) {
+    const publicKey = key.slice(3);
+    return `https://r.xxf.app/${publicKey.split("/").map(encodeURIComponent).join("/")}`;
+  }
+  return `/api/c/media/${key.split("/").map(encodeURIComponent).join("/")}`;
+}
+
 function mapMessage(row: ChatRow) {
   return {
     id: row.id,
@@ -92,7 +100,7 @@ function mapMessage(row: ChatRow) {
     content: row.content,
     media: row.media_key ? {
       key: row.media_key,
-      url: `/api/c/media/${row.media_key.split("/").map(encodeURIComponent).join("/")}`,
+      url: mediaUrlForKey(row.media_key),
       type: row.media_type,
       name: row.media_name,
       size: row.media_size,
@@ -144,7 +152,11 @@ async function createMessage(request: Request, db: ChatDatabase, room: string) {
   if (!deviceId || !nickname || !avatarSeed) return json({ error: "Device identity is required." }, 400);
   if (kind === "text" && !content) return json({ error: "Message text is required." }, 400);
   if (kind !== "text" && (!mediaKey || !mediaType || !mediaName || !mediaSize)) return json({ error: "Media details are incomplete." }, 400);
-  if (mediaKey && !mediaKey.startsWith(`chat/${encodeURIComponent(room)}/`)) return json({ error: "Media does not belong to this room." }, 400);
+  const legacyPrefix = `chat/${encodeURIComponent(room)}/`;
+  const publicR2Prefix = `r2/${legacyPrefix}`;
+  if (mediaKey && !mediaKey.startsWith(legacyPrefix) && !mediaKey.startsWith(publicR2Prefix)) {
+    return json({ error: "Media does not belong to this room." }, 400);
+  }
 
   const recent = await db.prepare(`
     SELECT COUNT(*) AS count
@@ -153,7 +165,7 @@ async function createMessage(request: Request, db: ChatDatabase, room: string) {
   `).bind(deviceId).first<{ count: number }>();
   if ((recent?.count ?? 0) >= 30) return json({ error: "You are sending messages too quickly. Try again in a moment." }, 429);
 
-  if (mediaKey) {
+  if (mediaKey && !mediaKey.startsWith("r2/")) {
     const upload = await db.prepare(`
       SELECT media_key
       FROM chat_uploads
