@@ -486,11 +486,16 @@ test("named chat rooms persist messages and R2 media with a device profile", asy
   assert.match(component, /https:\/\/xxf-chat-media\.suwdoit\.workers\.dev\/upload/);
   assert.match(component, /"X-Room": encodeURIComponent\(activeRoom\)/);
   assert.match(component, /OWNER_KEY_PREFIX = "xxf-chat-owner-v1:"/);
+  assert.match(component, /url\.searchParams\.get\("owner"\)/);
+  assert.match(component, /url\.searchParams\.set\("owner", ownerToken\)/);
+  assert.match(component, /window\.history\.replaceState/);
+  assert.match(component, /Copy owner link/);
   assert.match(component, /Clear this room\?/);
   assert.match(component, /method: "DELETE"/);
   assert.match(chatApi, /https:\/\/r\.xxf\.app\//);
   assert.match(chatApi, /publicR2Prefix = `r2\/\$\{legacyPrefix\}`/);
   assert.match(chatApi, /Only this room's owner can clear it/);
+  assert.match(chatApi, /existing\.owner_token_hash === ownerTokenHash/);
   assert.match(chatApi, /mediaAdminSecret/);
   assert.match(mediaWorker, /url\.pathname === "\/delete"/);
   assert.match(mediaWorker, /env\.MEDIA\.delete\(keys\)/);

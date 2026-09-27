@@ -107,7 +107,7 @@ async function claimRoomOwnership(request: Request, db: ChatDatabase, room: stri
     WHERE room_slug = ?1
   `).bind(room).first<{ owner_device_id: string; owner_token_hash: string }>();
   if (existing) {
-    return json({ owner: existing.owner_device_id === deviceId && existing.owner_token_hash === ownerTokenHash });
+    return json({ owner: existing.owner_token_hash === ownerTokenHash });
   }
 
   const firstMessage = await db.prepare(`
@@ -128,7 +128,7 @@ async function claimRoomOwnership(request: Request, db: ChatDatabase, room: stri
     FROM chat_rooms
     WHERE room_slug = ?1
   `).bind(room).first<{ owner_device_id: string; owner_token_hash: string }>();
-  return json({ owner: claimed?.owner_device_id === deviceId && claimed?.owner_token_hash === ownerTokenHash });
+  return json({ owner: claimed?.owner_token_hash === ownerTokenHash });
 }
 
 async function clearRoom(
@@ -146,7 +146,7 @@ async function clearRoom(
     FROM chat_rooms
     WHERE room_slug = ?1
   `).bind(room).first<{ owner_device_id: string; owner_token_hash: string }>();
-  if (!owner || owner.owner_device_id !== deviceId || owner.owner_token_hash !== ownerTokenHash) {
+  if (!owner || owner.owner_token_hash !== ownerTokenHash) {
     return json({ error: "Only this room's owner can clear it." }, 403);
   }
 

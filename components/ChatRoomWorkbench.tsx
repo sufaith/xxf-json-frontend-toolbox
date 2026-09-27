@@ -80,11 +80,17 @@ async function getDeviceIdentity() {
 
 async function getRoomOwnerToken(room: string) {
   const key = `${OWNER_KEY_PREFIX}${room}`;
+  const url = new URL(window.location.href);
+  const sharedToken = url.searchParams.get("owner")?.trim() ?? "";
   const localToken = window.localStorage.getItem(key);
   const indexedToken = await readFromIndexedDb(key);
-  const token = indexedToken || localToken || `owner_${crypto.randomUUID()}_${crypto.randomUUID()}`;
+  const token = sharedToken.length >= 32 ? sharedToken : indexedToken || localToken || `owner_${crypto.randomUUID()}_${crypto.randomUUID()}`;
   window.localStorage.setItem(key, token);
   writeToIndexedDb(key, token);
+  if (sharedToken.length >= 32) {
+    url.searchParams.delete("owner");
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }
   return token;
 }
 
@@ -134,6 +140,10 @@ function TrashIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" /></svg>;
 }
 
+function KeyIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4" /><path d="m11 12 8-8m-3 3 3 3m-6 0 3 3" /></svg>;
+}
+
 export function ChatRoomWorkbench({ roomName }: Props) {
   const [activeRoom, setActiveRoom] = useState(roomName);
   const [routeResolved, setRouteResolved] = useState(false);
@@ -145,6 +155,7 @@ export function ChatRoomWorkbench({ roomName }: Props) {
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [ownerLinkCopied, setOwnerLinkCopied] = useState(false);
   const [ownerToken, setOwnerToken] = useState("");
   const [isRoomOwner, setIsRoomOwner] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
@@ -318,8 +329,20 @@ export function ChatRoomWorkbench({ roomName }: Props) {
   async function copyRoomLink() {
     await navigator.clipboard.writeText(window.location.href);
     setCopied(true);
+    setOwnerLinkCopied(false);
     if (copyTimer.current) clearTimeout(copyTimer.current);
     copyTimer.current = setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function copyOwnerLink() {
+    if (!ownerToken) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("owner", ownerToken);
+    await navigator.clipboard.writeText(url.toString());
+    setOwnerLinkCopied(true);
+    setCopied(false);
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+    copyTimer.current = setTimeout(() => setOwnerLinkCopied(false), 2000);
   }
 
   async function clearRoom() {
@@ -361,6 +384,7 @@ export function ChatRoomWorkbench({ roomName }: Props) {
           <span className="chat-room__live" aria-hidden="true" />
           <h1>{roomLabel}</h1>
           <button type="button" onClick={copyRoomLink} aria-label={copied ? "Room link copied" : "Copy room link"} title={copied ? "Copied" : "Copy room link"} className={copied ? "is-copied" : ""}><LinkIcon /></button>
+          {isRoomOwner && <button type="button" onClick={copyOwnerLink} aria-label={ownerLinkCopied ? "Owner link copied" : "Copy owner link"} title={ownerLinkCopied ? "Owner link copied" : "Copy owner link"} className={ownerLinkCopied ? "chat-room__owner-link is-copied" : "chat-room__owner-link"}><KeyIcon /></button>}
           {isRoomOwner && <button type="button" onClick={() => setShowClearDialog(true)} aria-label="Clear room" title="Clear room" className="chat-room__clear"><TrashIcon /></button>}
         </div>
         {identity ? (
