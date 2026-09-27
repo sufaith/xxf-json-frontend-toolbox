@@ -121,7 +121,7 @@ export function SiteHeader() {
     ? { left: `${position.x}px`, top: `${position.y}px`, right: "auto", bottom: "auto" } as CSSProperties
     : undefined;
 
-  if (pathname === "/" || pathname.startsWith("/n/") || pathname.startsWith("/animal")) return null;
+  if (pathname === "/" || pathname.startsWith("/n/") || pathname.startsWith("/c/") || pathname.startsWith("/animal")) return null;
 
   return (
     <header ref={headerRef} className={`site-header ${menuPlacement} ${isDragging ? "site-header--dragging" : ""}`} style={dockStyle}>
@@ -162,6 +162,11 @@ export function SiteFooter() {
         <span>© 2026 XXF Tools</span>
         <nav aria-label="Footer navigation">
           <Link href="/site-map/">Sitemap</Link>
+          <Link href="/guides/">Guides</Link>
+          <Link href="/editorial-policy/">Editorial</Link>
+          <Link href="/about/">About</Link>
+          <Link href="/contact/">Contact</Link>
+          <Link href="/terms/">Terms</Link>
           <Link href="/privacy/">Privacy Policy</Link>
         </nav>
       </div>

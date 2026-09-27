@@ -2,6 +2,7 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 import { handleNoteSpaceRequest, type NoteSpaceDatabase } from "../lib/note-spaces";
+import { handleChatMediaRequest, handleChatRequest, type ChatDatabase, type ChatMediaBucket } from "../lib/chat";
 
 interface AssetFetcher {
   fetch(request: Request): Promise<Response>;
@@ -9,7 +10,8 @@ interface AssetFetcher {
 
 interface Env {
   ASSETS: AssetFetcher;
-  DB?: NoteSpaceDatabase;
+  DB?: NoteSpaceDatabase & ChatDatabase;
+  MEDIA?: ChatMediaBucket;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -49,9 +51,23 @@ const worker = {
       return handleNoteSpaceRequest(request, env.DB);
     }
 
+    if (url.pathname.startsWith("/api/c/media/")) {
+      return handleChatMediaRequest(request, env.MEDIA);
+    }
+
+    if (url.pathname.startsWith("/api/c/")) {
+      return handleChatRequest(request, env.DB, env.MEDIA);
+    }
+
     if (url.pathname.startsWith("/n/") && url.pathname !== "/n/welcome/") {
       const rewrittenUrl = new URL(request.url);
       rewrittenUrl.pathname = "/n/welcome/";
+      return handler.fetch(new Request(rewrittenUrl, request));
+    }
+
+    if (url.pathname.startsWith("/c/") && url.pathname !== "/c/welcome/") {
+      const rewrittenUrl = new URL(request.url);
+      rewrittenUrl.pathname = "/c/welcome/";
       return handler.fetch(new Request(rewrittenUrl, request));
     }
 
