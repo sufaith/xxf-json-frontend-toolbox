@@ -325,14 +325,19 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /location = \/api\/check-redirects/);
   assert.match(source, /proxy_pass https:\/\/u\.xxf\.app\/api\/check-redirects/);
   assert.match(source, /location ~ \^\/api\/n\/\[\^\/\]\+\/\?\$ \{/);
+  assert.match(source, /location \^~ \/api\/c\/ \{/);
+  assert.match(source, /client_max_body_size 52m/);
+  assert.match(source, /proxy_request_buffering off/);
   assert.match(source, /proxy_pass https:\/\/xxf-json-frontend-tools\.xxfapp\.chatgpt\.site;/);
   assert.match(source, /server_name xxf\.app;/);
   assert.match(source, /server_name www\.xxf\.app;[\s\S]*return 301 https:\/\/xxf\.app\$request_uri;/);
   assert.match(source, /location ~ \^\/n\/\[\^\/\]\+\/\?\$ \{/);
+  assert.match(source, /location ~ \^\/c\/\[\^\/\]\+\/\?\$ \{/);
   assert.match(source, /map \$uri \$xxf_robots_tag \{[\s\S]*~\^\/n\/ "noindex, nofollow, noarchive";/);
   assert.match(source, /add_header X-Robots-Tag \$xxf_robots_tag always;/);
   assert.doesNotMatch(source, /location ~ \^\/n\/\[\^\/\]\+\/\?\$ \{\s*add_header/);
   assert.match(source, /try_files \/n\/welcome\/index\.html =404/);
+  assert.match(source, /try_files \/c\/welcome\/index\.html =404/);
 });
 
 test("AdSense stays off private, navigational and error-only screens", async () => {
@@ -445,6 +450,35 @@ test("named spaces use durable storage and an auto-saving full-screen editor", a
   assert.doesNotMatch(component, /className="note-space__copy"/);
   assert.match(chrome, /pathname\.startsWith\("\/n\/"\)/);
   assert.match(worker, /rewrittenUrl\.pathname = "\/n\/welcome\/"/);
+});
+
+test("named chat rooms persist messages and R2 media with a device profile", async () => {
+  const [hosting, worker, schema, page, component, chrome, chatShell] = await Promise.all([
+    readFile(new URL("../.openai/hosting.json", import.meta.url), "utf8"),
+    readFile(new URL("../worker/index.ts", import.meta.url), "utf8"),
+    readFile(new URL("../drizzle/0001_chat.sql", import.meta.url), "utf8"),
+    readFile(new URL("../app/c/[slug]/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/ChatRoomWorkbench.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8"),
+    html("c/welcome/index.html"),
+  ]);
+  assert.equal(JSON.parse(hosting).r2, "MEDIA");
+  assert.match(schema, /CREATE TABLE IF NOT EXISTS chat_profiles/);
+  assert.match(schema, /CREATE TABLE IF NOT EXISTS chat_messages/);
+  assert.match(schema, /idx_chat_messages_room_id/);
+  assert.match(worker, /handleChatRequest\(request, env\.DB, env\.MEDIA\)/);
+  assert.match(worker, /handleChatMediaRequest\(request, env\.MEDIA\)/);
+  assert.match(worker, /rewrittenUrl\.pathname = "\/c\/welcome\/"/);
+  assert.match(page, /dynamicParams = false/);
+  assert.match(component, /indexedDB\.open\("xxf-chat", 1\)/);
+  assert.match(component, /crypto\.randomUUID\(\)/);
+  assert.match(component, /setInterval\([\s\S]*2000\)/);
+  assert.match(component, /accept="image\/\*,video\/\*"/);
+  assert.match(component, /MAX_FILE_BYTES = 50 \* 1024 \* 1024/);
+  assert.match(component, /Shift \+ Enter/);
+  assert.match(chrome, /pathname\.startsWith\("\/c\/"\)/);
+  assert.match(chatShell, /<meta name="robots" content="noindex, nofollow"/i);
+  assert.doesNotMatch(chatShell, /pagead2\.googlesyndication\.com/);
 });
 
 test("video to M3U8 conversion stays local and packages HLS output", async () => {

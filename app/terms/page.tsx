@@ -4,7 +4,7 @@ import { AdSenseScript } from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
-  description: "Terms covering use of XXF browser tools, shared note spaces, generated output and public network features",
+  description: "Terms covering use of XXF browser tools, shared spaces, chat uploads, generated output and public network features",
   alternates: { canonical: "/terms/" },
 };
 
@@ -22,6 +22,7 @@ export default function TermsPage() {
         <p>You are responsible for validating generated code, schemas, timestamps, encodings, media packages and converted data before production use. Do not use a network tool to access content you are not authorized to request.</p>
         <h2>Shared spaces</h2>
         <p>Named pages under <code>/n/</code> are link-accessible shared text spaces rather than private accounts. Do not store secrets, personal records, confidential material or unlawful content in a shared space. Anyone with the link may read or change its contents.</p>
+        <p>Named pages under <code>/c/</code> are link-accessible chat rooms. Only post text and upload images or videos you have the right to share. Anyone with the room link may view its messages and media.</p>
         <h2>Availability and changes</h2>
         <p>Features may change, move or be discontinued. XXF may limit abusive automated traffic, oversized requests or misuse that affects the reliability or security of the free service.</p>
         <h2>Content and intellectual property</h2>

@@ -4,7 +4,7 @@ import { AdSenseScript } from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "How XXF Tools handles converter input, shared note spaces, server logs, advertising and cookies",
+  description: "How XXF Tools handles converter input, shared spaces, chat media, server logs, advertising and cookies",
   alternates: { canonical: "/privacy/" },
 };
 
@@ -24,6 +24,9 @@ export default function PrivacyPage() {
         <h2>Shared note spaces</h2>
         <p>Pages under <code>/n/</code> are an explicit exception to browser-local processing. Their text is transmitted to XXF storage and automatically saved so the same named space can be opened again. Anyone who knows or guesses the space link can access its content, so shared spaces must not contain passwords, access tokens, personal records, private source code or confidential business information.</p>
 
+        <h2>Chat rooms and uploaded media</h2>
+        <p>Pages under <code>/c/</code> store messages and generated device profiles in a database. Images and videos shared in a room are stored in private Cloudflare R2 object storage and delivered through the chat service. Anyone who knows or guesses a room link can view and post in that room. A random device identifier is kept in browser storage so clearing cookies alone does not replace the generated profile; clearing all site data can reset it.</p>
+
         <h2>Server logs and infrastructure</h2>
         <p>Infrastructure providers may process basic request information such as IP address, browser type, requested URL, response status and timestamps for security, reliability and aggregate traffic measurement. Converter editor contents are not part of ordinary page requests, except for the network and shared-space features described above.</p>
 
@@ -32,7 +35,7 @@ export default function PrivacyPage() {
         <p>Google explains this processing in <a className="text-link" href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noreferrer">How Google uses information from sites or apps that use its services ↗</a>. Visitors can review or change ad personalization through <a className="text-link" href="https://adssettings.google.com/" target="_blank" rel="noreferrer">Google Ads Settings ↗</a>. Other advertising vendors may provide their own controls where their services are used.</p>
 
         <h2>Your choices</h2>
-        <p>You can use the converters without creating an XXF account, clear browser site data, block cookies through browser settings and avoid shared spaces or network tools. Blocking some requests may prevent advertising, stream playback or network-dependent features from working.</p>
+        <p>You can use the converters without creating an XXF account, clear browser site data, block cookies through browser settings and avoid shared spaces or network tools. Clearing site data resets the local chat identity. Blocking some requests may prevent advertising, stream playback or network-dependent features from working.</p>
 
         <h2>Questions and corrections</h2>
         <p>Use the <Link className="text-link" href="/contact/">contact and feedback page</Link> to report a privacy-documentation error or ask a question about the behavior described here.</p>
