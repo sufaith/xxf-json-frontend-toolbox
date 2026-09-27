@@ -328,6 +328,9 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /location \^~ \/api\/c\/ \{/);
   assert.match(source, /client_max_body_size 52m/);
   assert.match(source, /proxy_request_buffering off/);
+  assert.match(source, /proxy_set_header Range \$http_range/);
+  assert.match(source, /proxy_set_header If-Range \$http_if_range/);
+  assert.match(source, /proxy_force_ranges on/);
   assert.match(source, /proxy_pass https:\/\/xxf-json-frontend-tools\.xxfapp\.chatgpt\.site;/);
   assert.match(source, /server_name xxf\.app;/);
   assert.match(source, /server_name www\.xxf\.app;[\s\S]*return 301 https:\/\/xxf\.app\$request_uri;/);
