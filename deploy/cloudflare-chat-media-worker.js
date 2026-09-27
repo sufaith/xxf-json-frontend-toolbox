@@ -31,6 +31,28 @@ function decode(value) {
   }
 }
 
+function sameSecret(received, expected) {
+  if (!received || !expected || received.length !== expected.length) return false;
+  let mismatch = 0;
+  for (let index = 0; index < received.length; index += 1) {
+    mismatch |= received.charCodeAt(index) ^ expected.charCodeAt(index);
+  }
+  return mismatch === 0;
+}
+
+async function deleteObjects(request, env, origin) {
+  if (!sameSecret(request.headers.get("x-internal-key") || "", env.CHAT_MEDIA_ADMIN_SECRET || "")) {
+    return json({ error: "Unauthorized." }, 401, origin);
+  }
+  const payload = await request.json().catch(() => null);
+  const keys = Array.isArray(payload?.keys) ? payload.keys : [];
+  if (!keys.length || keys.length > 200 || keys.some((key) => typeof key !== "string" || !/^chat\/[^/]+\/[^/]+$/.test(key))) {
+    return json({ error: "Invalid object keys." }, 400, origin);
+  }
+  await env.MEDIA.delete(keys);
+  return json({ deleted: keys.length }, 200, origin);
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -39,6 +61,9 @@ export default {
     if (request.method === "OPTIONS") {
       if (!ALLOWED_ORIGINS.has(origin)) return new Response(null, { status: 403 });
       return new Response(null, { status: 204, headers: cors(origin) });
+    }
+    if (request.method === "POST" && url.pathname === "/delete") {
+      return deleteObjects(request, env, origin);
     }
     if (request.method !== "POST" || url.pathname !== "/upload") {
       return json({ error: "Not found." }, 404, origin);

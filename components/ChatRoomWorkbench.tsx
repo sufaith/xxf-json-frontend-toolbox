@@ -18,6 +18,7 @@ type ChatMessage = {
 };
 
 const DEVICE_KEY = "xxf-chat-device-v1";
+const OWNER_KEY_PREFIX = "xxf-chat-owner-v1:";
 const MAX_FILE_BYTES = 50 * 1024 * 1024;
 const CHAT_MEDIA_UPLOAD_URL = "https://xxf-chat-media.suwdoit.workers.dev/upload";
 const nicknameFirst = ["Quiet", "Silver", "Mellow", "Bright", "Little", "Lucky", "Amber", "Velvet", "Cosmic", "Gentle", "Indigo", "Sunny"];
@@ -43,7 +44,7 @@ function profileFor(deviceId: string): Identity {
   };
 }
 
-function readDeviceFromIndexedDb(): Promise<string | null> {
+function readFromIndexedDb(key: string): Promise<string | null> {
   return new Promise((resolve) => {
     if (!("indexedDB" in window)) return resolve(null);
     const request = indexedDB.open("xxf-chat", 1);
@@ -51,35 +52,49 @@ function readDeviceFromIndexedDb(): Promise<string | null> {
     request.onerror = () => resolve(null);
     request.onsuccess = () => {
       const transaction = request.result.transaction("identity", "readonly");
-      const get = transaction.objectStore("identity").get(DEVICE_KEY);
+      const get = transaction.objectStore("identity").get(key);
       get.onsuccess = () => resolve(typeof get.result === "string" ? get.result : null);
       get.onerror = () => resolve(null);
     };
   });
 }
 
-function writeDeviceToIndexedDb(deviceId: string) {
+function writeToIndexedDb(key: string, value: string) {
   if (!("indexedDB" in window)) return;
   const request = indexedDB.open("xxf-chat", 1);
   request.onupgradeneeded = () => request.result.createObjectStore("identity");
   request.onsuccess = () => {
     const transaction = request.result.transaction("identity", "readwrite");
-    transaction.objectStore("identity").put(deviceId, DEVICE_KEY);
+    transaction.objectStore("identity").put(value, key);
   };
 }
 
 async function getDeviceIdentity() {
   const localId = window.localStorage.getItem(DEVICE_KEY);
-  const indexedId = await readDeviceFromIndexedDb();
+  const indexedId = await readFromIndexedDb(DEVICE_KEY);
   const deviceId = indexedId || localId || `device_${crypto.randomUUID()}`;
   window.localStorage.setItem(DEVICE_KEY, deviceId);
-  writeDeviceToIndexedDb(deviceId);
+  writeToIndexedDb(DEVICE_KEY, deviceId);
   return profileFor(deviceId);
+}
+
+async function getRoomOwnerToken(room: string) {
+  const key = `${OWNER_KEY_PREFIX}${room}`;
+  const localToken = window.localStorage.getItem(key);
+  const indexedToken = await readFromIndexedDb(key);
+  const token = indexedToken || localToken || `owner_${crypto.randomUUID()}_${crypto.randomUUID()}`;
+  window.localStorage.setItem(key, token);
+  writeToIndexedDb(key, token);
+  return token;
 }
 
 function roomMessagesUrl(room: string, after?: number) {
   const base = `/api/c/${encodeURIComponent(room)}/messages`;
   return after ? `${base}?after=${after}` : base;
+}
+
+function roomOwnerUrl(room: string) {
+  return `/api/c/${encodeURIComponent(room)}/owner`;
 }
 
 function initials(name: string) {
@@ -115,6 +130,10 @@ function LinkIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2" /><path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /></svg>;
 }
 
+function TrashIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" /></svg>;
+}
+
 export function ChatRoomWorkbench({ roomName }: Props) {
   const [activeRoom, setActiveRoom] = useState(roomName);
   const [routeResolved, setRouteResolved] = useState(false);
@@ -126,6 +145,10 @@ export function ChatRoomWorkbench({ roomName }: Props) {
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [ownerToken, setOwnerToken] = useState("");
+  const [isRoomOwner, setIsRoomOwner] = useState(false);
+  const [showClearDialog, setShowClearDialog] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const afterId = useRef(0);
   const fileInput = useRef<HTMLInputElement>(null);
   const messageEnd = useRef<HTMLDivElement>(null);
@@ -147,6 +170,30 @@ export function ChatRoomWorkbench({ roomName }: Props) {
       if (copyTimer.current) clearTimeout(copyTimer.current);
     };
   }, [roomName]);
+
+  useEffect(() => {
+    if (!routeResolved || !identity) return;
+    let cancelled = false;
+    async function claimOwnership() {
+      try {
+        const token = await getRoomOwnerToken(activeRoom);
+        const response = await fetch(roomOwnerUrl(activeRoom), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ deviceId: identity?.deviceId, ownerToken: token }),
+        });
+        const data = await response.json() as { owner?: boolean };
+        if (!cancelled) {
+          setOwnerToken(token);
+          setIsRoomOwner(response.ok && data.owner === true);
+        }
+      } catch {
+        if (!cancelled) setIsRoomOwner(false);
+      }
+    }
+    claimOwnership();
+    return () => { cancelled = true; };
+  }, [activeRoom, identity, routeResolved]);
 
   const mergeMessages = useCallback((incoming: ChatMessage[]) => {
     if (!incoming.length) return;
@@ -275,6 +322,29 @@ export function ChatRoomWorkbench({ roomName }: Props) {
     copyTimer.current = setTimeout(() => setCopied(false), 2000);
   }
 
+  async function clearRoom() {
+    if (!identity || !ownerToken || clearing) return;
+    setClearing(true);
+    setError("");
+    try {
+      const response = await fetch(roomMessagesUrl(activeRoom), {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deviceId: identity.deviceId, ownerToken }),
+      });
+      const data = await response.json() as { cleared?: boolean; error?: string };
+      if (!response.ok || !data.cleared) throw new Error(data.error || "This room could not be cleared.");
+      afterId.current = 0;
+      setMessages([]);
+      setShowClearDialog(false);
+    } catch (clearError) {
+      setError(clearError instanceof Error ? clearError.message : "This room could not be cleared.");
+      setShowClearDialog(false);
+    } finally {
+      setClearing(false);
+    }
+  }
+
   const roomLabel = useMemo(() => `/c/${activeRoom}`, [activeRoom]);
 
   return (
@@ -291,6 +361,7 @@ export function ChatRoomWorkbench({ roomName }: Props) {
           <span className="chat-room__live" aria-hidden="true" />
           <h1>{roomLabel}</h1>
           <button type="button" onClick={copyRoomLink} aria-label={copied ? "Room link copied" : "Copy room link"} title={copied ? "Copied" : "Copy room link"} className={copied ? "is-copied" : ""}><LinkIcon /></button>
+          {isRoomOwner && <button type="button" onClick={() => setShowClearDialog(true)} aria-label="Clear room" title="Clear room" className="chat-room__clear"><TrashIcon /></button>}
         </div>
         {identity ? (
           <div className="chat-room__profile" title="This profile belongs to this browser device">
@@ -354,6 +425,19 @@ export function ChatRoomWorkbench({ roomName }: Props) {
         <p>Enter to send · Shift + Enter for a new line · images and videos up to 50 MB</p>
       </div>
       {dragging && <div className="chat-room__drop"><b>Drop to share</b><span>Images and videos stay in this room</span></div>}
+      {showClearDialog && (
+        <div className="chat-room__dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target && !clearing) setShowClearDialog(false); }}>
+          <div className="chat-room__dialog" role="dialog" aria-modal="true" aria-labelledby="clear-room-title">
+            <span className="chat-room__dialog-icon"><TrashIcon /></span>
+            <h2 id="clear-room-title">Clear this room?</h2>
+            <p>Every message, image and video in <b>{roomLabel}</b> will be permanently deleted.</p>
+            <div>
+              <button type="button" onClick={() => setShowClearDialog(false)} disabled={clearing}>Cancel</button>
+              <button type="button" className="is-danger" onClick={clearRoom} disabled={clearing}>{clearing ? "Clearing…" : "Clear room"}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

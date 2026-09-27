@@ -456,13 +456,15 @@ test("named spaces use durable storage and an auto-saving full-screen editor", a
 });
 
 test("named chat rooms persist messages and R2 media with a device profile", async () => {
-  const [hosting, worker, schema, page, component, chatApi, chrome, chatShell] = await Promise.all([
+  const [hosting, worker, schema, ownerSchema, page, component, chatApi, mediaWorker, chrome, chatShell] = await Promise.all([
     readFile(new URL("../.openai/hosting.json", import.meta.url), "utf8"),
     readFile(new URL("../worker/index.ts", import.meta.url), "utf8"),
     readFile(new URL("../drizzle/0001_chat.sql", import.meta.url), "utf8"),
+    readFile(new URL("../drizzle/0002_chat_rooms.sql", import.meta.url), "utf8"),
     readFile(new URL("../app/c/[slug]/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/ChatRoomWorkbench.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/chat.ts", import.meta.url), "utf8"),
+    readFile(new URL("../deploy/cloudflare-chat-media-worker.js", import.meta.url), "utf8"),
     readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8"),
     html("c/welcome/index.html"),
   ]);
@@ -470,7 +472,9 @@ test("named chat rooms persist messages and R2 media with a device profile", asy
   assert.match(schema, /CREATE TABLE IF NOT EXISTS chat_profiles/);
   assert.match(schema, /CREATE TABLE IF NOT EXISTS chat_messages/);
   assert.match(schema, /idx_chat_messages_room_id/);
-  assert.match(worker, /handleChatRequest\(request, env\.DB, env\.MEDIA\)/);
+  assert.match(ownerSchema, /CREATE TABLE IF NOT EXISTS chat_rooms/);
+  assert.match(ownerSchema, /owner_token_hash/);
+  assert.match(worker, /handleChatRequest\(request, env\.DB, env\.MEDIA, env\.CHAT_MEDIA_ADMIN_SECRET\)/);
   assert.match(worker, /handleChatMediaRequest\(request, env\.MEDIA\)/);
   assert.match(worker, /rewrittenUrl\.pathname = "\/c\/welcome\/"/);
   assert.match(page, /dynamicParams = false/);
@@ -481,8 +485,15 @@ test("named chat rooms persist messages and R2 media with a device profile", asy
   assert.match(component, /MAX_FILE_BYTES = 50 \* 1024 \* 1024/);
   assert.match(component, /https:\/\/xxf-chat-media\.suwdoit\.workers\.dev\/upload/);
   assert.match(component, /"X-Room": encodeURIComponent\(activeRoom\)/);
+  assert.match(component, /OWNER_KEY_PREFIX = "xxf-chat-owner-v1:"/);
+  assert.match(component, /Clear this room\?/);
+  assert.match(component, /method: "DELETE"/);
   assert.match(chatApi, /https:\/\/r\.xxf\.app\//);
   assert.match(chatApi, /publicR2Prefix = `r2\/\$\{legacyPrefix\}`/);
+  assert.match(chatApi, /Only this room's owner can clear it/);
+  assert.match(chatApi, /mediaAdminSecret/);
+  assert.match(mediaWorker, /url\.pathname === "\/delete"/);
+  assert.match(mediaWorker, /env\.MEDIA\.delete\(keys\)/);
   assert.match(component, /Shift \+ Enter/);
   assert.match(chrome, /pathname\.startsWith\("\/c\/"\)/);
   assert.match(chatShell, /<meta name="robots" content="noindex, nofollow"/i);

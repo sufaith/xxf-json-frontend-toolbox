@@ -29,6 +29,7 @@ export interface ChatMediaBucket {
     customMetadata: Record<string, string>;
   }): Promise<unknown>;
   get(key: string, options?: { range?: Headers }): Promise<R2ObjectBody | null>;
+  delete(key: string): Promise<void>;
 }
 
 type ChatRow = {
@@ -64,6 +65,11 @@ function validRoom(value: string) {
 
 function readChatRoute(request: Request) {
   const path = new URL(request.url).pathname;
+  const owner = path.match(/^\/api\/c\/([^/]+)\/owner\/?$/);
+  if (owner) {
+    const room = decodeSegment(owner[1]);
+    return validRoom(room) ? { room, action: "owner" as const } : null;
+  }
   const upload = path.match(/^\/api\/c\/([^/]+)\/upload\/?$/);
   if (upload) {
     const room = decodeSegment(upload[1]);
@@ -75,6 +81,107 @@ function readChatRoute(request: Request) {
     return validRoom(room) ? { room, action: "messages" as const } : null;
   }
   return null;
+}
+
+async function hashOwnerToken(value: string) {
+  const bytes = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function readOwnerCredentials(request: Request) {
+  const body = await request.json() as Record<string, unknown>;
+  return {
+    deviceId: cleanIdentity(body.deviceId, 80),
+    ownerToken: cleanIdentity(body.ownerToken, 200),
+  };
+}
+
+async function claimRoomOwnership(request: Request, db: ChatDatabase, room: string) {
+  const { deviceId, ownerToken } = await readOwnerCredentials(request);
+  if (!deviceId || ownerToken.length < 32) return json({ error: "Owner credentials are required." }, 400);
+  const ownerTokenHash = await hashOwnerToken(ownerToken);
+  const existing = await db.prepare(`
+    SELECT owner_device_id, owner_token_hash
+    FROM chat_rooms
+    WHERE room_slug = ?1
+  `).bind(room).first<{ owner_device_id: string; owner_token_hash: string }>();
+  if (existing) {
+    return json({ owner: existing.owner_device_id === deviceId && existing.owner_token_hash === ownerTokenHash });
+  }
+
+  const firstMessage = await db.prepare(`
+    SELECT device_id
+    FROM chat_messages
+    WHERE room_slug = ?1
+    ORDER BY id ASC
+    LIMIT 1
+  `).bind(room).first<{ device_id: string }>();
+  if (firstMessage && firstMessage.device_id !== deviceId) return json({ owner: false });
+
+  await db.prepare(`
+    INSERT OR IGNORE INTO chat_rooms (room_slug, owner_device_id, owner_token_hash, created_at, updated_at)
+    VALUES (?1, ?2, ?3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+  `).bind(room, deviceId, ownerTokenHash).run();
+  const claimed = await db.prepare(`
+    SELECT owner_device_id, owner_token_hash
+    FROM chat_rooms
+    WHERE room_slug = ?1
+  `).bind(room).first<{ owner_device_id: string; owner_token_hash: string }>();
+  return json({ owner: claimed?.owner_device_id === deviceId && claimed?.owner_token_hash === ownerTokenHash });
+}
+
+async function clearRoom(
+  request: Request,
+  db: ChatDatabase,
+  bucket: ChatMediaBucket | undefined,
+  room: string,
+  mediaAdminSecret?: string,
+) {
+  const { deviceId, ownerToken } = await readOwnerCredentials(request);
+  if (!deviceId || ownerToken.length < 32) return json({ error: "Owner credentials are required." }, 400);
+  const ownerTokenHash = await hashOwnerToken(ownerToken);
+  const owner = await db.prepare(`
+    SELECT owner_device_id, owner_token_hash
+    FROM chat_rooms
+    WHERE room_slug = ?1
+  `).bind(room).first<{ owner_device_id: string; owner_token_hash: string }>();
+  if (!owner || owner.owner_device_id !== deviceId || owner.owner_token_hash !== ownerTokenHash) {
+    return json({ error: "Only this room's owner can clear it." }, 403);
+  }
+
+  const result = await db.prepare(`
+    SELECT media_key
+    FROM chat_messages
+    WHERE room_slug = ?1 AND media_key IS NOT NULL
+  `).bind(room).all<{ media_key: string }>();
+  const keys = (result.results ?? []).map((row) => row.media_key).filter(Boolean);
+  const publicR2Keys = keys.filter((key) => key.startsWith("r2/")).map((key) => key.slice(3));
+  const managedKeys = keys.filter((key) => !key.startsWith("r2/"));
+
+  if (publicR2Keys.length) {
+    if (!mediaAdminSecret) return json({ error: "Media cleanup is temporarily unavailable." }, 503);
+    for (let index = 0; index < publicR2Keys.length; index += 200) {
+      const response = await fetch("https://xxf-chat-media.suwdoit.workers.dev/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Internal-Key": mediaAdminSecret },
+        body: JSON.stringify({ keys: publicR2Keys.slice(index, index + 200) }),
+      });
+      if (!response.ok) return json({ error: "Media cleanup failed. The room was not cleared." }, 502);
+    }
+  }
+  if (managedKeys.length) {
+    if (!bucket) return json({ error: "Media cleanup is temporarily unavailable." }, 503);
+    for (let index = 0; index < managedKeys.length; index += 50) {
+      await Promise.all(managedKeys.slice(index, index + 50).map((key) => bucket.delete(key)));
+    }
+  }
+
+  await db.batch([
+    db.prepare("DELETE FROM chat_uploads WHERE room_slug = ?1").bind(room),
+    db.prepare("DELETE FROM chat_messages WHERE room_slug = ?1").bind(room),
+  ]);
+  return json({ cleared: true, deletedMedia: keys.length });
 }
 
 function cleanIdentity(value: unknown, maxLength: number) {
@@ -241,14 +348,18 @@ async function uploadMedia(request: Request, db: ChatDatabase, bucket: ChatMedia
   }, 201);
 }
 
-export async function handleChatRequest(request: Request, db?: ChatDatabase, bucket?: ChatMediaBucket) {
+export async function handleChatRequest(request: Request, db?: ChatDatabase, bucket?: ChatMediaBucket, mediaAdminSecret?: string) {
   const route = readChatRoute(request);
   if (!route) return json({ error: "Invalid chat room." }, 400);
   if (!db) return json({ error: "Chat storage is unavailable." }, 503);
 
   try {
+    if (route.action === "owner" && request.method === "POST") return claimRoomOwnership(request, db, route.room);
     if (route.action === "messages" && request.method === "GET") return listMessages(request, db, route.room);
     if (route.action === "messages" && request.method === "POST") return createMessage(request, db, route.room);
+    if (route.action === "messages" && request.method === "DELETE") {
+      return clearRoom(request, db, bucket, route.room, mediaAdminSecret);
+    }
     if (route.action === "upload" && request.method === "POST") {
       if (!bucket) return json({ error: "Media storage is unavailable." }, 503);
       return uploadMedia(request, db, bucket, route.room);

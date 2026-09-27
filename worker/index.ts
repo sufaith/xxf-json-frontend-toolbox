@@ -12,6 +12,7 @@ interface Env {
   ASSETS: AssetFetcher;
   DB?: NoteSpaceDatabase & ChatDatabase;
   MEDIA?: ChatMediaBucket;
+  CHAT_MEDIA_ADMIN_SECRET?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -56,7 +57,7 @@ const worker = {
     }
 
     if (url.pathname.startsWith("/api/c/")) {
-      return handleChatRequest(request, env.DB, env.MEDIA);
+      return handleChatRequest(request, env.DB, env.MEDIA, env.CHAT_MEDIA_ADMIN_SECRET);
     }
 
     if (url.pathname.startsWith("/n/") && url.pathname !== "/n/welcome/") {
