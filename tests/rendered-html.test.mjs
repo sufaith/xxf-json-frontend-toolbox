@@ -432,8 +432,10 @@ test("named spaces use durable storage and an auto-saving full-screen editor", a
   assert.match(page, /dynamicParams = false/);
   assert.match(component, /fetch\(spaceApiUrl\(activeSpaceName\), \{ cache: "no-store" \}/);
   assert.match(component, /setTimeout\(\(\) => save\(content, version\), 500\)/);
-  assert.match(component, /Auto-saves as you type/);
+  assert.doesNotMatch(component, /Auto-saves as you type/);
   assert.match(component, /note-space__space-id/);
+  assert.match(component, /saveState === "saving" \? "Saving" : "Saved"/);
+  assert.match(component, /className="note-space__save" onClick=\{saveNow\}/);
   assert.match(component, /copied \? "Copied" : "Copy"/);
   assert.match(chrome, /pathname\.startsWith\("\/n\/"\)/);
   assert.match(worker, /rewrittenUrl\.pathname = "\/n\/welcome\/"/);

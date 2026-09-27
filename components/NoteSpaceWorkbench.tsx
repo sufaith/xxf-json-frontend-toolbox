@@ -137,10 +137,17 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
       <footer className="note-space__hint">
         <span className="note-space__space-id">/n/{activeSpaceName}</span>
         <div className="note-space__meta">
-          <span className={`note-space__status note-space__status--${saveState}`} role="status" aria-live="polite">
-            {error || "Auto-saves as you type"}
-          </span>
           <span>{content.length.toLocaleString()} characters</span>
+          {saveState === "error" ? (
+            <>
+              <span className="sr-only" role="status" aria-live="polite">{error || "Save failed"}</span>
+              <button type="button" className="note-space__save" onClick={saveNow} title={error || "Retry saving"}>Save</button>
+            </>
+          ) : saveState === "loading" ? null : (
+            <span className={`note-space__status note-space__status--${saveState}`} role="status" aria-live="polite">
+              {saveState === "saving" ? "Saving" : "Saved"}
+            </span>
+          )}
           <button type="button" className="note-space__copy" onClick={copySpaceLink}>{copied ? "Copied" : "Copy"}</button>
         </div>
       </footer>
