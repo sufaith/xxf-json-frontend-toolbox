@@ -53,6 +53,7 @@ button, select { cursor: pointer; }
 .note-space__copy-icon:hover, .note-space__copy-icon:focus-visible { background: rgba(18,20,22,.07); color: var(--ink); outline: 0; }
 .note-space__copy-icon--copied { color: #6f8d22; }
 .note-space__meta { display: flex; align-items: center; justify-content: flex-end; gap: 14px; min-width: 0; }
+.note-space__character-meta { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .note-space__status { min-width: 40px; overflow: hidden; color: #7a7e75; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
 .note-space__status--saving { color: #a27827; }
 .note-space__save { border: 1px solid rgba(180,75,58,.32); border-radius: 999px; background: transparent; color: #b44b3a; padding: 6px 10px; font-size: 10px; line-height: 1; transition: border-color .18s, background .18s; }

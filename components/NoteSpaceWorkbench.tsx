@@ -9,17 +9,30 @@ function spaceApiUrl(spaceName: string) {
   return `/api/n/${encodeURIComponent(spaceName)}`;
 }
 
+function CopyIcon({ copied }: { copied: boolean }) {
+  return copied ? (
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-8" /></svg>
+  ) : (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="9" y="9" width="10" height="10" rx="2" />
+      <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+    </svg>
+  );
+}
+
 export function NoteSpaceWorkbench({ spaceName }: Props) {
   const [activeSpaceName, setActiveSpaceName] = useState(spaceName);
   const [routeResolved, setRouteResolved] = useState(false);
   const [content, setContent] = useState("");
   const [saveState, setSaveState] = useState<SaveState>("loading");
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [contentCopied, setContentCopied] = useState(false);
   const isLoaded = useRef(false);
   const skipNextSave = useRef(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const copyResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const linkCopyResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const contentCopyResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveQueue = useRef(Promise.resolve());
   const changeVersion = useRef(0);
 
@@ -92,7 +105,8 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
     return () => {
       cancelled = true;
       if (saveTimer.current) clearTimeout(saveTimer.current);
-      if (copyResetTimer.current) clearTimeout(copyResetTimer.current);
+      if (linkCopyResetTimer.current) clearTimeout(linkCopyResetTimer.current);
+      if (contentCopyResetTimer.current) clearTimeout(contentCopyResetTimer.current);
     };
   }, [activeSpaceName, routeResolved]);
 
@@ -112,9 +126,16 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
 
   async function copySpaceLink() {
     await navigator.clipboard.writeText(window.location.href);
-    if (copyResetTimer.current) clearTimeout(copyResetTimer.current);
-    setCopied(true);
-    copyResetTimer.current = setTimeout(() => setCopied(false), 2000);
+    if (linkCopyResetTimer.current) clearTimeout(linkCopyResetTimer.current);
+    setLinkCopied(true);
+    linkCopyResetTimer.current = setTimeout(() => setLinkCopied(false), 2000);
+  }
+
+  async function copyContent() {
+    await navigator.clipboard.writeText(content);
+    if (contentCopyResetTimer.current) clearTimeout(contentCopyResetTimer.current);
+    setContentCopied(true);
+    contentCopyResetTimer.current = setTimeout(() => setContentCopied(false), 2000);
   }
 
   return (
@@ -142,23 +163,27 @@ export function NoteSpaceWorkbench({ spaceName }: Props) {
           <span className="note-space__space-id">/n/{activeSpaceName}</span>
           <button
             type="button"
-            className={`note-space__copy-icon${copied ? " note-space__copy-icon--copied" : ""}`}
+            className={`note-space__copy-icon${linkCopied ? " note-space__copy-icon--copied" : ""}`}
             onClick={copySpaceLink}
-            aria-label={copied ? "Copied" : "Copy space link"}
-            title={copied ? "Copied" : "Copy space link"}
+            aria-label={linkCopied ? "Link copied" : "Copy space link"}
+            title={linkCopied ? "Link copied" : "Copy space link"}
           >
-            {copied ? (
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-8" /></svg>
-            ) : (
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="9" y="9" width="10" height="10" rx="2" />
-                <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
-              </svg>
-            )}
+            <CopyIcon copied={linkCopied} />
           </button>
         </div>
         <div className="note-space__meta">
-          <span>{content.length.toLocaleString()} characters</span>
+          <div className="note-space__character-meta">
+            <span>{content.length.toLocaleString()} characters</span>
+            <button
+              type="button"
+              className={`note-space__copy-icon${contentCopied ? " note-space__copy-icon--copied" : ""}`}
+              onClick={copyContent}
+              aria-label={contentCopied ? "Content copied" : "Copy content"}
+              title={contentCopied ? "Content copied" : "Copy content"}
+            >
+              <CopyIcon copied={contentCopied} />
+            </button>
+          </div>
           {saveState === "error" ? (
             <>
               <span className="sr-only" role="status" aria-live="polite">{error || "Save failed"}</span>
