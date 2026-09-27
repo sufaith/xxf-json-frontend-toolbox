@@ -52,8 +52,9 @@ button, select { cursor: pointer; }
 .note-space__copy-icon svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .note-space__copy-icon:hover, .note-space__copy-icon:focus-visible { background: rgba(18,20,22,.07); color: var(--ink); outline: 0; }
 .note-space__copy-icon--copied { color: #6f8d22; }
-.note-space__meta { display: flex; align-items: center; justify-content: flex-end; gap: 14px; min-width: 0; }
-.note-space__character-meta { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.note-space__meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; min-width: 0; }
+.note-space__character-meta { display: flex; align-items: center; gap: 0; white-space: nowrap; }
+.note-space__character-meta .note-space__copy-icon { width: 20px; height: 20px; }
 .note-space__status { min-width: 40px; overflow: hidden; color: #7a7e75; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
 .note-space__status--saving { color: #a27827; }
 .note-space__save { border: 1px solid rgba(180,75,58,.32); border-radius: 999px; background: transparent; color: #b44b3a; padding: 6px 10px; font-size: 10px; line-height: 1; transition: border-color .18s, background .18s; }
@@ -690,7 +691,7 @@ button, select { cursor: pointer; }
   .note-space { min-height: 100svh; }
   .note-space__editor { padding: 24px 16px 28px; font-size: 16px; line-height: 1.7; }
   .note-space__hint { align-items: center; gap: 10px; min-height: 58px; padding: 10px 12px; font-size: 9px; }
-  .note-space__meta { flex-wrap: wrap; gap: 8px 10px; }
+  .note-space__meta { flex-wrap: wrap; gap: 4px; }
   .note-space__status { max-width: 46vw; }
   .note-space__save { padding: 7px 10px; }
   .site-header { inset: auto 10px 10px auto !important; width: 158px; height: 40px; border: 1px solid rgba(255,255,255,.12); border-radius: 13px; opacity: .8; box-shadow: 0 12px 34px rgba(18,20,22,.2); }
