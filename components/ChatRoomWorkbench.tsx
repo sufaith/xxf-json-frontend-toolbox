@@ -160,7 +160,7 @@ export function ChatRoomWorkbench({ roomName }: Props) {
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
+  const [sendingText, setSendingText] = useState(false);
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -282,8 +282,8 @@ export function ChatRoomWorkbench({ roomName }: Props) {
   async function sendText(event?: FormEvent) {
     event?.preventDefault();
     const content = draft.trim();
-    if (!content || sending) return;
-    setSending(true);
+    if (!content || sendingText) return;
+    setSendingText(true);
     setDraft("");
     setError("");
     try {
@@ -292,13 +292,12 @@ export function ChatRoomWorkbench({ roomName }: Props) {
       setDraft(content);
       setError(sendError instanceof Error ? sendError.message : "Message could not be sent.");
     } finally {
-      setSending(false);
+      setSendingText(false);
     }
   }
 
   async function uploadFiles(files: File[]) {
     if (!identity) return setError("Device identity is not ready yet.");
-    if (sending) return;
     const accepted = files.filter((file) => file.type.startsWith("image/") || file.type.startsWith("video/")).slice(0, 4);
     if (!accepted.length) return setError("Choose an image or video.");
     if (accepted.some((file) => file.size > MAX_FILE_BYTES)) return setError("Each file must be 50 MB or smaller.");
@@ -309,7 +308,6 @@ export function ChatRoomWorkbench({ roomName }: Props) {
       previewUrl: URL.createObjectURL(file),
     }));
     setPendingUploads((current) => [...current, ...previews]);
-    setSending(true);
     setError("");
     const failures: string[] = [];
     await Promise.all(previews.map(async (preview) => {
@@ -343,18 +341,18 @@ export function ChatRoomWorkbench({ roomName }: Props) {
       }
     }));
     if (failures.length) setError(failures.length === 1 ? failures[0] : `${failures.length} files could not be uploaded.`);
-    setSending(false);
-    if (fileInput.current) fileInput.current.value = "";
   }
 
   function chooseFiles(event: ChangeEvent<HTMLInputElement>) {
-    uploadFiles(Array.from(event.target.files ?? []));
+    const files = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    void uploadFiles(files);
   }
 
   function dropFiles(event: DragEvent) {
     event.preventDefault();
     setDragging(false);
-    uploadFiles(Array.from(event.dataTransfer.files));
+    void uploadFiles(Array.from(event.dataTransfer.files));
   }
 
   async function copyRoomLink() {
@@ -477,7 +475,7 @@ export function ChatRoomWorkbench({ roomName }: Props) {
         {error && <button type="button" className="chat-room__error" onClick={() => setError("")} title="Dismiss">{error}<span>×</span></button>}
         <form className="chat-room__composer" onSubmit={sendText}>
           <input ref={fileInput} type="file" accept="image/*,video/*" multiple hidden onChange={chooseFiles} />
-          <button type="button" className="chat-room__attach" onClick={() => fileInput.current?.click()} disabled={!identity || sending} aria-label="Add image or video" title="Add image or video"><PaperclipIcon /></button>
+          <button type="button" className="chat-room__attach" onClick={() => fileInput.current?.click()} disabled={!identity} aria-label="Add image or video" title="Add image or video"><PaperclipIcon /></button>
           <textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value.slice(0, 4000))}
@@ -487,9 +485,9 @@ export function ChatRoomWorkbench({ roomName }: Props) {
             rows={1}
             placeholder="Message this room…"
             aria-label="Message"
-            disabled={!identity || sending}
+            disabled={!identity || sendingText}
           />
-          <button type="submit" className="chat-room__send" disabled={!draft.trim() || !identity || sending} aria-label="Send message" title="Send"><SendIcon /></button>
+          <button type="submit" className="chat-room__send" disabled={!draft.trim() || !identity || sendingText} aria-label="Send message" title="Send"><SendIcon /></button>
         </form>
         <p>Enter to send · Shift + Enter for a new line · images and videos up to 50 MB</p>
       </div>

@@ -488,6 +488,9 @@ test("named chat rooms persist messages and R2 media with a device profile", asy
   assert.match(component, /"X-Room": encodeURIComponent\(activeRoom\)/);
   assert.match(component, /URL\.createObjectURL\(file\)/);
   assert.match(component, /Promise\.all\(previews\.map/);
+  assert.match(component, /const \[sendingText, setSendingText\]/);
+  assert.match(component, /disabled=\{!identity\} aria-label="Add image or video"/);
+  assert.match(component, /event\.target\.value = ""/);
   assert.match(component, /chat-message__uploading/);
   assert.match(component, /chat-room__lightbox/);
   assert.match(component, /setLightboxImage/);
