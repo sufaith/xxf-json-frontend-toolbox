@@ -456,7 +456,7 @@ test("named spaces use durable storage and an auto-saving full-screen editor", a
 });
 
 test("named chat rooms persist messages and R2 media with a device profile", async () => {
-  const [hosting, worker, schema, ownerSchema, page, component, chatApi, mediaWorker, chrome, chatShell] = await Promise.all([
+  const [hosting, worker, schema, ownerSchema, page, component, chatApi, mediaWorker, chrome, styles, chatShell] = await Promise.all([
     readFile(new URL("../.openai/hosting.json", import.meta.url), "utf8"),
     readFile(new URL("../worker/index.ts", import.meta.url), "utf8"),
     readFile(new URL("../drizzle/0001_chat.sql", import.meta.url), "utf8"),
@@ -466,6 +466,7 @@ test("named chat rooms persist messages and R2 media with a device profile", asy
     readFile(new URL("../lib/chat.ts", import.meta.url), "utf8"),
     readFile(new URL("../deploy/cloudflare-chat-media-worker.js", import.meta.url), "utf8"),
     readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     html("c/welcome/index.html"),
   ]);
   assert.equal(JSON.parse(hosting).r2, "MEDIA");
@@ -485,6 +486,13 @@ test("named chat rooms persist messages and R2 media with a device profile", asy
   assert.match(component, /MAX_FILE_BYTES = 50 \* 1024 \* 1024/);
   assert.match(component, /https:\/\/xxf-chat-media\.suwdoit\.workers\.dev\/upload/);
   assert.match(component, /"X-Room": encodeURIComponent\(activeRoom\)/);
+  assert.match(component, /URL\.createObjectURL\(file\)/);
+  assert.match(component, /Promise\.all\(previews\.map/);
+  assert.match(component, /chat-message__uploading/);
+  assert.match(component, /chat-room__lightbox/);
+  assert.match(component, /setLightboxImage/);
+  assert.match(styles, /max-width: min\(154px,42vw\)/);
+  assert.match(styles, /cursor: zoom-in/);
   assert.match(component, /OWNER_KEY_PREFIX = "xxf-chat-owner-v1:"/);
   assert.match(component, /url\.searchParams\.get\("owner"\)/);
   assert.match(component, /url\.searchParams\.set\("owner", ownerToken\)/);

@@ -16,6 +16,13 @@ type ChatMessage = {
   media: ChatMedia | null;
   createdAt: string;
 };
+type PendingUpload = {
+  id: string;
+  file: File;
+  kind: "image" | "video";
+  previewUrl: string;
+};
+type LightboxImage = { url: string; name: string };
 
 const DEVICE_KEY = "xxf-chat-device-v1";
 const OWNER_KEY_PREFIX = "xxf-chat-owner-v1:";
@@ -149,6 +156,8 @@ export function ChatRoomWorkbench({ roomName }: Props) {
   const [routeResolved, setRouteResolved] = useState(false);
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([]);
+  const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -246,8 +255,17 @@ export function ChatRoomWorkbench({ roomName }: Props) {
   }, [activeRoom, loadMessages, routeResolved]);
 
   useEffect(() => {
-    messageEnd.current?.scrollIntoView({ behavior: messages.length > 1 ? "smooth" : "auto", block: "end" });
-  }, [messages.length]);
+    messageEnd.current?.scrollIntoView({ behavior: messages.length + pendingUploads.length > 1 ? "smooth" : "auto", block: "end" });
+  }, [messages.length, pendingUploads.length]);
+
+  useEffect(() => {
+    if (!lightboxImage) return;
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") setLightboxImage(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [lightboxImage]);
 
   async function postMessage(payload: Partial<ChatMessage> & { kind: ChatMessage["kind"] }) {
     if (!identity) throw new Error("Device identity is not ready.");
@@ -280,13 +298,23 @@ export function ChatRoomWorkbench({ roomName }: Props) {
 
   async function uploadFiles(files: File[]) {
     if (!identity) return setError("Device identity is not ready yet.");
+    if (sending) return;
     const accepted = files.filter((file) => file.type.startsWith("image/") || file.type.startsWith("video/")).slice(0, 4);
     if (!accepted.length) return setError("Choose an image or video.");
     if (accepted.some((file) => file.size > MAX_FILE_BYTES)) return setError("Each file must be 50 MB or smaller.");
+    const previews = accepted.map((file) => ({
+      id: crypto.randomUUID(),
+      file,
+      kind: file.type.startsWith("video/") ? "video" as const : "image" as const,
+      previewUrl: URL.createObjectURL(file),
+    }));
+    setPendingUploads((current) => [...current, ...previews]);
     setSending(true);
     setError("");
-    try {
-      for (const file of accepted) {
+    const failures: string[] = [];
+    await Promise.all(previews.map(async (preview) => {
+      try {
+        const { file } = preview;
         const upload = await fetch(CHAT_MEDIA_UPLOAD_URL, {
           method: "POST",
           headers: {
@@ -300,20 +328,23 @@ export function ChatRoomWorkbench({ roomName }: Props) {
         const media = await upload.json() as ChatMedia & { error?: string };
         if (!upload.ok) throw new Error(media.error || "Upload failed.");
         await postMessage({
-          kind: file.type.startsWith("video/") ? "video" : "image",
+          kind: preview.kind,
           content: "",
           mediaKey: media.key,
           mediaType: media.type,
           mediaName: media.name,
           mediaSize: media.size,
         } as Partial<ChatMessage> & { kind: ChatMessage["kind"] });
+      } catch (uploadError) {
+        failures.push(uploadError instanceof Error ? uploadError.message : "Upload failed.");
+      } finally {
+        setPendingUploads((current) => current.filter((item) => item.id !== preview.id));
+        window.setTimeout(() => URL.revokeObjectURL(preview.previewUrl), 0);
       }
-    } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "Upload failed.");
-    } finally {
-      setSending(false);
-      if (fileInput.current) fileInput.current.value = "";
-    }
+    }));
+    if (failures.length) setError(failures.length === 1 ? failures[0] : `${failures.length} files could not be uploaded.`);
+    setSending(false);
+    if (fileInput.current) fileInput.current.value = "";
   }
 
   function chooseFiles(event: ChangeEvent<HTMLInputElement>) {
@@ -396,11 +427,11 @@ export function ChatRoomWorkbench({ roomName }: Props) {
       </header>
 
       <div className="chat-room__messages" aria-live="polite">
-        {loading ? (
+        {loading && pendingUploads.length === 0 ? (
           <div className="chat-room__empty"><span className="chat-room__loader" /><p>Opening room…</p></div>
-        ) : messages.length === 0 ? (
+        ) : messages.length === 0 && pendingUploads.length === 0 ? (
           <div className="chat-room__empty"><b>It’s quiet here.</b><p>Send the first message to start this room.</p></div>
-        ) : messages.map((message) => {
+        ) : <>{messages.map((message) => {
           const own = message.deviceId === identity?.deviceId;
           return (
             <article className={`chat-message${own ? " chat-message--own" : ""}`} key={message.id}>
@@ -409,10 +440,10 @@ export function ChatRoomWorkbench({ roomName }: Props) {
                 {!own && <span className="chat-message__name">{message.nickname}</span>}
                 <div className={`chat-message__bubble chat-message__bubble--${message.kind}`}>
                   {message.kind === "text" ? <p>{message.content}</p> : message.kind === "image" && message.media ? (
-                    <a href={message.media.url} target="_blank" rel="noreferrer" title={`Open ${message.media.name}`}>
+                    <button type="button" className="chat-message__image-button" onClick={() => setLightboxImage({ url: message.media!.url, name: message.media!.name })} title={`Enlarge ${message.media.name}`} aria-label={`Enlarge ${message.media.name}`}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={message.media.url} alt={message.media.name} loading="lazy" decoding="async" />
-                    </a>
+                    </button>
                   ) : message.media ? (
                     <video controls playsInline preload="metadata" src={message.media.url} aria-label={message.media.name} />
                   ) : null}
@@ -425,6 +456,20 @@ export function ChatRoomWorkbench({ roomName }: Props) {
             </article>
           );
         })}
+        {pendingUploads.map((preview) => (
+          <article className="chat-message chat-message--own chat-message--pending" key={preview.id} aria-label={`${preview.file.name} uploading`}>
+            <div className="chat-message__body">
+              <div className={`chat-message__bubble chat-message__bubble--${preview.kind}`}>
+                {preview.kind === "image" ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={preview.previewUrl} alt={preview.file.name} />
+                ) : <video muted playsInline preload="metadata" src={preview.previewUrl} aria-label={preview.file.name} />}
+                <span className="chat-message__uploading"><span className="chat-room__loader" />Uploading…</span>
+              </div>
+              <div className="chat-message__meta"><span>{formatBytes(preview.file.size)}</span><time>now</time></div>
+            </div>
+          </article>
+        ))}</>}
         <div ref={messageEnd} />
       </div>
 
@@ -449,6 +494,13 @@ export function ChatRoomWorkbench({ roomName }: Props) {
         <p>Enter to send · Shift + Enter for a new line · images and videos up to 50 MB</p>
       </div>
       {dragging && <div className="chat-room__drop"><b>Drop to share</b><span>Images and videos stay in this room</span></div>}
+      {lightboxImage && (
+        <div className="chat-room__lightbox" role="dialog" aria-modal="true" aria-label={lightboxImage.name} onMouseDown={(event) => { if (event.currentTarget === event.target) setLightboxImage(null); }}>
+          <button type="button" onClick={() => setLightboxImage(null)} aria-label="Close image preview">×</button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={lightboxImage.url} alt={lightboxImage.name} />
+        </div>
+      )}
       {showClearDialog && (
         <div className="chat-room__dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target && !clearing) setShowClearDialog(false); }}>
           <div className="chat-room__dialog" role="dialog" aria-modal="true" aria-labelledby="clear-room-title">
