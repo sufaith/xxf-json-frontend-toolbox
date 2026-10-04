@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AdSenseScript } from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "Contact and Feedback",
@@ -11,11 +10,13 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="legal-page">
-      <AdSenseScript />
       <div className="legal-page__inner shell">
         <span className="kicker">Contact and feedback</span>
         <h1>Help improve XXF</h1>
         <p>XXF Tools is maintained as a public software project. Bug reports, reproducible conversion examples and focused feature requests help improve both the tools and their documentation.</p>
+        <h2>What to include in a report</h2>
+        <ul><li>The exact page URL and browser version</li><li>A small synthetic input and the expected output</li><li>The actual result or error, with secrets removed</li><li>Whether the problem repeats after reloading the page</li></ul>
+        <p>Reports are public on GitHub. For privacy questions, describe the feature and request without publishing the private content itself. The maintainer profile and repository history are linked from the <Link className="text-link" href="/about/">About page</Link>.</p>
         <h2>Correct documentation</h2>
         <p>Report an inaccurate worked example, limitation or source link through the issue tracker. The <Link className="text-link" href="/editorial-policy/">editorial standards</Link> explain how technical claims are checked and corrected.</p>
         <h2>Report a tool problem</h2>

@@ -92,7 +92,7 @@ export const tools: ToolDefinition[] = [
       {
         question: "What does the formatter change?",
         answer:
-          "It changes whitespace and indentation only. Property names, values, array order and object key order remain unchanged.",
+          "The tool parses and serializes JSON. It changes whitespace and may normalize escape sequences and number notation. Duplicate keys and unsafe integer literals need special care; use a lossless parser when exact source fidelity matters.",
       },
     ],
   },
@@ -184,7 +184,7 @@ export const tools: ToolDefinition[] = [
       {
         question: "How are arrays inferred?",
         answer:
-          "XXF inspects every sample item and combines distinct shapes into a safe union when necessary.",
+          "XXF inspects sample items and combines observed types. Review repeated interface names in mixed object arrays and compile the generated declarations before use.",
       },
     ],
   },

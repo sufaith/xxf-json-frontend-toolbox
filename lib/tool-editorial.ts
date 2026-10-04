@@ -268,7 +268,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
     ],
     steps: ["Drop or choose up to 20 supported images", "Select smart, WebP, JPEG or PNG output and adjust quality or dimensions", "Compare savings and previews, then download individual files or one ZIP"],
     useCases: ["Prepare product and article images for the web", "Resize oversized screenshots before sharing", "Create lighter WebP alternatives from JPEG or PNG sources"],
-    notes: ["PNG is lossless and may remain larger for photographs", "Browser canvas export can remove metadata such as EXIF orientation, location and camera details"],
+    notes: ["PNG output below 99% quality quantizes RGB values in this tool; use full quality and unchanged dimensions when exact pixels matter", "Browser canvas export can remove metadata such as EXIF orientation, location and camera details"],
     guideSlugs: ["prepare-images-for-the-web"],
   },
   "photo-collage-maker": {
@@ -304,7 +304,7 @@ export const toolEditorial: Record<string, ToolEditorial> = {
   "css-formatter-minifier": {
     overview: [
       "CSS formatting adds line breaks and indentation for inspection, while minification removes comments and unnecessary whitespace for delivery. XXF offers both directions without sending a stylesheet to a remote service.",
-      "The transformation is intentionally conservative and text-based. It does not reorder declarations, merge selectors, rewrite values or attempt aggressive semantic optimization.",
+      "The transformation uses regular expressions rather than a CSS parser. Simple snippets are convenient to inspect, but quoted strings, data URLs and custom properties can change; use a parser-based build tool for production stylesheets.",
     ],
     steps: ["Choose Format or Minify and paste the stylesheet", "Run the conversion and inspect complex rules, comments and data URLs", "Test the result in the target browser set before replacing a production asset"],
     useCases: ["Read a compact third-party stylesheet during debugging", "Shrink a small standalone CSS snippet", "Normalize a generated style block for code review"],

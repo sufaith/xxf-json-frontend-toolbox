@@ -122,6 +122,6 @@ export const toolExamples: Record<string, ToolExample> = {
   },
   "css-formatter-minifier": {
     scenario: "Format the included compact card rules, then switch direction and minify the formatted result",
-    observation: "Formatting separates the base and hover blocks for inspection, while minification removes optional whitespace. Selector order and declaration values remain unchanged",
+    observation: "Formatting separates the base and hover blocks for inspection, while minification removes optional whitespace. For this simple sample, selector order and declaration values remain unchanged; complex strings require a parser-based tool",
   },
 };

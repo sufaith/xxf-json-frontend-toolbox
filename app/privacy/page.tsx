@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AdSenseScript } from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -11,9 +10,8 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <main className="legal-page">
-      <AdSenseScript />
       <div className="legal-page__inner shell">
-        <span className="kicker">Last updated September 2, 2026</span>
+        <span className="kicker">Last updated October 4, 2026</span>
         <h1>Privacy Policy</h1>
         <p>XXF Tools is designed to minimize the data required to use its browser utilities. This page distinguishes local converters from the few features that intentionally use a network or stored shared space.</p>
 
@@ -34,6 +32,8 @@ export default function PrivacyPage() {
         <p>XXF includes Google AdSense advertising code. When Google advertising services are active, a visitor&apos;s browser may send Google information such as the page URL and IP address, and Google or its partners may set or read advertising cookies. Third-party vendors, including Google, may use cookies to serve ads informed by a visitor&apos;s previous visits to this site or other sites. Google uses this information to deliver services, measure advertising, protect against fraud and, depending on the visitor&apos;s settings and consent, personalize ads.</p>
         <p>Google explains this processing in <a className="text-link" href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noreferrer">How Google uses information from sites or apps that use its services ↗</a>. Visitors can review or change ad personalization through <a className="text-link" href="https://adssettings.google.com/" target="_blank" rel="noreferrer">Google Ads Settings ↗</a>. Other advertising vendors may provide their own controls where their services are used.</p>
 
+        <h2>Advertising scope</h2>
+        <p>AdSense code is limited to the tool directory, individual tool pages and individual technical guides. Shared notes, chat rooms, the museum, the guide index, contact and policy pages, the sitemap and error pages do not include the AdSense loader. Advertising requests are separate from converter processing: a local conversion does not mean that the entire page makes no network requests.</p>
         <h2>Your choices</h2>
         <p>You can use the converters without creating an XXF account, clear browser site data, block cookies through browser settings and avoid shared spaces or network tools. Clearing site data resets the local chat identity. Blocking some requests may prevent advertising, stream playback or network-dependent features from working.</p>
 

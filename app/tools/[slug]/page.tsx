@@ -11,6 +11,7 @@ import { UrlParserWorkbench } from "@/components/UrlParserWorkbench";
 import { VideoToM3u8Workbench } from "@/components/VideoToM3u8Workbench";
 import { guideMap } from "@/lib/guides";
 import { toolEditorial } from "@/lib/tool-editorial";
+import { toolResults } from "@/lib/tool-results";
 import { toolExamples } from "@/lib/tool-examples";
 import { getRelatedTools, toolMap, tools } from "@/lib/tools";
 
@@ -183,6 +184,7 @@ export default async function ToolPage({ params }: Props) {
             <span>Scenario</span>
             <p>{example.scenario}</p>
             {tool.sample && <div className="worked-example__input"><small>Included sample input</small><pre><code>{tool.sample}</code></pre></div>}
+            {toolResults[tool.slug] && <div className="worked-example__input"><small>Expected output · default settings</small><pre><code>{toolResults[tool.slug]}</code></pre></div>}
             <span>What to notice</span>
             <p>{example.observation}</p>
           </div>

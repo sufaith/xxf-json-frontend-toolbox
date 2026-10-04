@@ -1,13 +1,16 @@
+import { guideWorkflows, type GuideSection } from "./guide-workflows";
+
 export type Guide = {
   slug: string;
   title: string;
   description: string;
   readTime: string;
   updated: string;
+  published?: string;
   topic: "JSON" | "Data formats" | "Web platform" | "Images" | "Video" | "Security";
   relatedTools: string[];
   references: Array<{ title: string; publisher: string; url: string }>;
-  sections: Array<{ heading: string; paragraphs: string[]; bullets?: string[] }>;
+  sections: GuideSection[];
 };
 
 export const guides: Guide[] = [
@@ -531,6 +534,14 @@ export const guides: Guide[] = [
     ],
   },
 ];
+
+for (const guide of guides) {
+  guide.published = guide.updated;
+  guide.updated = "2026-10-04";
+  guide.sections.push(...guideWorkflows[guide.slug]);
+  const words = guide.sections.map((section) => [section.heading, ...section.paragraphs, ...(section.bullets ?? []), ...(section.codeBlocks ?? []).map((block) => block.code)].join(" ")).join(" ").split(/\s+/).length;
+  guide.readTime = `${Math.max(1, Math.ceil(words / 180))} min read`;
+}
 
 export const guideMap = new Map(guides.map((guide) => [guide.slug, guide]));
 export const guideTopics = [...new Set(guides.map((guide) => guide.topic))];

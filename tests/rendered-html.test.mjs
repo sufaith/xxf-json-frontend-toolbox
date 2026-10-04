@@ -180,6 +180,11 @@ test("thirteen editorial guides include primary references and relevant tools", 
     assert.match(source, /class="article-references"/);
     assert.match(source, /Primary references/);
     assert.match(source, /class="article-tool-links"/);
+    assert.match(source, /aria-label="Article contents"/);
+    assert.match(source, /class="article-code"/);
+    assert.match(source, /Updated (?:<!-- -->)?2026-10-04/);
+    assert.match(source, /"datePublished":"2026-09-01"/);
+    assert.match(source, /"dateModified":"2026-10-04"/);
     assert.match(source, /href="\/tools\//);
     assert.match(source, /href="\/guides\/">Guides<\/a>/);
     assert.match(source, /By XXF Tools/);
@@ -384,8 +389,8 @@ test("every indexable page has unique metadata and an intentional ad decision", 
     titles.add(title);
     descriptions.add(description);
     canonicals.add(canonical);
-    if (pathname === "/site-map/") assert.doesNotMatch(source, adScript);
-    else assert.match(source, adScript, `${pathname} includes the approved site script`);
+    if (["/site-map/", "/about/", "/contact/", "/privacy/", "/terms/", "/editorial-policy/", "/guides/", "/animal/"].includes(pathname)) assert.doesNotMatch(source, adScript);
+    else assert.match(source, adScript, `${pathname} includes the site script`);
   }
 });
 

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AdSenseScript } from "@/components/AdSenseScript";
 
 export const metadata: Metadata = {
   title: "About XXF Tools",
@@ -11,11 +10,12 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="legal-page">
-      <AdSenseScript />
       <div className="legal-page__inner shell">
         <span className="kicker">Maintained by XXF Tools · Reviewed September 2, 2026</span>
         <h1>Useful conversions, explained</h1>
         <p>XXF Tools is a focused collection of browser-based utilities for the small transformations that interrupt frontend work: formatting JSON, generating types, translating data formats, decoding text and preparing media.</p>
+        <h2>Project maintainer</h2>
+        <p>The public source repository is maintained under the <a className="text-link" href="https://github.com/sufaith" target="_blank" rel="noreferrer">sufaith GitHub profile</a>. Visitors can inspect the commit history, conversion functions and documentation changes rather than relying on an anonymous byline.</p>
         <h2>Private by architecture</h2>
         <p>Text, image and video transformations run on your device. Converter input is not uploaded to an XXF processing API, stored in an account or reviewed by us. The redirect checker sends only the public URL being tested to its restricted server endpoint, while the M3U8 player connects directly to the stream host.</p>
         <h2>Maintained with the implementation</h2>

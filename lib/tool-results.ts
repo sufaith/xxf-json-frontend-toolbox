@@ -1,0 +1,25 @@
+// Reproducible output for each deterministic default sample, checked against runTool.
+export const toolResults: Record<string, string> = {
+  "json-formatter": "{\n  \"project\": \"XXF\",\n  \"ready\": true,\n  \"tools\": [\n    \"format\",\n    \"convert\",\n    \"ship\"\n  ],\n  \"encoded\": \">\",\n  \"meta\": {\n    \"version\": 1,\n    \"private\": true\n  }\n}",
+  "json-validator": "✓ Valid JSON\n\nRoot type: object\nMaximum depth: 2\nObjects: 2\nArrays: 1\nStrings: 2\nNumbers: 3\nBooleans: 0\nNull values: 0",
+  "json-minifier": "{\"name\":\"compact\",\"enabled\":true,\"tags\":[\"api\",\"frontend\"]}",
+  "json-key-sorter": "{\n  \"alpha\": {\n    \"a\": 1,\n    \"z\": 2\n  },\n  \"items\": [\n    {\n      \"first\": 1,\n      \"last\": 2\n    }\n  ],\n  \"zebra\": 1\n}",
+  "json-to-typescript": "export interface Root {\n  id: number;\n  name: string;\n  active: boolean;\n  roles: string[];\n  profile: Profile;\n}\n\nexport interface Profile {\n  avatar: null;\n  score: number;\n}",
+  "json-to-zod": "import { z } from \"zod\";\n\nexport const RootSchema = z.object({\n  \"email\": z.string(),\n  \"age\": z.number().int(),\n  \"preferences\": z.object({\n  \"darkMode\": z.boolean(),\n}),\n  \"tags\": z.array(z.string()),\n});\n\nexport type Root = z.infer<typeof RootSchema>;",
+  "json-to-json-schema": "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"title\": \"Root\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"orderId\": {\n      \"type\": \"string\"\n    },\n    \"total\": {\n      \"type\": \"number\"\n    },\n    \"paid\": {\n      \"type\": \"boolean\"\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"sku\": {\n            \"type\": \"string\"\n          },\n          \"qty\": {\n            \"type\": \"number\"\n          }\n        },\n        \"required\": [\n          \"sku\",\n          \"qty\"\n        ],\n        \"additionalProperties\": false\n      }\n    }\n  },\n  \"required\": [\n    \"orderId\",\n    \"total\",\n    \"paid\",\n    \"items\"\n  ],\n  \"additionalProperties\": false\n}",
+  "json-to-yaml": "service: web\nreplicas: 3\nports:\n  - 80\n  - 443\nenvironment:\n  NODE_ENV: production\n",
+  "yaml-to-json": "{\n  \"service\": \"web\",\n  \"replicas\": 3,\n  \"ports\": [\n    80,\n    443\n  ],\n  \"environment\": {\n    \"NODE_ENV\": \"production\"\n  }\n}",
+  "json-to-csv": "name,role,active\r\nAda,Engineer,true\r\nLin,Designer,false",
+  "csv-to-json": "[\n  {\n    \"name\": \"Ada\",\n    \"role\": \"Engineer\",\n    \"active\": \"true\"\n  },\n  {\n    \"name\": \"Lin\",\n    \"role\": \"Designer\",\n    \"active\": \"false\"\n  }\n]",
+  "json-to-xml": "<catalog>\n  <product>\n    <id>1</id>\n    <name>Keyboard</name>\n  </product>\n  <product>\n    <id>2</id>\n    <name>Mouse</name>\n  </product>\n</catalog>\n",
+  "xml-to-json": "{\n  \"catalog\": {\n    \"product\": [\n      {\n        \"name\": \"Keyboard\",\n        \"@id\": \"1\"\n      },\n      {\n        \"name\": \"Mouse\",\n        \"@id\": \"2\"\n      }\n    ]\n  }\n}",
+  "json-to-html-table": "<table>\n  <thead>\n    <tr>\n      <th scope=\"col\">Product</th>\n      <th scope=\"col\">Price</th>\n      <th scope=\"col\">Available</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Starter</td>\n      <td>$9</td>\n      <td>true</td>\n    </tr>\n    <tr>\n      <td>Pro</td>\n      <td>$29</td>\n      <td>false</td>\n    </tr>\n  </tbody>\n</table>",
+  "json-to-markdown-table": "| Feature | Status |\n| --- | --- |\n| Local processing | Ready |\n| Batch tools | Ready |",
+  "url-encoder-decoder": "campaign%3Dsummer%20launch%26city%3D%E4%B8%8A%E6%B5%B7",
+  "base64-encoder-decoder": "RnJvbnRlbmQgdG9vbHMgc2hvdWxkIGhhbmRsZSDkuK3mlocgYW5kIGVtb2ppIPCfmoA=",
+  "html-entities": "&lt;button aria-label=&quot;Save &amp; close&quot;&gt;Done&lt;/button&gt;",
+  "jwt-decoder": "{\n  \"header\": {\n    \"alg\": \"HS256\",\n    \"typ\": \"JWT\"\n  },\n  \"payload\": {\n    \"sub\": \"1234567890\",\n    \"name\": \"Ada\",\n    \"iat\": 1516239022\n  },\n  \"signature\": \"signature\"\n}",
+  "color-converter": "HEX: #6c5ce7\nRGB: rgb(108, 92, 231)\nHSL: hsl(247, 74%, 63%)",
+  "sha256-hash": "268b3aadbbae82e66634458e184660f55ec05866f99209a8efef33268441fb22",
+  "css-formatter-minifier": ".card {\n  display:grid;\n  gap:1rem;\n  padding:2rem;\n  background:#fff\n}\n\n.card:hover {\n  transform:translateY(-2px)\n}"
+};
