@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AdSenseScript } from "@/components/AdSenseScript";
 import { ToolExplorer } from "@/components/ToolExplorer";
 import { guides } from "@/lib/guides";
+import { toolResults } from "@/lib/tool-results";
 import { tools } from "@/lib/tools";
 
 export const metadata: Metadata = {
@@ -73,9 +74,9 @@ export default function Home() {
         about: { "@id": "https://xxf.app/#organization" },
         mainEntity: { "@id": "https://xxf.app/#tools" },
         reviewedBy: { "@id": "https://xxf.app/#organization" },
-        lastReviewed: "2026-09-02",
+        lastReviewed: "2026-10-05",
         publishingPrinciples: "https://xxf.app/editorial-policy/",
-        dateModified: "2026-09-02",
+        dateModified: "2026-10-05",
       },
       {
         "@type": "ItemList",
@@ -103,8 +104,19 @@ export default function Home() {
       <AdSenseScript />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <h1 className="sr-only">XXF browser tools</h1>
       <section className="home-tool-directory__inner shell" id="tools" aria-label="XXF tools">
+        <header className="home-directory-intro">
+          <div>
+            <span className="kicker">Free · browser-local · no account</span>
+            <h1>Useful browser tools, with the edges explained.</h1>
+          </div>
+          <p>Convert JSON, data, images and video without uploading working files. Every tool includes a reproducible example, review notes and format-specific limitations.</p>
+          <dl aria-label="XXF content summary">
+            <div><dt>{tools.length}</dt><dd>working tools</dd></div>
+            <div><dt>{guides.length}</dt><dd>original guides</dd></div>
+            <div><dt>{Object.keys(toolResults).length}</dt><dd>verified outputs</dd></div>
+          </dl>
+        </header>
         <ToolExplorer />
       </section>
 

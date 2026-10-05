@@ -11,7 +11,7 @@ export default function TermsPage() {
   return (
     <main className="legal-page">
       <div className="legal-page__inner shell">
-        <span className="kicker">Last updated September 2, 2026</span>
+        <span className="kicker">Last updated October 5, 2026</span>
         <h1>Terms of Use</h1>
         <p>By using XXF Tools, you agree to use the service lawfully and to review generated output before relying on it.</p>
         <h2>No warranty</h2>

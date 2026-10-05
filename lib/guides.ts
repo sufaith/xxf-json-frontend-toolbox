@@ -537,7 +537,7 @@ export const guides: Guide[] = [
 
 for (const guide of guides) {
   guide.published = guide.updated;
-  guide.updated = "2026-10-04";
+  guide.updated = "2026-10-05";
   guide.sections.push(...guideWorkflows[guide.slug]);
   const words = guide.sections.map((section) => [section.heading, ...section.paragraphs, ...(section.bullets ?? []), ...(section.codeBlocks ?? []).map((block) => block.code)].join(" ")).join(" ").split(/\s+/).length;
   guide.readTime = `${Math.max(1, Math.ceil(words / 180))} min read`;

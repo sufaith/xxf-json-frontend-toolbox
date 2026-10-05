@@ -87,9 +87,9 @@ export default async function ToolPage({ params }: Props) {
         mainEntity: { "@id": applicationId },
         author: { "@id": organizationId },
         reviewedBy: { "@id": organizationId },
-        lastReviewed: "2026-09-02",
+        lastReviewed: "2026-10-05",
         publishingPrinciples: "https://xxf.app/editorial-policy/",
-        dateModified: "2026-09-02",
+        dateModified: "2026-10-05",
       },
       {
         "@type": "BreadcrumbList",
@@ -203,7 +203,7 @@ export default async function ToolPage({ params }: Props) {
           <div className="faq-list faq-list--light">
             {tool.faq.map((item) => <details key={item.question}><summary>{item.question}<span>+</span></summary><p>{item.answer}</p></details>)}
           </div>
-          <footer className="editorial-byline"><span>Reviewed September 2, 2026</span><p>Written and implementation-checked by the XXF Tools editorial team</p><Link href="/editorial-policy/">How XXF reviews tool guidance →</Link></footer>
+          <footer className="editorial-byline"><span>Reviewed October 5, 2026</span><p>Written and implementation-checked by the XXF Tools editorial team</p><Link href="/editorial-policy/">How XXF reviews tool guidance →</Link></footer>
         </article>
 
         <aside className="tool-editorial__aside" aria-label="Related resources">

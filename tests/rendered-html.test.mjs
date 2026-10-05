@@ -15,7 +15,10 @@ function exportedHtmlPath(pathname) {
 
 test("home page keeps the tool directory and adds useful editorial content below it", async () => {
   const source = await html("index.html");
-  assert.match(source, /<h1 class="sr-only">XXF browser tools<\/h1>/i);
+  assert.match(source, /<h1>Useful browser tools, with the edges explained\.<\/h1>/i);
+  assert.match(source, /<dt>30<\/dt><dd>working tools<\/dd>/i);
+  assert.match(source, /<dt>13<\/dt><dd>original guides<\/dd>/i);
+  assert.match(source, /<dt>22<\/dt><dd>verified outputs<\/dd>/i);
   assert.match(source, /aria-label="Tool categories"/i);
   assert.match(source, /class="category-tabs"/i);
   assert.match(source, /class="tool-card-grid"/i);
@@ -90,7 +93,7 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /class="worked-example"/);
     assert.match(source, /Worked example/);
     assert.match(source, /What to notice/);
-    assert.match(source, /Reviewed September 2, 2026/);
+    assert.match(source, /Reviewed October 5, 2026/);
     assert.match(source, /How XXF reviews tool guidance/);
     assert.match(source, /When this tool helps/);
     assert.match(source, /Accuracy and safety notes/);
@@ -182,9 +185,9 @@ test("thirteen editorial guides include primary references and relevant tools", 
     assert.match(source, /class="article-tool-links"/);
     assert.match(source, /aria-label="Article contents"/);
     assert.match(source, /class="article-code"/);
-    assert.match(source, /Updated (?:<!-- -->)?2026-10-04/);
+    assert.match(source, /Updated (?:<!-- -->)?2026-10-05/);
     assert.match(source, /"datePublished":"2026-09-01"/);
-    assert.match(source, /"dateModified":"2026-10-04"/);
+    assert.match(source, /"dateModified":"2026-10-05"/);
     assert.match(source, /href="\/tools\//);
     assert.match(source, /href="\/guides\/">Guides<\/a>/);
     assert.match(source, /By XXF Tools/);

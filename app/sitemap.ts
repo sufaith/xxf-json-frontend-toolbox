@@ -5,7 +5,7 @@ import { tools } from "@/lib/tools";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-09-02T00:00:00.000Z");
+  const lastModified = new Date("2026-10-05T00:00:00.000Z");
   return [
     { url: "https://xxf.app/", lastModified, changeFrequency: "weekly", priority: 1 },
     { url: "https://xxf.app/guides/", lastModified, changeFrequency: "weekly", priority: 0.8 },

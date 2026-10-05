@@ -13,8 +13,8 @@ export default function EditorialPolicyPage() {
     "@type": "WebPage",
     name: "XXF Tools editorial standards and review process",
     url: "https://xxf.app/editorial-policy/",
-    dateModified: "2026-09-02",
-    lastReviewed: "2026-09-02",
+    dateModified: "2026-10-05",
+    lastReviewed: "2026-10-05",
     author: { "@type": "Organization", name: "XXF Tools", url: "https://xxf.app/about/" },
     reviewedBy: { "@type": "Organization", name: "XXF Tools", url: "https://xxf.app/about/" },
   };
@@ -24,7 +24,7 @@ export default function EditorialPolicyPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <article className="legal-page__inner shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span>Editorial standards</span></nav>
-        <span className="kicker">Last reviewed September 2, 2026</span>
+        <span className="kicker">Last reviewed October 5, 2026</span>
         <h1>Editorial standards</h1>
         <p>XXF publishes technical guidance to explain what each browser tool does, where its output is useful and which decisions still require human review. The editorial material is part of the product rather than a separate content-marketing feed, so every claim should correspond to behavior a visitor can inspect in the public implementation.</p>
 

@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <main className="legal-page">
       <div className="legal-page__inner shell">
-        <span className="kicker">Last updated October 4, 2026</span>
+        <span className="kicker">Last updated October 5, 2026</span>
         <h1>Privacy Policy</h1>
         <p>XXF Tools is designed to minimize the data required to use its browser utilities. This page distinguishes local converters from the few features that intentionally use a network or stored shared space.</p>
 
