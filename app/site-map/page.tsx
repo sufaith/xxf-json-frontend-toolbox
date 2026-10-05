@@ -16,7 +16,7 @@ export default function SiteMapPage() {
         <div className="site-map-page__intro">
           <span className="kicker">Sitemap</span>
           <h1>Everything on XXF.</h1>
-          <p>Open any browser-local tool directly. Each tool is free to use and processes your input on your device.</p>
+          <p>Open any tool directly. Most conversions run on your device; network-dependent tools state exactly which URL or stream host receives a request.</p>
         </div>
         <div className="site-map-page__groups">
           {categories.map((category) => (
@@ -45,6 +45,8 @@ export default function SiteMapPage() {
             <nav aria-label="Site information">
               <Link href="/">Home</Link>
               <Link href="/about/">About</Link>
+              <Link href="/authors/sufaith/">Maintainer</Link>
+              <Link href="/updates/">Updates</Link>
               <Link href="/editorial-policy/">Editorial Standards</Link>
               <Link href="/guides/">Guides</Link>
               <Link href="/contact/">Contact</Link>

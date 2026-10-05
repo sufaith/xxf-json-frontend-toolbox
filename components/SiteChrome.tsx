@@ -8,6 +8,30 @@ import { tools } from "@/lib/tools";
 type DockPoint = { x: number; y: number };
 type DragState = { pointerId: number; pointerX: number; pointerY: number; startX: number; startY: number };
 
+export function SiteTopbar() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/tools/") || pathname.startsWith("/n/") || pathname.startsWith("/c/") || pathname.startsWith("/animal")) return null;
+
+  const links = [
+    { href: "/#tools", label: "Tools" },
+    { href: "/guides/", label: "Guides" },
+    { href: "/updates/", label: "Updates" },
+    { href: "/about/", label: "About" },
+  ];
+
+  return (
+    <div className="site-topbar">
+      <div className="shell site-topbar__inner">
+        <Link className="site-topbar__brand" href="/" aria-label="XXF Tools home"><span>XXF</span><b>Tools</b></Link>
+        <nav aria-label="Primary navigation">
+          {links.map((link) => <Link className={pathname === link.href.replace("#tools", "") ? "is-active" : ""} href={link.href} key={link.href}>{link.label}</Link>)}
+        </nav>
+        <a className="site-topbar__source" href="https://github.com/sufaith/xxf-json-frontend-toolbox" target="_blank" rel="noreferrer">Source ↗</a>
+      </div>
+    </div>
+  );
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
@@ -163,6 +187,7 @@ export function SiteFooter() {
         <nav aria-label="Footer navigation">
           <Link href="/site-map/">Sitemap</Link>
           <Link href="/guides/">Guides</Link>
+          <Link href="/updates/">Updates</Link>
           <Link href="/editorial-policy/">Editorial</Link>
           <Link href="/about/">About</Link>
           <Link href="/contact/">Contact</Link>

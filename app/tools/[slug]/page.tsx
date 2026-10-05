@@ -12,6 +12,7 @@ import { VideoToM3u8Workbench } from "@/components/VideoToM3u8Workbench";
 import { guideMap } from "@/lib/guides";
 import { toolEditorial } from "@/lib/tool-editorial";
 import { toolResults } from "@/lib/tool-results";
+import { toolVerification } from "@/lib/tool-verification";
 import { toolExamples } from "@/lib/tool-examples";
 import { getRelatedTools, toolMap, tools } from "@/lib/tools";
 
@@ -59,6 +60,8 @@ export default async function ToolPage({ params }: Props) {
   if (!editorial) notFound();
   const example = toolExamples[tool.slug];
   if (!example) notFound();
+  const verification = toolVerification[tool.slug];
+  if (!verification) notFound();
   const related = getRelatedTools(tool);
   const relatedGuides = editorial.guideSlugs.map((guideSlug) => guideMap.get(guideSlug)).filter((guide) => Boolean(guide));
   const isPhotoCollage = tool.slug === "photo-collage-maker";
@@ -85,7 +88,7 @@ export default async function ToolPage({ params }: Props) {
         isPartOf: { "@id": "https://xxf.app/#website" },
         breadcrumb: { "@id": `${canonical}#breadcrumb` },
         mainEntity: { "@id": applicationId },
-        author: { "@id": organizationId },
+        author: { "@id": "https://xxf.app/authors/sufaith/#person" },
         reviewedBy: { "@id": organizationId },
         lastReviewed: "2026-10-05",
         publishingPrinciples: "https://xxf.app/editorial-policy/",
@@ -129,6 +132,13 @@ export default async function ToolPage({ params }: Props) {
               : isImageCompressor
                 ? ["Batch image compression", "Smart output selection", "Quality and resize controls", "ZIP download", "Local browser processing"]
                 : ["Local browser processing", "Copy result", "Download output", tool.description],
+      },
+      {
+        "@type": "Person",
+        "@id": "https://xxf.app/authors/sufaith/#person",
+        name: "Sufaith",
+        url: "https://xxf.app/authors/sufaith/",
+        sameAs: ["https://github.com/sufaith"],
       },
       {
         "@type": "Organization",
@@ -203,7 +213,7 @@ export default async function ToolPage({ params }: Props) {
           <div className="faq-list faq-list--light">
             {tool.faq.map((item) => <details key={item.question}><summary>{item.question}<span>+</span></summary><p>{item.answer}</p></details>)}
           </div>
-          <footer className="editorial-byline"><span>Reviewed October 5, 2026</span><p>Written and implementation-checked by the XXF Tools editorial team</p><Link href="/editorial-policy/">How XXF reviews tool guidance →</Link></footer>
+          <footer className="editorial-byline"><span>Reviewed October 5, 2026</span><p>Written and implementation-checked by <Link href="/authors/sufaith/">Sufaith</Link></p><Link href="/editorial-policy/">How XXF reviews tool guidance →</Link></footer>
         </article>
 
         <aside className="tool-editorial__aside" aria-label="Related resources">
@@ -212,6 +222,15 @@ export default async function ToolPage({ params }: Props) {
             <h3>Continue the workflow</h3>
             <p>Move to a related tool without sending your working data to XXF</p>
             {related.map((item) => <Link href={`/tools/${item.slug}/`} key={item.slug}><span>{item.name}</span><b>↗</b></Link>)}
+          </div>
+          <div className="verification-card">
+            <div className="verification-card__head"><span>Verification record</span><b>{verification.level}</b></div>
+            <dl>
+              <div><dt>Method</dt><dd>{verification.method}</dd></div>
+              <div><dt>Invariant</dt><dd>{verification.invariant}</dd></div>
+              <div><dt>Known boundary</dt><dd>{verification.boundary}</dd></div>
+            </dl>
+            <footer><span>Checked 2026-10-05</span><Link href="/editorial-policy/">Methodology ↗</Link></footer>
           </div>
           {relatedGuides.length > 0 && <div className="editorial-guides"><span className="kicker">Related reading</span>{relatedGuides.map((guide) => guide && <Link href={`/guides/${guide.slug}/`} key={guide.slug}><strong>{guide.title}</strong><small>{guide.readTime}</small></Link>)}</div>}
         </aside>

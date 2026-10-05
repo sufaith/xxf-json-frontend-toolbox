@@ -19,6 +19,7 @@ export default function ContactPage() {
         <p>Reports are public on GitHub. For privacy questions, describe the feature and request without publishing the private content itself. The maintainer profile and repository history are linked from the <Link className="text-link" href="/about/">About page</Link>.</p>
         <h2>Correct documentation</h2>
         <p>Report an inaccurate worked example, limitation or source link through the issue tracker. The <Link className="text-link" href="/editorial-policy/">editorial standards</Link> explain how technical claims are checked and corrected.</p>
+        <p>See who is responsible on the <Link className="text-link" href="/authors/sufaith/">maintainer page</Link> and review recent visitor-facing work in the <Link className="text-link" href="/updates/">maintenance log</Link>.</p>
         <h2>Report a tool problem</h2>
         <p>Open a GitHub issue and include the tool name, browser, expected result and a minimal sample that contains no credentials or personal information.</p>
         <p><a className="text-link" href="https://github.com/sufaith/xxf-json-frontend-toolbox/issues" target="_blank" rel="noreferrer">Open the public issue tracker ↗</a></p>

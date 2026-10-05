@@ -3,6 +3,7 @@ import test from 'node:test';
 import { runTool } from '../lib/transformers.ts';
 import { tools } from '../lib/tools.ts';
 import { toolResults } from '../lib/tool-results.ts';
+import { toolVerification } from '../lib/tool-verification.ts';
 import { guideWorkflows } from '../lib/guide-workflows.ts';
 
 const blocks = (slug) => guideWorkflows[slug].flatMap(section => section.codeBlocks ?? []);
@@ -13,6 +14,21 @@ test('published default sample outputs are reproducible', async () => {
     const tool = tools.find(tool => tool.slug === slug);
     assert.equal(await runTool(slug, tool.sample), expected, slug);
   }
+});
+
+test('every public tool has a distinct verification record', () => {
+  assert.equal(Object.keys(toolVerification).length, tools.length);
+  const methods = new Set();
+  for (const tool of tools) {
+    const record = toolVerification[tool.slug];
+    assert.ok(record, tool.slug);
+    assert.match(record.level, /^(Automated|Manual|Network)$/);
+    assert.ok(record.method.length >= 80, `${tool.slug} method is substantial`);
+    assert.ok(record.invariant.length >= 50, `${tool.slug} invariant is substantial`);
+    assert.ok(record.boundary.length >= 50, `${tool.slug} boundary is substantial`);
+    methods.add(record.method);
+  }
+  assert.equal(methods.size, tools.length);
 });
 
 test('guide fixtures match the named conversion and settings', async () => {

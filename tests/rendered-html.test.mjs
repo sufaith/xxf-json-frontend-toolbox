@@ -23,6 +23,8 @@ test("home page keeps the tool directory and adds useful editorial content below
   assert.match(source, /class="category-tabs"/i);
   assert.match(source, /class="tool-card-grid"/i);
   assert.match(source, /site-footer__minimal/i);
+  assert.match(source, /class="site-topbar"/i);
+  assert.match(source, /aria-label="Primary navigation"/i);
   assert.doesNotMatch(source, /class="site-header/);
   assert.match(source, /JSON Formatter/);
   assert.match(source, /Image Compressor/);
@@ -101,6 +103,11 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /Frequently asked questions/);
     assert.match(source, /class="related-section"/);
     assert.match(source, /class="sidebar-card"/);
+    assert.match(source, /class="verification-card"/);
+    assert.match(source, /Verification record/);
+    assert.match(source, /Known boundary/);
+    assert.match(source, /Checked 2026-10-05/);
+    assert.match(source, /href="\/authors\/sufaith\/">Sufaith<\/a>/);
     assert.match(source, /class="editorial-guides"/);
     assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer/);
     assert.match(source, /dock-tool-switcher/);
@@ -191,8 +198,9 @@ test("thirteen editorial guides include primary references and relevant tools", 
     assert.match(source, /"dateModified":"2026-10-05"/);
     assert.match(source, /href="\/tools\//);
     assert.match(source, /href="\/guides\/">Guides<\/a>/);
-    assert.match(source, /By XXF Tools/);
-    assert.match(source, /Implementation-checked by the XXF Tools editorial team/);
+    assert.match(source, /By Sufaith/);
+    assert.match(source, /Implementation-checked by/);
+    assert.match(source, /href="\/authors\/sufaith\/">Sufaith<\/a>/);
     assert.match(source, new RegExp(`https://xxf\\.app/guides/${slug}/`));
   }
 });
@@ -217,33 +225,40 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("llms.txt", out), "utf8"),
     readFile(new URL("ads.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 52);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 54);
   assert.match(sitemap, /https:\/\/xxf\.app\/animal\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/site-map\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/contact\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/guides\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/editorial-policy\//);
+  assert.match(sitemap, /https:\/\/xxf\.app\/authors\/sufaith\//);
+  assert.match(sitemap, /https:\/\/xxf\.app\/updates\//);
   assert.match(robots, /Sitemap: https:\/\/xxf\.app\/sitemap\.xml/);
   assert.match(manifest, /XXF JSON, Frontend & Video Tools/);
   assert.match(llms, /Text, image and video conversions run locally/);
   assert.match(llms, /Contact and public issue tracker/);
   assert.match(llms, /Link-accessible \/n\/ note spaces/);
   assert.match(llms, /Editorial standards and review process/);
+  assert.match(llms, /Maintainer profile and public authorship/);
+  assert.match(llms, /Product updates and maintenance record/);
   assert.equal(ads.trim(), "google.com, pub-5078282844971985, DIRECT, f08c47fec0942fa0");
   assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
   await Promise.all(["og.jpg", "animal-museum-hero.jpg", "icon-192.png", "icon-512.png", "favicon.ico", "ads.txt"].map((asset) => access(new URL(asset, out))));
 });
 
-test("editorial and privacy pages disclose review and data boundaries", async () => {
-  const [editorial, privacy, about, terms] = await Promise.all([
+test("editorial, authorship and privacy pages disclose review and data boundaries", async () => {
+  const [editorial, privacy, about, terms, author, updates] = await Promise.all([
     html("editorial-policy/index.html"),
     html("privacy/index.html"),
     html("about/index.html"),
     html("terms/index.html"),
+    html("authors/sufaith/index.html"),
+    html("updates/index.html"),
   ]);
   assert.match(editorial, /Editorial standards/);
   assert.match(editorial, /How a tool page is reviewed/);
   assert.match(editorial, /Advertising independence/);
+  assert.match(editorial, /Verification evidence/);
   assert.match(editorial, /lastReviewed/);
   assert.match(editorial, /reviewedBy/);
   assert.match(privacy, /Shared note spaces/);
@@ -252,7 +267,14 @@ test("editorial and privacy pages disclose review and data boundaries", async ()
   assert.match(privacy, /adssettings\.google\.com/);
   assert.match(about, /Maintained by XXF Tools/);
   assert.match(about, /href="\/editorial-policy\/">editorial standards page<\/a>/);
+  assert.match(about, /href="\/authors\/sufaith\/">Sufaith<\/a>/);
   assert.match(terms, /Shared spaces/);
+  assert.match(author, /Developer and maintainer of XXF Tools/);
+  assert.match(author, /https:\/\/github\.com\/sufaith/);
+  assert.match(author, /Evidence you can inspect/);
+  assert.match(updates, /Public maintenance record/);
+  assert.match(updates, /2026-10-05/);
+  assert.match(updates, /View commit history/);
 });
 
 test("prehistoric animal museum has its own indexable experience page", async () => {
@@ -293,6 +315,8 @@ test("HTML sitemap exposes every tool and guide through crawlable links", async 
   assert.match(source, /<h1>Everything on XXF\.<\/h1>/);
   assert.match(source, /href="\/sitemap\.xml">XML Sitemap<\/a>/);
   assert.match(source, /href="\/editorial-policy\/">Editorial Standards<\/a>/);
+  assert.match(source, /href="\/authors\/sufaith\/">Maintainer<\/a>/);
+  assert.match(source, /href="\/updates\/">Updates<\/a>/);
   for (const slug of (await readdir(new URL("tools/", out), { withFileTypes: true })).filter((item) => item.isDirectory()).map((item) => item.name)) {
     assert.match(source, new RegExp(`href="/tools/${slug}/"`));
   }
@@ -377,7 +401,7 @@ test("every indexable page has unique metadata and an intentional ad decision", 
   const canonicals = new Set();
   const adScript = /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i;
 
-  assert.equal(paths.length, 52);
+  assert.equal(paths.length, 54);
   for (const pathname of paths) {
     const source = await html(exportedHtmlPath(pathname));
     const title = source.match(/<title>(.*?)<\/title>/i)?.[1];
@@ -393,7 +417,7 @@ test("every indexable page has unique metadata and an intentional ad decision", 
     titles.add(title);
     descriptions.add(description);
     canonicals.add(canonical);
-    if (["/site-map/", "/about/", "/contact/", "/privacy/", "/terms/", "/editorial-policy/", "/guides/", "/animal/"].includes(pathname)) assert.doesNotMatch(source, adScript);
+    if (["/site-map/", "/about/", "/authors/sufaith/", "/updates/", "/contact/", "/privacy/", "/terms/", "/editorial-policy/", "/guides/", "/animal/"].includes(pathname)) assert.doesNotMatch(source, adScript);
     else assert.match(source, adScript, `${pathname} includes the site script`);
   }
 });

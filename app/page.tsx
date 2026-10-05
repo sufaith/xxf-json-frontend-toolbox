@@ -52,7 +52,15 @@ export default function Home() {
         url: "https://xxf.app/",
         logo: { "@type": "ImageObject", url: "https://xxf.app/icon-512.png", width: 512, height: 512 },
         sameAs: ["https://github.com/sufaith/xxf-json-frontend-toolbox"],
+        founder: { "@id": "https://xxf.app/authors/sufaith/#person" },
         publishingPrinciples: "https://xxf.app/editorial-policy/",
+      },
+      {
+        "@type": "Person",
+        "@id": "https://xxf.app/authors/sufaith/#person",
+        name: "Sufaith",
+        url: "https://xxf.app/authors/sufaith/",
+        sameAs: ["https://github.com/sufaith"],
       },
       {
         "@type": "WebSite",
@@ -72,6 +80,7 @@ export default function Home() {
         inLanguage: "en",
         isPartOf: { "@id": "https://xxf.app/#website" },
         about: { "@id": "https://xxf.app/#organization" },
+        author: { "@id": "https://xxf.app/authors/sufaith/#person" },
         mainEntity: { "@id": "https://xxf.app/#tools" },
         reviewedBy: { "@id": "https://xxf.app/#organization" },
         datePublished: "2026-08-02",

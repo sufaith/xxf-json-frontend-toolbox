@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...guides.map((guide) => ({ url: `https://xxf.app/guides/${guide.slug}/`, lastModified: new Date(`${guide.updated}T00:00:00.000Z`), changeFrequency: "monthly" as const, priority: 0.72 })),
     { url: "https://xxf.app/site-map/", lastModified, changeFrequency: "monthly", priority: 0.5 },
     { url: "https://xxf.app/editorial-policy/", lastModified, changeFrequency: "monthly", priority: 0.55 },
+    { url: "https://xxf.app/authors/sufaith/", lastModified, changeFrequency: "monthly", priority: 0.55 },
+    { url: "https://xxf.app/updates/", lastModified, changeFrequency: "monthly", priority: 0.62 },
     ...["about", "contact", "privacy", "terms"].map((page) => ({ url: `https://xxf.app/${page}/`, lastModified, changeFrequency: "yearly" as const, priority: 0.35 })),
   ];
 }

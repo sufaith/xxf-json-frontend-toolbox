@@ -15,7 +15,7 @@ export default function EditorialPolicyPage() {
     url: "https://xxf.app/editorial-policy/",
     dateModified: "2026-10-05",
     lastReviewed: "2026-10-05",
-    author: { "@type": "Organization", name: "XXF Tools", url: "https://xxf.app/about/" },
+    author: { "@type": "Person", name: "Sufaith", url: "https://xxf.app/authors/sufaith/", sameAs: ["https://github.com/sufaith"] },
     reviewedBy: { "@type": "Organization", name: "XXF Tools", url: "https://xxf.app/about/" },
   };
 
@@ -29,7 +29,7 @@ export default function EditorialPolicyPage() {
         <p>XXF publishes technical guidance to explain what each browser tool does, where its output is useful and which decisions still require human review. The editorial material is part of the product rather than a separate content-marketing feed, so every claim should correspond to behavior a visitor can inspect in the public implementation.</p>
 
         <h2>Ownership and purpose</h2>
-        <p>The XXF Tools editorial team writes and maintains the tool instructions, worked examples, safety notes and long-form guides. Its goal is to help visitors complete a small technical task and understand the boundary of the result. Content is not commissioned from anonymous contributors or generated as interchangeable pages around search keywords.</p>
+        <p><Link className="text-link" href="/authors/sufaith/">Sufaith</Link> writes and maintains the tool instructions, worked examples, safety notes and long-form guides alongside the implementation. The goal is to help visitors complete a small technical task and understand the boundary of the result. Content is not commissioned from anonymous contributors or generated as interchangeable pages around search keywords.</p>
         <p>XXF is a software project, not a standards body, security auditor or substitute for documentation supplied by the system that will consume the output. Generated code, schemas, hashes, converted data and media packages remain starting points that must be tested in their destination environment.</p>
 
         <h2>How a tool page is reviewed</h2>
@@ -41,6 +41,10 @@ export default function EditorialPolicyPage() {
           <li><strong>Safety</strong><span>Privacy and security claims distinguish browser-local work from network requests</span></li>
           <li><strong>Connections</strong><span>Related guides and tools extend the workflow without creating misleading promises</span></li>
         </ol>
+
+        <h2>Verification evidence</h2>
+        <p>Each public tool page carries its own verification record: the exact method used, the behavior that should remain invariant and a known boundary that the tool cannot resolve. Deterministic converters are compared with committed expected outputs. Network and media tools use an explicit manual or network protocol because their results depend on a browser, remote host or selected file.</p>
+        <p>The build also checks unique metadata, crawlable internal links, private-route noindex directives, advertising scope and the presence of every guide, example and verification record. Passing a test does not make a broad accuracy claim; it provides reproducible evidence for one documented behavior.</p>
 
         <h2>Sources and technical claims</h2>
         <p>Long-form guides prefer normative specifications and first-party platform documentation: RFC Editor publications, W3C and WHATWG standards, NIST publications, official language documentation and browser-platform references. Secondary explanations may help with examples, but they do not replace an available primary source for protocol or syntax behavior.</p>
@@ -54,7 +58,7 @@ export default function EditorialPolicyPage() {
         <p>Advertising may support hosting and maintenance, but advertisers do not select guide topics, approve conclusions or receive access to converter input. An advertisement is not an endorsement, and editorial pages do not rank tools or formats according to commercial relationships.</p>
 
         <h2>Contact the maintainers</h2>
-        <p>Read more about the project on the <Link className="text-link" href="/about/">About page</Link>, review the <a className="text-link" href="https://github.com/sufaith/xxf-json-frontend-toolbox" target="_blank" rel="noreferrer">public source repository</a> or use the <Link className="text-link" href="/contact/">contact and feedback page</Link> to report a correction.</p>
+        <p>Read more about the project on the <Link className="text-link" href="/about/">About page</Link>, inspect the <Link className="text-link" href="/updates/">maintenance log</Link>, review the <a className="text-link" href="https://github.com/sufaith/xxf-json-frontend-toolbox" target="_blank" rel="noreferrer">public source repository</a> or use the <Link className="text-link" href="/contact/">contact and feedback page</Link> to report a correction.</p>
       </article>
     </main>
   );

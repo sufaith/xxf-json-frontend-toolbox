@@ -66,7 +66,10 @@ export const tools: ToolDefinition[] = [
     fileExtension: "txt",
     kind: "redirect-checker",
     faq: [
-      sharedPrivacy,
+      {
+        question: "What data does the redirect check send?",
+        answer: "The public URL you enter and the selected user-agent profile are sent to XXF's restricted checker endpoint so it can request the HTTP chain. Do not submit private or credential-bearing URLs.",
+      },
       {
         question: "Which redirect responses are shown?",
         answer: "The checker follows HTTP redirect responses and reports each URL and status code until it reaches a final response or a loop.",
@@ -569,7 +572,10 @@ export const tools: ToolDefinition[] = [
     fileExtension: "m3u8",
     kind: "m3u8-player",
     faq: [
-      sharedPrivacy,
+      {
+        question: "Does XXF upload or store the stream?",
+        answer: "No. The player requests the playlist and media directly from the stream host in your browser. That host receives the playback requests, and its own access logs and privacy terms apply.",
+      },
       {
         question: "Why does a stream fail to play?",
         answer: "The stream must be publicly reachable and allow browser playback with CORS headers. DRM-protected, private or region-locked streams may not work.",
