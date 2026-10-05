@@ -49,6 +49,7 @@ test("home page keeps the tool directory and adds useful editorial content below
   assert.match(source, /href="\/guides\/">Browse all/);
   assert.match(source, /href="\/editorial-policy\/">Review standards/);
   assert.match(source, /publishingPrinciples/);
+  assert.match(source, /"datePublished":"2026-08-02"/);
   assert.match(source, /lastReviewed/);
   assert.doesNotMatch(source, /workspace-hero|search-box|closing-cta/);
   assert.doesNotMatch(source, /codex-preview|react-loading-skeleton|Starter Project/);

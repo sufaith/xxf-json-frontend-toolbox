@@ -74,6 +74,7 @@ export default function Home() {
         about: { "@id": "https://xxf.app/#organization" },
         mainEntity: { "@id": "https://xxf.app/#tools" },
         reviewedBy: { "@id": "https://xxf.app/#organization" },
+        datePublished: "2026-08-02",
         lastReviewed: "2026-10-05",
         publishingPrinciples: "https://xxf.app/editorial-policy/",
         dateModified: "2026-10-05",
