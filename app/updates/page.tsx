@@ -13,6 +13,7 @@ const updates = [
     title: "A more focused and readable public site",
     summary: "Reduced review risk by tightening the indexable topic surface and making evidence easier to read on every public tool page.",
     changes: [
+      "Promoted four core utilities into a distinct first-row layout on the homepage",
       "Removed the unrelated museum promotion from the homepage and sitemaps while keeping its direct URL available",
       "Marked the museum noindex so the searchable site remains focused on browser utilities and technical guidance",
       "Added visible breadcrumbs and first-party specification links to each tool page",

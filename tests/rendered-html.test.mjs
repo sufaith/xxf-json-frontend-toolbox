@@ -22,6 +22,12 @@ test("home page keeps the tool directory and adds useful editorial content below
   assert.match(source, /aria-label="Tool categories"/i);
   assert.match(source, /class="category-tabs"/i);
   assert.match(source, /class="tool-card-grid"/i);
+  assert.match(source, /id="featured-tools-title">Most-used tools</i);
+  assert.equal((source.match(/class="featured-tool-card tool-card--/g) ?? []).length, 4);
+  assert.equal((source.match(/href="\/tools\/json-formatter\/"/g) ?? []).length, 1);
+  assert.equal((source.match(/href="\/tools\/image-compressor\/"/g) ?? []).length, 1);
+  assert.equal((source.match(/href="\/tools\/m3u8-player\/"/g) ?? []).length, 1);
+  assert.equal((source.match(/href="\/tools\/video-to-m3u8\/"/g) ?? []).length, 1);
   assert.match(source, /site-footer__minimal/i);
   assert.match(source, /class="site-topbar"/i);
   assert.match(source, /aria-label="Primary navigation"/i);
