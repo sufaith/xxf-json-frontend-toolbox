@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Explore 18 prehistoric animals in a calm, interactive browser museum with English and Simplified Chinese field notes.",
   keywords: ["prehistoric animal museum", "dinosaur museum online", "interactive dinosaur exhibit", "paleontology for kids", "史前动物博物馆", "恐龙博物馆"],
   alternates: { canonical: "/animal/" },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
+  robots: { index: false, follow: false, noarchive: true, googleBot: { index: false, follow: false, noimageindex: true } },
   openGraph: { type: "website", locale: "en_US", siteName: "XXF Tools", url: "https://xxf.app/animal/", title: "Prehistoric Animal Museum — XXF", description: "A calm, interactive browser museum for exploring 18 prehistoric animals.", images: [{ url: "/animal/museum-bg-v2.jpg", width: 1672, height: 941, alt: "Prehistoric animal museum exhibit" }, { url: "/animal-museum-hero.jpg", width: 1536, height: 1024, alt: "Prehistoric animal museum diorama" }] },
   twitter: { card: "summary_large_image", title: "Prehistoric Animal Museum — XXF", description: "Explore 18 prehistoric animals in a calm browser museum.", images: ["/animal/museum-bg-v2.jpg"] },
 };

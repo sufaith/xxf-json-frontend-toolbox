@@ -9,6 +9,18 @@ export const metadata: Metadata = {
 
 const updates = [
   {
+    date: "2026-10-06",
+    title: "A more focused and readable public site",
+    summary: "Reduced review risk by tightening the indexable topic surface and making evidence easier to read on every public tool page.",
+    changes: [
+      "Removed the unrelated museum promotion from the homepage and sitemaps while keeping its direct URL available",
+      "Marked the museum noindex so the searchable site remains focused on browser utilities and technical guidance",
+      "Added visible breadcrumbs and first-party specification links to each tool page",
+      "Increased small navigation, card, source and verification text for more comfortable reading",
+      "Excluded AdSense from upload-heavy media tools and the stream player in addition to private communication pages",
+    ],
+  },
+  {
     date: "2026-10-05",
     title: "Clear authorship, navigation and verification evidence",
     summary: "Made the site's purpose and maintenance evidence easier to evaluate without changing the fast tool workflow.",

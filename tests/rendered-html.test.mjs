@@ -33,7 +33,7 @@ test("home page keeps the tool directory and adds useful editorial content below
   assert.match(source, /Redirect Checker/);
   assert.match(source, /M3U8 Video Player/);
   assert.match(source, /Video to M3U8/);
-  assert.match(source, /Prehistoric Animal Museum/);
+  assert.doesNotMatch(source, /Prehistoric Animal Museum/);
   assert.doesNotMatch(source, />Open tool</i);
   assert.match(source, /<link rel="canonical" href="https:\/\/xxf\.app\/"/i);
   assert.match(source, /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i);
@@ -96,7 +96,7 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /class="worked-example"/);
     assert.match(source, /Worked example/);
     assert.match(source, /What to notice/);
-    assert.match(source, /Reviewed October 5, 2026/);
+    assert.match(source, /Reviewed October 6, 2026/);
     assert.match(source, /How XXF reviews tool guidance/);
     assert.match(source, /When this tool helps/);
     assert.match(source, /Accuracy and safety notes/);
@@ -106,9 +106,13 @@ test("all 30 tool pages are statically rendered with unique SEO signals", async 
     assert.match(source, /class="verification-card"/);
     assert.match(source, /Verification record/);
     assert.match(source, /Known boundary/);
-    assert.match(source, /Checked 2026-10-05/);
+    assert.match(source, /Checked 2026-10-06/);
     assert.match(source, /href="\/authors\/sufaith\/">Sufaith<\/a>/);
     assert.match(source, /class="editorial-guides"/);
+    assert.match(source, /class="tool-breadcrumbs"/);
+    assert.match(source, /class="tool-reference-card"/);
+    assert.match(source, /Standards and sources/);
+    assert.match(source, /citation/);
     assert.doesNotMatch(source, /page-hero|workbench__topline|workbench__controls|convert-rail|workbench__footer/);
     assert.match(source, /dock-tool-switcher/);
     assert.match(source, /site-header__drag-handle/);
@@ -225,8 +229,8 @@ test("crawler and app files expose the complete canonical surface", async () => 
     readFile(new URL("llms.txt", out), "utf8"),
     readFile(new URL("ads.txt", out), "utf8"),
   ]);
-  assert.equal((sitemap.match(/<url>/g) ?? []).length, 54);
-  assert.match(sitemap, /https:\/\/xxf\.app\/animal\//);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 53);
+  assert.doesNotMatch(sitemap, /https:\/\/xxf\.app\/animal\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/site-map\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/contact\//);
   assert.match(sitemap, /https:\/\/xxf\.app\/guides\//);
@@ -241,6 +245,7 @@ test("crawler and app files expose the complete canonical surface", async () => 
   assert.match(llms, /Editorial standards and review process/);
   assert.match(llms, /Maintainer profile and public authorship/);
   assert.match(llms, /Product updates and maintenance record/);
+  assert.doesNotMatch(llms, /Prehistoric Animal Museum/);
   assert.equal(ads.trim(), "google.com, pub-5078282844971985, DIRECT, f08c47fec0942fa0");
   assert.match(manifest, /Private browser-based JSON, frontend, image and video tools/);
   await Promise.all(["og.jpg", "animal-museum-hero.jpg", "icon-192.png", "icon-512.png", "favicon.ico", "ads.txt"].map((asset) => access(new URL(asset, out))));
@@ -265,6 +270,7 @@ test("editorial, authorship and privacy pages disclose review and data boundarie
   assert.match(privacy, /Google advertising and cookies/);
   assert.match(privacy, /policies\.google\.com\/technologies\/partner-sites/);
   assert.match(privacy, /adssettings\.google\.com/);
+  assert.match(privacy, /upload-heavy image and video workbenches/);
   assert.match(about, /Maintained by XXF Tools/);
   assert.match(about, /href="\/editorial-policy\/">editorial standards page<\/a>/);
   assert.match(about, /href="\/authors\/sufaith\/">Sufaith<\/a>/);
@@ -273,11 +279,11 @@ test("editorial, authorship and privacy pages disclose review and data boundarie
   assert.match(author, /https:\/\/github\.com\/sufaith/);
   assert.match(author, /Evidence you can inspect/);
   assert.match(updates, /Public maintenance record/);
-  assert.match(updates, /2026-10-05/);
+  assert.match(updates, /2026-10-06/);
   assert.match(updates, /View commit history/);
 });
 
-test("prehistoric animal museum has its own indexable experience page", async () => {
+test("prehistoric animal museum remains available without diluting the indexed tool topic", async () => {
   const source = await html("animal/index.html");
   assert.match(source, /<title>Prehistoric Animal Museum — Interactive Natural History \| XXF Tools<\/title>/i);
   assert.match(source, /href="https:\/\/xxf\.app\/animal\//i);
@@ -289,6 +295,7 @@ test("prehistoric animal museum has its own indexable experience page", async ()
   assert.match(source, /Tyrannosaurus/);
   assert.match(source, /Triceratops/);
   assert.match(source, /中文/);
+  assert.match(source, /<meta name="robots" content="noindex, nofollow, noarchive"/i);
   assert.doesNotMatch(source, /site-header/);
 });
 
@@ -308,6 +315,10 @@ test("performance hints and image previews are present", async () => {
   assert.match(globals, /font-variant-ligatures: none/);
   assert.match(globals, /\.primary-button \{[^}]*box-shadow: none;/);
   assert.match(globals, /\.primary-button:focus-visible, \.ghost-button:focus-visible/);
+  assert.match(globals, /\.tool-card p \{[^}]*font-size: 13px;/);
+  assert.match(globals, /\.guide-card p \{[^}]*font-size: 14px;/);
+  assert.match(globals, /\.verification-card dd \{[^}]*font-size: 13px;/);
+  assert.match(globals, /\.site-topbar nav a \{[^}]*font:[^;]*12px/);
 });
 
 test("HTML sitemap exposes every tool and guide through crawlable links", async () => {
@@ -376,11 +387,13 @@ test("public host security policy allows the configured AdSense domains", async 
   assert.match(source, /try_files \/c\/welcome\/index\.html =404/);
 });
 
-test("AdSense stays off private, navigational and error-only screens", async () => {
-  const [home, tool, note, siteMap, notFound] = await Promise.all([
+test("AdSense stays off private, navigational, media-workbench and error-only screens", async () => {
+  const [home, tool, note, mediaTool, streamTool, siteMap, notFound] = await Promise.all([
     html("index.html"),
     html("tools/json-formatter/index.html"),
     html("n/welcome/index.html"),
+    html("tools/image-compressor/index.html"),
+    html("tools/m3u8-player/index.html"),
     html("site-map/index.html"),
     html("404.html"),
   ]);
@@ -388,6 +401,8 @@ test("AdSense stays off private, navigational and error-only screens", async () 
   assert.match(home, adScript);
   assert.match(tool, adScript);
   assert.doesNotMatch(note, adScript);
+  assert.doesNotMatch(mediaTool, adScript);
+  assert.doesNotMatch(streamTool, adScript);
   assert.doesNotMatch(siteMap, adScript);
   assert.doesNotMatch(notFound, adScript);
   assert.match(note, /<meta name="robots" content="noindex, nofollow"/i);
@@ -401,7 +416,7 @@ test("every indexable page has unique metadata and an intentional ad decision", 
   const canonicals = new Set();
   const adScript = /<script async(?:="")? src="https:\/\/pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=ca-pub-5078282844971985" crossorigin="anonymous"><\/script>/i;
 
-  assert.equal(paths.length, 54);
+  assert.equal(paths.length, 53);
   for (const pathname of paths) {
     const source = await html(exportedHtmlPath(pathname));
     const title = source.match(/<title>(.*?)<\/title>/i)?.[1];
@@ -417,7 +432,7 @@ test("every indexable page has unique metadata and an intentional ad decision", 
     titles.add(title);
     descriptions.add(description);
     canonicals.add(canonical);
-    if (["/site-map/", "/about/", "/authors/sufaith/", "/updates/", "/contact/", "/privacy/", "/terms/", "/editorial-policy/", "/guides/", "/animal/"].includes(pathname)) assert.doesNotMatch(source, adScript);
+    if (["/site-map/", "/about/", "/authors/sufaith/", "/updates/", "/contact/", "/privacy/", "/terms/", "/editorial-policy/", "/guides/", "/tools/image-compressor/", "/tools/photo-collage-maker/", "/tools/m3u8-player/", "/tools/video-to-m3u8/"].includes(pathname)) assert.doesNotMatch(source, adScript);
     else assert.match(source, adScript, `${pathname} includes the site script`);
   }
 });

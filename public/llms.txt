@@ -10,13 +10,12 @@ XXF Tools is a free, browser-based JSON, frontend, image and video toolbox at ht
 - Link-accessible /n/ note spaces are a separate feature whose text is transmitted and stored for sharing.
 - Link-accessible /c/ chat rooms store messages and device profiles in D1 and shared image or video files in Cloudflare R2.
 - No account or payment is required.
-- The site includes dedicated pages for 30 tools, an interactive prehistoric animal museum, including URL inspection, redirect checking, M3U8 video playback, video-to-M3U8 conversion, a local image compressor and photo collage maker, plus practical technical guides.
+- The site includes dedicated pages for 30 browser utilities, including URL inspection, redirect checking, M3U8 video playback, video-to-M3U8 conversion, a local image compressor and photo collage maker, plus practical technical guides.
 
 ## Primary sections
 
 - Home and tool directory: https://xxf.app/
 - Technical guide library: https://xxf.app/guides/
-- Prehistoric Animal Museum: https://xxf.app/animal/
 - JSON Formatter: https://xxf.app/tools/json-formatter/
 - JSON to TypeScript: https://xxf.app/tools/json-to-typescript/
 - JSON to YAML: https://xxf.app/tools/json-to-yaml/

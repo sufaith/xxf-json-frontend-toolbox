@@ -9,7 +9,7 @@ import { RedirectCheckerWorkbench } from "@/components/RedirectCheckerWorkbench"
 import { ToolWorkbench } from "@/components/ToolWorkbench";
 import { UrlParserWorkbench } from "@/components/UrlParserWorkbench";
 import { VideoToM3u8Workbench } from "@/components/VideoToM3u8Workbench";
-import { guideMap } from "@/lib/guides";
+import { guideMap, type Guide } from "@/lib/guides";
 import { toolEditorial } from "@/lib/tool-editorial";
 import { toolResults } from "@/lib/tool-results";
 import { toolVerification } from "@/lib/tool-verification";
@@ -17,6 +17,8 @@ import { toolExamples } from "@/lib/tool-examples";
 import { getRelatedTools, toolMap, tools } from "@/lib/tools";
 
 type Props = { params: Promise<{ slug: string }> };
+
+const mediaWorkbenchSlugs = new Set(["image-compressor", "photo-collage-maker", "m3u8-player", "video-to-m3u8"]);
 
 export const dynamicParams = false;
 
@@ -63,7 +65,9 @@ export default async function ToolPage({ params }: Props) {
   const verification = toolVerification[tool.slug];
   if (!verification) notFound();
   const related = getRelatedTools(tool);
-  const relatedGuides = editorial.guideSlugs.map((guideSlug) => guideMap.get(guideSlug)).filter((guide) => Boolean(guide));
+  const relatedGuides = editorial.guideSlugs.map((guideSlug) => guideMap.get(guideSlug)).filter((guide): guide is Guide => Boolean(guide));
+  const references = Array.from(new Map(relatedGuides.flatMap((guide) => guide.references).map((reference) => [reference.url, reference])).values()).slice(0, 4);
+  const shouldLoadAds = !mediaWorkbenchSlugs.has(tool.slug);
   const isPhotoCollage = tool.slug === "photo-collage-maker";
   const isImageCompressor = tool.slug === "image-compressor";
   const isUrlParser = tool.kind === "url-parser";
@@ -90,9 +94,11 @@ export default async function ToolPage({ params }: Props) {
         mainEntity: { "@id": applicationId },
         author: { "@id": "https://xxf.app/authors/sufaith/#person" },
         reviewedBy: { "@id": organizationId },
-        lastReviewed: "2026-10-05",
+        citation: references.map((reference) => reference.url),
+        datePublished: "2026-08-02",
+        lastReviewed: "2026-10-06",
         publishingPrinciples: "https://xxf.app/editorial-policy/",
-        dateModified: "2026-10-05",
+        dateModified: "2026-10-06",
       },
       {
         "@type": "BreadcrumbList",
@@ -170,7 +176,7 @@ export default async function ToolPage({ params }: Props) {
 
   return (
     <main>
-      <AdSenseScript />
+      {shouldLoadAds && <AdSenseScript />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(seoSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
@@ -180,6 +186,7 @@ export default async function ToolPage({ params }: Props) {
 
       <section className="tool-editorial shell" aria-labelledby="tool-guide-title">
         <article className="tool-editorial__article prose">
+          <nav className="tool-breadcrumbs" aria-label="Breadcrumb"><Link href="/">All tools</Link><span>/</span><span>{tool.category}</span><span>/</span><span>{tool.name}</span></nav>
           <span className="kicker">Practical guide</span>
           <h2 id="tool-guide-title">How to use {tool.name}</h2>
           {editorial.overview.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
@@ -213,7 +220,7 @@ export default async function ToolPage({ params }: Props) {
           <div className="faq-list faq-list--light">
             {tool.faq.map((item) => <details key={item.question}><summary>{item.question}<span>+</span></summary><p>{item.answer}</p></details>)}
           </div>
-          <footer className="editorial-byline"><span>Reviewed October 5, 2026</span><p>Written and implementation-checked by <Link href="/authors/sufaith/">Sufaith</Link></p><Link href="/editorial-policy/">How XXF reviews tool guidance →</Link></footer>
+          <footer className="editorial-byline"><span>Reviewed October 6, 2026</span><p>Written and implementation-checked by <Link href="/authors/sufaith/">Sufaith</Link></p><Link href="/editorial-policy/">How XXF reviews tool guidance →</Link></footer>
         </article>
 
         <aside className="tool-editorial__aside" aria-label="Related resources">
@@ -230,9 +237,10 @@ export default async function ToolPage({ params }: Props) {
               <div><dt>Invariant</dt><dd>{verification.invariant}</dd></div>
               <div><dt>Known boundary</dt><dd>{verification.boundary}</dd></div>
             </dl>
-            <footer><span>Checked 2026-10-05</span><Link href="/editorial-policy/">Methodology ↗</Link></footer>
+            <footer><span>Checked 2026-10-06</span><Link href="/editorial-policy/">Methodology ↗</Link></footer>
           </div>
-          {relatedGuides.length > 0 && <div className="editorial-guides"><span className="kicker">Related reading</span>{relatedGuides.map((guide) => guide && <Link href={`/guides/${guide.slug}/`} key={guide.slug}><strong>{guide.title}</strong><small>{guide.readTime}</small></Link>)}</div>}
+          {references.length > 0 && <div className="tool-reference-card"><span className="kicker">Standards and sources</span>{references.map((reference) => <a href={reference.url} target="_blank" rel="noreferrer" key={reference.url}><small>{reference.publisher}</small><strong>{reference.title}</strong></a>)}</div>}
+          {relatedGuides.length > 0 && <div className="editorial-guides"><span className="kicker">Related reading</span>{relatedGuides.map((guide) => <Link href={`/guides/${guide.slug}/`} key={guide.slug}><strong>{guide.title}</strong><small>{guide.readTime}</small></Link>)}</div>}
         </aside>
       </section>
 

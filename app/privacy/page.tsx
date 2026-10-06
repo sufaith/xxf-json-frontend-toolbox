@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <main className="legal-page">
       <div className="legal-page__inner shell">
-        <span className="kicker">Last updated October 5, 2026</span>
+        <span className="kicker">Last updated October 6, 2026</span>
         <h1>Privacy Policy</h1>
         <p>XXF Tools is designed to minimize the data required to use its browser utilities. This page distinguishes local converters from the few features that intentionally use a network or stored shared space.</p>
 
@@ -33,7 +33,7 @@ export default function PrivacyPage() {
         <p>Google explains this processing in <a className="text-link" href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noreferrer">How Google uses information from sites or apps that use its services ↗</a>. Visitors can review or change ad personalization through <a className="text-link" href="https://adssettings.google.com/" target="_blank" rel="noreferrer">Google Ads Settings ↗</a>. Other advertising vendors may provide their own controls where their services are used.</p>
 
         <h2>Advertising scope</h2>
-        <p>AdSense code is limited to the tool directory, individual tool pages and individual technical guides. Shared notes, chat rooms, the museum, the guide index, contact and policy pages, the sitemap and error pages do not include the AdSense loader. Advertising requests are separate from converter processing: a local conversion does not mean that the entire page makes no network requests.</p>
+        <p>AdSense code is limited to the public tool directory, eligible text-oriented tool pages and individual technical guides. Shared notes, chat rooms, upload-heavy image and video workbenches, the stream player, the museum, the guide index, contact and policy pages, the sitemap and error pages do not include the AdSense loader. Advertising requests are separate from converter processing: a local conversion does not mean that the entire page makes no network requests.</p>
         <h2>Your choices</h2>
         <p>You can use the converters without creating an XXF account, clear browser site data, block cookies through browser settings and avoid shared spaces or network tools. Clearing site data resets the local chat identity. Blocking some requests may prevent advertising, stream playback or network-dependent features from working.</p>
 

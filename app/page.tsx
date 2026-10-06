@@ -84,9 +84,9 @@ export default function Home() {
         mainEntity: { "@id": "https://xxf.app/#tools" },
         reviewedBy: { "@id": "https://xxf.app/#organization" },
         datePublished: "2026-08-02",
-        lastReviewed: "2026-10-05",
+        lastReviewed: "2026-10-06",
         publishingPrinciples: "https://xxf.app/editorial-policy/",
-        dateModified: "2026-10-05",
+        dateModified: "2026-10-06",
       },
       {
         "@type": "ItemList",

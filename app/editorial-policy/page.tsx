@@ -13,8 +13,8 @@ export default function EditorialPolicyPage() {
     "@type": "WebPage",
     name: "XXF Tools editorial standards and review process",
     url: "https://xxf.app/editorial-policy/",
-    dateModified: "2026-10-05",
-    lastReviewed: "2026-10-05",
+    dateModified: "2026-10-06",
+    lastReviewed: "2026-10-06",
     author: { "@type": "Person", name: "Sufaith", url: "https://xxf.app/authors/sufaith/", sameAs: ["https://github.com/sufaith"] },
     reviewedBy: { "@type": "Organization", name: "XXF Tools", url: "https://xxf.app/about/" },
   };
@@ -24,7 +24,7 @@ export default function EditorialPolicyPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <article className="legal-page__inner shell">
         <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span>Editorial standards</span></nav>
-        <span className="kicker">Last reviewed October 5, 2026</span>
+        <span className="kicker">Last reviewed October 6, 2026</span>
         <h1>Editorial standards</h1>
         <p>XXF publishes technical guidance to explain what each browser tool does, where its output is useful and which decisions still require human review. The editorial material is part of the product rather than a separate content-marketing feed, so every claim should correspond to behavior a visitor can inspect in the public implementation.</p>
 
@@ -56,6 +56,7 @@ export default function EditorialPolicyPage() {
 
         <h2>Advertising independence</h2>
         <p>Advertising may support hosting and maintenance, but advertisers do not select guide topics, approve conclusions or receive access to converter input. An advertisement is not an endorsement, and editorial pages do not rank tools or formats according to commercial relationships.</p>
+        <p>Advertising code is deliberately excluded from shared notes, chat rooms, upload-heavy media workbenches, the stream player and other pages where private communication, selected media or a download action is the primary focus. This separation protects the working surface from misleading placement and keeps advertising on public, reviewable content pages.</p>
 
         <h2>Contact the maintainers</h2>
         <p>Read more about the project on the <Link className="text-link" href="/about/">About page</Link>, inspect the <Link className="text-link" href="/updates/">maintenance log</Link>, review the <a className="text-link" href="https://github.com/sufaith/xxf-json-frontend-toolbox" target="_blank" rel="noreferrer">public source repository</a> or use the <Link className="text-link" href="/contact/">contact and feedback page</Link> to report a correction.</p>

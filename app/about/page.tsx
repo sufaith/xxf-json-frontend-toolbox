@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <main className="legal-page">
       <div className="legal-page__inner shell">
-        <span className="kicker">Maintained by XXF Tools · Reviewed October 5, 2026</span>
+        <span className="kicker">Maintained by XXF Tools · Reviewed October 6, 2026</span>
         <h1>Useful conversions, explained</h1>
         <p>XXF Tools is a focused collection of browser-based utilities for the small transformations that interrupt frontend work: formatting JSON, generating types, translating data formats, decoding text and preparing media.</p>
         <h2>Project maintainer</h2>
