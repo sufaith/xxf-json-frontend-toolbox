@@ -38,7 +38,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <head>
-        <script async src="https://hm.baidu.com/hm.js?6820c511e2a5c3943e2dad968c0e3182" />
+        <script dangerouslySetInnerHTML={{ __html: `var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6820c511e2a5c3943e2dad968c0e3182";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();` }} />
       </head>
       <body>
         <SiteTopbar />
