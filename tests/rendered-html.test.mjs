@@ -203,9 +203,10 @@ test("thirteen editorial guides include primary references and relevant tools", 
     assert.match(source, /class="article-tool-links"/);
     assert.match(source, /aria-label="Article contents"/);
     assert.match(source, /class="article-code"/);
-    assert.match(source, /Updated (?:<!-- -->)?2026-10-05/);
+    const updated = slug === 'convert-json-and-csv-safely' ? '2026-11-03' : '2026-10-05';
+    assert.match(source, new RegExp(`Updated (?:<!-- -->)?${updated}`));
     assert.match(source, /"datePublished":"2026-09-01"/);
-    assert.match(source, /"dateModified":"2026-10-05"/);
+    assert.match(source, new RegExp(`"dateModified":"${updated}"`));
     assert.match(source, /href="\/tools\//);
     assert.match(source, /href="\/guides\/">Guides<\/a>/);
     assert.match(source, /By Sufaith/);
