@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <main className="legal-page">
       <div className="legal-page__inner shell">
-        <span className="kicker">Last updated October 6, 2026</span>
+        <span className="kicker">Last updated November 3, 2026</span>
         <h1>Privacy Policy</h1>
         <p>XXF Tools is designed to minimize the data required to use its browser utilities. This page distinguishes local converters from the few features that intentionally use a network or stored shared space.</p>
 
@@ -27,6 +27,9 @@ export default function PrivacyPage() {
 
         <h2>Server logs and infrastructure</h2>
         <p>Infrastructure providers may process basic request information such as IP address, browser type, requested URL, response status and timestamps for security, reliability and aggregate traffic measurement. Converter editor contents are not part of ordinary page requests, except for the network and shared-space features described above.</p>
+
+        <h2>Traffic analytics</h2>
+        <p>XXF uses Baidu Analytics to measure site visits and page use. Your browser connects to Baidu and may send information such as your IP address, browser details, page URL and referrer; Baidu may use cookies or similar identifiers to recognize visits. This includes URLs of shared spaces, so do not put sensitive information in a space or room name.</p>
 
         <h2>Google advertising and cookies</h2>
         <p>XXF includes Google AdSense advertising code. When Google advertising services are active, a visitor&apos;s browser may send Google information such as the page URL and IP address, and Google or its partners may set or read advertising cookies. Third-party vendors, including Google, may use cookies to serve ads informed by a visitor&apos;s previous visits to this site or other sites. Google uses this information to deliver services, measure advertising, protect against fraud and, depending on the visitor&apos;s settings and consent, personalize ads.</p>

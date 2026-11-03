@@ -37,7 +37,9 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <head />
+      <head>
+        <script async src="https://hm.baidu.com/hm.js?6820c511e2a5c3943e2dad968c0e3182" />
+      </head>
       <body>
         <SiteTopbar />
         <SiteHeader />
