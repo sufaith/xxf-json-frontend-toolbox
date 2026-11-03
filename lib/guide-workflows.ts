@@ -84,10 +84,14 @@ export const guideWorkflows: Record<string, GuideSection[]> = {
       heading: "Establish columns before exporting mixed records",
       paragraphs: [
         "For JSON to CSV, supply an array of objects with the same explicit columns. XXF serializes nested objects into cell text rather than expanding dotted paths, and null values become empty cells. CSV therefore cannot distinguish null from an empty string without an additional convention.",
-        "The current exporter derives columns from the first record. A key introduced only in a later record can be omitted, so normalize the records before exporting. For example, give every row id, name and note, including empty values, and compare the downloaded header and row count with the intended dataset.",
+        "XXF collects columns from every record in first-seen order. A key appearing only in a later record gets its own column, and missing values become empty cells. Compare the downloaded headers and row count with the intended dataset before importing it.",
         "CSV quoting is separate from spreadsheet formula handling. Untrusted cells beginning with formula markers may be evaluated by spreadsheet software. Review the destination's import settings and neutralization policy; a syntactically valid CSV file is not proof that opening it is safe.",
       ],
-      bullets: ["Use consistent keys in every JSON record", "Define how null and empty cells are represented", "Keep identifiers as strings", "Check formula-like cells before spreadsheet distribution"],
+      codeBlocks: [
+        { label: "Input · JSON to CSV", code: '[{"id":1},{"id":2,"note":"later"}]' },
+        { label: "Expected CSV · later key retained", code: 'id,note\r\n1,\r\n2,later' },
+      ],
+      bullets: ["Check all expected keys appear in the header", "Define how null and empty cells are represented", "Keep identifiers as strings", "Check formula-like cells before spreadsheet distribution"],
     },
   ],
   "frontend-encoding-cheat-sheet": [

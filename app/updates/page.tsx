@@ -9,6 +9,16 @@ export const metadata: Metadata = {
 
 const updates = [
   {
+    date: "2026-11-03",
+    title: "Prevent missing columns in JSON to CSV exports",
+    summary: "The CSV exporter now includes keys from every input record, including fields that appear only in later rows.",
+    changes: [
+      "Preserved the first-seen column order and left missing values empty",
+      "Added a reproducible mixed-record example and regression checks for quoting and nested values",
+      "Clarified that nested objects are kept as JSON within a cell rather than flattened",
+    ],
+  },
+  {
     date: "2026-10-06",
     title: "A more focused and readable public site",
     summary: "Reduced review risk by tightening the indexable topic surface and making evidence easier to read on every public tool page.",

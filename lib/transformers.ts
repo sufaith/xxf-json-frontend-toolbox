@@ -359,7 +359,8 @@ export async function runTool(slug: string, input: string, options: TransformOpt
       const records = tableRecords(parseJson(input)).map((record) =>
         Object.fromEntries(Object.entries(record).map(([key, value]) => [key, displayCell(value)])),
       );
-      return Papa.unparse(records);
+      const fields = unique(records.flatMap((record) => Object.keys(record)));
+      return Papa.unparse({ fields, data: records.map((record) => fields.map((field) => record[field] ?? "")) });
     }
     case "csv-to-json": {
       const result = Papa.parse<Record<string, string>>(input, { header: true, skipEmptyLines: "greedy" });

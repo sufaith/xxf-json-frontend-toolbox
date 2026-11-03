@@ -276,7 +276,7 @@ export const tools: ToolDefinition[] = [
     name: "JSON to CSV",
     eyebrow: "Tabular export",
     category: "Data",
-    description: "Flatten JSON records into spreadsheet-ready CSV rows.",
+    description: "Convert JSON records into CSV rows, preserving fields found across all records.",
     seoDescription:
       "Convert arrays of JSON objects to CSV online with safe quoting and nested value handling. Download the result instantly.",
     keywords: ["json to csv", "convert json csv", "json array to spreadsheet"],

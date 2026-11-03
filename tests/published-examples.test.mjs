@@ -60,7 +60,9 @@ test('guide fixtures match the named conversion and settings', async () => {
 });
 
 test('documented limitations remain accurate for current converters', async () => {
-  assert.equal(await runTool('json-to-csv', '[{"id":1},{"id":2,"note":"later"}]'), 'id\r\n1\r\n2');
+  const csvExample = guideWorkflows['convert-json-and-csv-safely'][1].codeBlocks;
+  assert.equal(await runTool('json-to-csv', csvExample[0].code), csvExample[1].code);
+  assert.equal(await runTool('json-to-csv', '[{"a":"x,y"},{"b":{"nested":true}}]'), 'a,b\r\n"x,y",\r\n,"{""nested"":true}"');
   const counterexample = blocks('format-and-minify-css-safely')[2].code;
   assert.match(await runTool('css-formatter-minifier',counterexample,{direction:1}), /content:"a>b"/);
   const uuid = await runTool('uuid-generator','2');
